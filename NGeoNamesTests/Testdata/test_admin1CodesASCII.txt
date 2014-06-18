@@ -1,0 +1,4 @@
+CF.04	Mambéré-Kadéï	Mambere-Kadei	2386161
+This.is.a.VERY.LONG.ID	Iğdır	Igdir	0
+TR.80	Şırnak	Sirnak	443189
+UA.26	Zaporiz’ka Oblast’	Zaporiz'ka Oblast'	687699

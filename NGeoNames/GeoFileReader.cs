@@ -40,7 +40,7 @@ namespace NGeoNames
                 while (!r.EndOfStream && (line = r.ReadLine()) != null)
                 {
                     c++;
-                    if ((c > parser.SkipLines) && (!parser.HasComments || (parser.HasComments && !line.StartsWith("#"))))
+                    if ((c > parser.SkipLines) && (line.Length > 0) && (!parser.HasComments || (parser.HasComments && !line.StartsWith("#"))))
                     {
                         var data = line.Split(parser.FieldSeparators);
                         if (data.Length != parser.ExpectedNumberOfFields)
