@@ -1,13 +1,12 @@
-NGeoNames
-=========
+# ![Logo](https://raw.githubusercontent.com/RobThree/NGeoNames/master/icon.png) NGeoNames
 
 Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). Uses [KdTree](https://github.com/codeandcats/KdTree).
 
 This library provides classes for downloading and parsing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like NearestNeighbourSearch and RadialSearch on the downloaded dataset(s).
 
+This library is available as [NuGet package](https://www.nuget.org/packages/NGeoNames/).
 
-Basic usage / example
----------------------
+## Basic usage / example
 
 ```c#
 var datadirectory = @"D:\test\geo";
