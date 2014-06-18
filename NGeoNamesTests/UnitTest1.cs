@@ -11,6 +11,7 @@ namespace NGeoNamesTests
     [TestClass]
     public class UnitTest1
     {
+        //TODO: Yeah, yeah, yeah. This is a mess. Will work on that soon... probably
         [TestMethod]
         public void TestMethod1()
         {
@@ -46,11 +47,11 @@ namespace NGeoNamesTests
 
             //var c = GeoFileReader.ReadExtendedGeoNames(Path.Combine(fileroot, "cities1000.txt")).ToDictionary(k => k.Id);
             //var g = GeoFileReader.ReadFeatureCodes(Path.Combine(fileroot, "featureCodes_en.txt")).ToDictionary(k => k.Class + "." + k.Code);
-            //var h = GeoFileReader.ReadBuiltInContinents().ToDictionary(k => k.Code);
+            var h = GeoFileReader.ReadBuiltInContinents().ToDictionary(k => k.Code);
             //var l = GeoFileReader.ReadHierarchy(Path.Combine(fileroot, "hierarchy.txt")).ToArray();
             ////var m = GeoFileReader.ReadAlternateNames(Path.Combine(fileroot, "alternateNames.txt")).ToDictionary(k => k.Id);
             //var n = GeoFileReader.ReadUserTags(Path.Combine(fileroot, "userTags.txt")).GroupBy(k => k.GeoNameId).ToDictionary(k => k.Key, k => k.ToArray());
-            //var o = GeoFileReader.ReadBuiltInFeatureClasses().ToDictionary(k => k.Class);
+            var o = GeoFileReader.ReadBuiltInFeatureClasses().ToDictionary(k => k.Class);
 
             //var t = new KDTree.KDTree<ExtendedGeoName>(c.Values.Where(p => (p.FeatureClass == "P" && p.FeatureCode.StartsWith("PPL")) || (p.FeatureClass == "A" && p.FeatureCode.StartsWith("ADM"))));
 

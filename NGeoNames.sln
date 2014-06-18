@@ -16,7 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E63B5C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5AA06099-00A1-4527-944E-1A69E498D1FE}"
 	ProjectSection(SolutionItems) = preProject
+		buildnugetpackage.cmd = buildnugetpackage.cmd
+		icon.png = icon.png
 		LICENSE = LICENSE
+		NGeoNames.nuspec = NGeoNames.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject

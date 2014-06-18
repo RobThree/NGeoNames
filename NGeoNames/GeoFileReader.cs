@@ -3,6 +3,7 @@ using NGeoNames.Parsers;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 
 namespace NGeoNames
 {
@@ -132,7 +133,14 @@ namespace NGeoNames
 
         public static IEnumerable<Continent> ReadBuiltInContinents()
         {
-            return new GeoFileReader().ReadRecords<Continent>(@"resources\continentCodes.txt", new ContinentParser());
+            return ReadBuiltInResource<Continent>("continentCodes", new ContinentParser());
+        }
+
+        private static IEnumerable<T> ReadBuiltInResource<T>(string name, IParser<T> parser)
+        {
+            using (var s = new MemoryStream(parser.Encoding.GetBytes(Properties.Resources.ResourceManager.GetString(name))))
+                foreach (var i in new GeoFileReader().ReadRecords<T>(s, parser))
+                    yield return i;
         }
 
         public static IEnumerable<Continent> ReadContinents(string filename)
@@ -157,7 +165,7 @@ namespace NGeoNames
 
         public static IEnumerable<FeatureClass> ReadBuiltInFeatureClasses()
         {
-            return new GeoFileReader().ReadRecords<FeatureClass>(@"resources\featureClasses_en.txt", new FeatureClassParser());
+            return ReadBuiltInResource<FeatureClass>("featureClasses_en", new FeatureClassParser());
         }
 
         public static IEnumerable<FeatureClass> ReadFeatureClasses(string filename)
