@@ -28,3 +28,5 @@ var results = reversegeocoder.RadialSearch(amsterdam, 250);  //Locate 250 geo-it
 foreach (var r in results)
     Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}, {1} {2} ({3:F4}Km)", r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam)));
 ```
+
+[![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
