@@ -19,6 +19,11 @@
         /// </summary>
         public double Longitude { get; set; }
 
+        public double DistanceTo(double lat, double lng)
+        {
+            return GeoUtil.DistanceTo(this, new GeoName { Latitude = lat, Longitude = lng });
+        }
+
         public double DistanceTo(GeoName loc)
         {
             return GeoUtil.DistanceTo(this, loc);
