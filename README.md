@@ -2,18 +2,18 @@
 
 Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). Uses [KdTree](https://github.com/codeandcats/KdTree).
 
-This library provides classes for downloading and parsing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like NearestNeighbourSearch and RadialSearch on the downloaded dataset(s).
+This library provides classes for downloading and parsing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
 
 This library is available as [NuGet package](https://www.nuget.org/packages/NGeoNames/).
 
 ## Basic usage / example
 
 ```c#
-var datadirectory = @"D:\test\geo";
+var datadirectory = @"D:\test\geo\";
 
 //Download file (optional; you can point a GeoFileReader to existing files ofcourse)
 var downloader = new GeoFileDownloader();
-downloader.DownloadFile("NL.txt", datadirectory);    //Download NL.txt to D:\foo\bar
+downloader.DownloadFile("NL.txt", datadirectory);    //Download NL.txt to D:\test\geo\
 
 //Read NL.txt file to memory
 var cities = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadirectory, "NL.txt")).ToArray();   //"Materialize" file to memory by calling ToArray()
@@ -28,5 +28,9 @@ var results = reversegeocoder.RadialSearch(amsterdam, 250);  //Locate 250 geo-it
 foreach (var r in results)
     Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}, {1} {2} ({3:F4}Km)", r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam)));
 ```
+
+## Project status
+
+Currently I'm adding (better) unittests. These will also serve a second purpose of demonstrating the usage of the library. As soon as I'm happy with the unittests I will add more documentation to this readme.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
