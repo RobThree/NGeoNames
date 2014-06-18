@@ -27,8 +27,7 @@ namespace NGeoNames
         public ReverseGeoCode(IEnumerable<T> geonames)
         {
             _tree = new KdTree.KdTree<double, T>(3, new DoubleMath());
-            foreach (var i in geonames)
-                this.Add(i);
+            this.AddRange(geonames);
 
             this.Balance();
         }
@@ -36,6 +35,12 @@ namespace NGeoNames
         public void Add(T node)
         {
             _tree.Add(GetCoord(node), node);
+        }
+
+        public void AddRange(IEnumerable<T> nodes)
+        {
+            foreach (var i in nodes)
+                this.Add(i);
         }
 
         public void Balance()
