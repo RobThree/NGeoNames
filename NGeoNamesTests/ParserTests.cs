@@ -71,7 +71,7 @@ namespace NGeoNamesTests
         [TestMethod]
         public void AlternateNamesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadAlternateNames(@"testdata\alternateNames.txt").ToArray();
+            var target = GeoFileReader.ReadAlternateNames(@"testdata\test_alternateNames.txt").ToArray();
             Assert.AreEqual(17, target.Length);
 
             Assert.AreEqual("رودخانه زاکلی", target[0].Name);
@@ -152,7 +152,7 @@ namespace NGeoNamesTests
         [TestMethod]
         public void CountryInfoParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadCountryInfo(@"testdata\countryInfo.txt").ToArray();
+            var target = GeoFileReader.ReadCountryInfo(@"testdata\test_countryInfo.txt").ToArray();
             Assert.AreEqual(2, target.Length);  //Should've skipped comment lines
 
             Assert.AreEqual("BZ", target[0].ISO_Alpha2);
@@ -196,15 +196,95 @@ namespace NGeoNamesTests
             Assert.AreEqual("XXX", target[1].EquivalentFipsCode);
         }
 
-
         //TODO: ExtendedGeoNameParser
-        //TODO: FeatureClassParser
-        //TODO: FeatureCodeParser
+
+        [TestMethod]
+        public void FeatureCodeParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadFeatureCodes(@"testdata\test_featureCodes_en.txt").ToArray();
+            Assert.AreEqual(3, target.Length);
+
+            //A.ADM1 should result in a "A" class and "ADM1" code
+            Assert.AreEqual("A", target[0].Class);
+            Assert.AreEqual("ADM1", target[0].Code);
+
+            Assert.AreEqual("first-order administrative division", target[0].Name);
+            Assert.AreEqual("a primary administrative division of a country, such as a state in the United States", target[0].Description);
+
+            ///When no dot in the featurecode is found, the class property should contain the entire string and code property should be null
+            Assert.AreEqual("XXX", target[1].Class);
+            Assert.IsNull(target[1].Code);
+            
+            //When the featurecode is "null" both the code and class property should be null
+            Assert.IsNull(target[2].Class);
+            Assert.IsNull(target[2].Code);
+        }
+
         //TODO: GeoNameParser
-        //TODO: HierarchyParser
-        //TODO: IsoLanguageCodeParser
+        [TestMethod]
+        public void HierarchyParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadHierarchy(@"testdata\test_hierarchy.txt").ToArray();
+            Assert.AreEqual(4, target.Length); 
+
+            //"Normal" record
+            Assert.AreEqual(6295630, target[0].ParentId);
+            Assert.AreEqual(6255146, target[0].ChildId);
+            Assert.AreEqual("ADM", target[0].Type);
+
+            //Zero-child
+            Assert.AreEqual(6255149, target[1].ParentId);
+            Assert.AreEqual(0, target[1].ChildId);
+            Assert.AreEqual("ADM", target[1].Type);
+
+            //No-type
+            Assert.AreEqual(672027, target[2].ParentId);
+            Assert.AreEqual(663875, target[2].ChildId);
+            Assert.AreEqual(string.Empty, target[2].Type);
+
+            //-1 parent
+            Assert.AreEqual(-1, target[3].ParentId);
+            Assert.AreEqual(3623365, target[3].ChildId);
+            Assert.AreEqual(string.Empty, target[3].Type);
+        }
+
+        [TestMethod]
+        public void IsoLanguageCodeParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadISOLanguageCodes(@"testdata\test_iso-languagecodes.txt").ToArray();
+            Assert.AreEqual(2, target.Length);  //First line in file should've been skipped
+
+            
+            Assert.AreEqual("alw", target[0].ISO_639_3);
+            Assert.AreEqual(string.Empty, target[0].ISO_639_2);
+            Assert.AreEqual(string.Empty, target[0].ISO_639_1);
+            Assert.AreEqual("Alaba-K’abeena", target[0].LanguageName);
+
+            Assert.AreEqual("zul", target[1].ISO_639_3); 
+            Assert.AreEqual("zul", target[1].ISO_639_2);    
+            Assert.AreEqual("zu", target[1].ISO_639_1);
+            Assert.AreEqual("Zulu", target[1].LanguageName);
+        }
+
         //TODO: TimeZoneParser
-        //TODO: UserTagParser
+
+        [TestMethod]
+        public void UserTagParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadUserTags(@"testdata\test_userTags.txt").ToArray();
+            Assert.AreEqual(3, target.Length);
+
+            //"Normal" tag
+            Assert.AreEqual(2599253, target[0].GeoNameId);
+            Assert.AreEqual("opengeodb", target[0].Tag);
+
+            //Tags contain all sorts of randum stuff like URLs
+            Assert.AreEqual(6255065, target[1].GeoNameId);
+            Assert.AreEqual("http://de.wikipedia.org/wiki/Gotthardgebäude", target[1].Tag);
+
+            Assert.AreEqual(6941058, target[2].GeoNameId);
+            Assert.AreEqual("lyžařské", target[2].Tag);
+        }
         
         [TestMethod]
         public void CustomParser_IsUsedCorrectly()
