@@ -50,7 +50,7 @@ namespace NGeoNames
 
         public IEnumerable<T> RadialSearch(double lat, double lng, int maxcount)
         {
-            return this.RadialSearch(LatLonToDummyGeo(lat, lng), maxcount);
+            return this.RadialSearch(CreateFromLatLong(lat, lng), maxcount);
         }
 
         public IEnumerable<T> RadialSearch(T center, int maxcount)
@@ -60,7 +60,7 @@ namespace NGeoNames
 
         public IEnumerable<T> RadialSearch(double lat, double lng, double radius)
         {
-            return this.RadialSearch(LatLonToDummyGeo(lat, lng), radius);
+            return this.RadialSearch(CreateFromLatLong(lat, lng), radius);
         }
 
         public IEnumerable<T> RadialSearch(T center, double radius)
@@ -70,7 +70,7 @@ namespace NGeoNames
 
         public IEnumerable<T> RadialSearch(double lat, double lng, double radius, int maxcount)
         {
-            return this.RadialSearch(LatLonToDummyGeo(lat, lng), radius, maxcount);
+            return this.RadialSearch(CreateFromLatLong(lat, lng), radius, maxcount);
         }
 
         public IEnumerable<T> RadialSearch(T center, double radius, int maxcount)
@@ -80,12 +80,12 @@ namespace NGeoNames
 
         public IEnumerable<T> NearestNeighbourSearch(double lat, double lng)
         {
-            return this.NearestNeighbourSearch(LatLonToDummyGeo(lat, lng), _tree.Count);
+            return this.NearestNeighbourSearch(CreateFromLatLong(lat, lng), _tree.Count);
         }
 
         public IEnumerable<T> NearestNeighbourSearch(double lat, double lng, int maxcount)
         {
-            return this.NearestNeighbourSearch(LatLonToDummyGeo(lat, lng), maxcount);
+            return this.NearestNeighbourSearch(CreateFromLatLong(lat, lng), maxcount);
         }
 
         public IEnumerable<T> NearestNeighbourSearch(T center)
@@ -98,13 +98,27 @@ namespace NGeoNames
             return _tree.GetNearestNeighbours(GetCoord(center), maxcount).Select(v => v.Value);
         }
 
-        private static T LatLonToDummyGeo(double lat, double lng) {
+        public T CreateFromLatLong(double lat, double lng) {
+            return this.CreateFromLatLong(lat, lng, 0);
+        }
+        public T CreateFromLatLong(double lat, double lng, int id)
+        {
+            return this.CreateFromLatLong(lat, lng, id, null);
+        }
+
+        public T CreateFromLatLong(double lat, double lng, string name)
+        {
+            return this.CreateFromLatLong(lat, lng, 0, name);
+        }
+
+        public T CreateFromLatLong(double lat, double lng, int id, string name)
+        {
             return new T()
             {
                 Latitude = lat,
                 Longitude = lng,
-                Name = null,
-                Id = 0
+                Name = name,
+                Id = id
             };
         }
 
