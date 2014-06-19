@@ -25,7 +25,8 @@ namespace NGeoNames.Parsers
             {
                 Id = int.Parse(fields[0]),
                 GeoNameId = int.Parse(fields[1]),
-                ISOLanguage = fields[2],
+                ISOLanguage = fields[2].Length <= 3 ? fields[2] : null,
+                Type = fields[2].Length <= 3 ? null : fields[2],
                 Name = fields[3],
                 IsPreferredName = fields[4].Equals("1"),
                 IsShortName = fields[5].Equals("1"),

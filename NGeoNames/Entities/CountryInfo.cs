@@ -6,6 +6,9 @@
         public string ISO_Alpha2 { get; set; }
         public string ISO_Alpha3 { get; set; }
         public string ISO_Numeric { get; set; }
+        /// <summary>
+        /// Federal Information Processing Standards
+        /// </summary>
         public string FIPS { get; set; }
         public string Country { get; set; }
         public string Capital { get; set; }

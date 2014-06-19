@@ -1,0 +1,17 @@
+2488123	4	fa	رودخانه زاکلی				
+8078498	12	link	http://en.wikipedia.org/wiki/Takht-e_Qeysar				
+3810073	523619		Нагольная				
+9189113	1616332	th	บ้านน้ำฉ่า				
+8196652	2648438	ko	글렌로시스				
+7636553	2649571	post	TW13				
+7481730	2649672	iata	FAB				
+1886364	2660644	icao	LSGG				
+5906078	4041549	faac	GSN				
+5906077	4041549		Saipan International Airport				
+2989172	4041549	link	http://en.wikipedia.org/wiki/Saipan_International_Airport				
+2259865	6559563	fr_1793	Ile-de-la-Liberté				
+2197207	6559568	bo	ཞིང་རི				
+8488823	6615458	abbr	TRTO				
+2256760	6615468	en	The Jekyll & Hyde Pub	1	1		
+2299521	6621102	it	Torre Fiumicelli			1	
+8066371	6639742	fr	Abbaye Saint-Antoine-des-Champs				1

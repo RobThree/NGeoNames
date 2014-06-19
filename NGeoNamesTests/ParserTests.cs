@@ -1,13 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames;
-using NGeoNames.Entities;
 using NGeoNames.Parsers;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NGeoNamesTests
 {
@@ -72,6 +68,144 @@ namespace NGeoNamesTests
             Assert.AreEqual(0, target[1].GeoNameId);
         }
 
+        [TestMethod]
+        public void AlternateNamesParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadAlternateNames(@"testdata\alternateNames.txt").ToArray();
+            Assert.AreEqual(17, target.Length);
+
+            Assert.AreEqual("رودخانه زاکلی", target[0].Name);
+            Assert.AreEqual("fa", target[0].ISOLanguage);       //Ensure we have an ISO code
+            Assert.IsNull(target[0].Type);                      //When ISO code is specified, type should be null
+            Assert.AreEqual(false, target[0].IsPreferredName);  //All these...
+            Assert.AreEqual(false, target[0].IsColloquial);     //...bits should...
+            Assert.AreEqual(false, target[0].IsShortName);      //...be set...
+            Assert.AreEqual(false, target[0].IsHistoric);       //...to false
+
+            Assert.AreEqual("http://en.wikipedia.org/wiki/Takht-e_Qeysar", target[1].Name);
+            Assert.IsNull(target[1].ISOLanguage);           //Should be null when a type is specified (e.g. length of ISO code field > 3)
+            Assert.AreEqual("link", target[1].Type);        //Ensure we have a type
+
+            Assert.AreEqual("Нагольная", target[2].Name);
+
+            Assert.AreEqual("บ้านน้ำฉ่า", target[3].Name);
+            Assert.AreEqual("th", target[3].ISOLanguage);
+
+            Assert.AreEqual("글렌로시스", target[4].Name);
+            Assert.AreEqual("ko", target[4].ISOLanguage);
+
+            //Postal code
+            Assert.AreEqual("TW13", target[5].Name);
+            Assert.AreEqual("post", target[5].Type);
+
+            //IATA - International Air Transport Association; airport code
+            Assert.AreEqual("FAB", target[6].Name);
+            Assert.AreEqual("iata", target[6].Type);
+
+            //ICAO - International Civil Aviation Organization airport code
+            Assert.AreEqual("LSGG", target[7].Name);
+            Assert.AreEqual("icao", target[7].Type);
+
+            //ICAO - International Civil Aviation Organization airport code
+            Assert.AreEqual("GSN", target[8].Name);
+            Assert.AreEqual("faac", target[8].Type);
+
+            Assert.AreEqual("Saipan International Airport", target[9].Name);
+            Assert.AreEqual("", target[9].ISOLanguage); //No language,...
+            Assert.IsNull(target[9].Type);              //...no type
+
+            //Link
+            Assert.AreEqual("http://en.wikipedia.org/wiki/Saipan_International_Airport", target[10].Name);
+            Assert.AreEqual("link", target[10].Type);
+
+            //fr_1793 - French Revolution name
+            Assert.AreEqual("Ile-de-la-Liberté", target[11].Name);
+            Assert.AreEqual("fr_1793", target[11].Type);
+            
+            Assert.AreEqual("ཞིང་རི", target[12].Name);
+            Assert.AreEqual("bo", target[12].ISOLanguage);
+
+            //Abbreviation
+            Assert.AreEqual("TRTO", target[13].Name);
+            Assert.AreEqual("abbr", target[13].Type);
+
+            //Check flags/bits
+            Assert.AreEqual("The Jekyll & Hyde Pub", target[14].Name);
+            Assert.AreEqual(true, target[14].IsPreferredName);
+            Assert.AreEqual(false, target[14].IsColloquial);
+            Assert.AreEqual(true, target[14].IsShortName);
+            Assert.AreEqual(false, target[14].IsHistoric);
+
+            Assert.AreEqual("Torre Fiumicelli", target[15].Name);
+            Assert.AreEqual(false, target[15].IsPreferredName);
+            Assert.AreEqual(true, target[15].IsColloquial);
+            Assert.AreEqual(false, target[15].IsShortName);
+            Assert.AreEqual(false, target[15].IsHistoric);
+
+            Assert.AreEqual("Abbaye Saint-Antoine-des-Champs", target[16].Name);
+            Assert.AreEqual(false, target[16].IsPreferredName);
+            Assert.AreEqual(false, target[16].IsColloquial);
+            Assert.AreEqual(false, target[16].IsShortName);
+            Assert.AreEqual(true, target[16].IsHistoric);
+        }
+
+        [TestMethod]
+        public void CountryInfoParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadCountryInfo(@"testdata\countryInfo.txt").ToArray();
+            Assert.AreEqual(2, target.Length);  //Should've skipped comment lines
+
+            Assert.AreEqual("BZ", target[0].ISO_Alpha2);
+            Assert.AreEqual("BLZ", target[0].ISO_Alpha3);
+            Assert.AreEqual("084", target[0].ISO_Numeric);  //Check if leading zeroes are preserved
+            Assert.AreEqual("BH", target[0].FIPS);
+            Assert.AreEqual("Belize", target[0].Country);
+            Assert.AreEqual("Belmopan", target[0].Capital);
+            Assert.AreEqual(22966, target[0].Area);
+            Assert.AreEqual(314522, target[0].Population);
+            Assert.AreEqual("NA", target[0].Continent);
+            Assert.AreEqual(".bz", target[0].Tld);
+            Assert.AreEqual("BZD", target[0].CurrencyCode);
+            Assert.AreEqual("Dollar", target[0].CurrencyName);
+            Assert.AreEqual("+501", target[0].Phone);       //Intl. dialingcodes should be prefixed with a + even though they're not in the file
+            Assert.AreEqual(string.Empty, target[0].PostalCodeFormat);
+            Assert.AreEqual(string.Empty, target[0].PostalCodeRegex);
+            CollectionAssert.AreEqual(new[] { "en-BZ", "es" }, target[0].Languages);
+            Assert.AreEqual(3582678, target[0].GeoNameId);
+            CollectionAssert.AreEqual(new[] { "GT", "MX" }, target[0].Neighbours);
+            Assert.AreEqual(string.Empty, target[0].EquivalentFipsCode);
+
+            Assert.AreEqual("XX", target[1].ISO_Alpha2);
+            Assert.AreEqual("XXX", target[1].ISO_Alpha3);
+            Assert.AreEqual("999", target[1].ISO_Numeric);
+            Assert.AreEqual(string.Empty, target[1].FIPS);
+            Assert.AreEqual("MADE UP COUNTRY", target[1].Country);
+            Assert.AreEqual(string.Empty, target[1].Capital);
+            Assert.AreEqual(0, target[1].Area);
+            Assert.AreEqual(0, target[1].Population);
+            Assert.AreEqual("EU", target[1].Continent);
+            Assert.AreEqual(".XX", target[1].Tld);
+            Assert.AreEqual("XXX", target[1].CurrencyCode);
+            Assert.AreEqual("X-Dollar", target[1].CurrencyName);
+            Assert.AreEqual("+1", target[1].Phone);       //Intl. dialingcodes should be prefixed with a + even though they're not in the file
+            Assert.AreEqual("@# #@@|@## #@@|@@# #@@|@@## #@@|@#@ #@@|@@#@ #@@|GIR0AA", target[1].PostalCodeFormat);
+            Assert.AreEqual(@"^(([A-Z]\d{2}[A-Z]{2})|([A-Z]\d{3}[A-Z]{2})|([A-Z]{2}\d{2}[A-Z]{2})|([A-Z]{2}\d{3}[A-Z]{2})|([A-Z]\d[A-Z]\d[A-Z]{2})|([A-Z]{2}\d[A-Z]\d[A-Z]{2})|(GIR0AA))$", target[1].PostalCodeRegex);
+            Assert.AreEqual(0, target[1].Languages.Length);
+            Assert.IsNull(target[1].GeoNameId);
+            Assert.AreEqual(0, target[1].Neighbours.Length);
+            Assert.AreEqual("XXX", target[1].EquivalentFipsCode);
+        }
+
+
+        //TODO: ExtendedGeoNameParser
+        //TODO: FeatureClassParser
+        //TODO: FeatureCodeParser
+        //TODO: GeoNameParser
+        //TODO: HierarchyParser
+        //TODO: IsoLanguageCodeParser
+        //TODO: TimeZoneParser
+        //TODO: UserTagParser
+        
         [TestMethod]
         public void CustomParser_IsUsedCorrectly()
         {
