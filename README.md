@@ -6,7 +6,7 @@ This library provides classes for downloading and parsing [files from GeoNames.o
 
 This library is available as [NuGet package](https://www.nuget.org/packages/NGeoNames/).
 
-## Basic usage / example
+## Basic usage / example / "quick start"
 
 ```c#
 var datadirectory = @"D:\test\geo\";
@@ -28,6 +28,26 @@ var results = reversegeocoder.RadialSearch(amsterdam, 250);  // Locate 250 geo-i
 foreach (var r in results)
     Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}, {1} {2} ({3:F4}Km)", r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam)));
 ```
+
+## Overview
+
+The library provides for the following main operations:
+
+1. [Downloading / retrieving data from geonames.org](#downloading)
+2. [Reading / parsing geonames.org data](#parsing)
+3. [Utilizing geonames.org data](#utilizing)
+
+### <a name="downloading"></a>Downloading / retrieving data from geonames.org
+
+{documentation and code samples to follow}
+
+### <a name="parsing"></a>Reading / parsing geonames.org data
+
+{documentation and code samples to follow}
+
+### <a name="utilizing"></a>Utilizing geonames.org data
+
+{documentation and code samples to follow}
 
 ## Project status
 
