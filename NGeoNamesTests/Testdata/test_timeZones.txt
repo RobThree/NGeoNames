@@ -1,0 +1,6 @@
+CountryCode	TimeZoneId	GMT offset 1. Jan 2014	DST offset 1. Jul 2014	rawOffset (independant of DST)
+MR	Africa/Nouakchott	0.0	0.0	0.0
+US	America/Adak	-10.0	-9.0	-10.0
+AU	Australia/Darwin	9.5	9.5	9.5
+AU	Australia/Eucla	8.75	8.75	8.75
+TZ	Africa/Dar_es_Salaam	3.0	3.0	3.0

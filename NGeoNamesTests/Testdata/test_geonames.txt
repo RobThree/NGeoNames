@@ -1,0 +1,2 @@
+1136469	Khōst	Khost	Khost,Khowst,Khōst,Matun,Matūn,khwst,mtwn,Хост,خوست,متون	33.33951	69.92041	P	PPLA	AF		37				96123		1183	Asia/Kabul	2012-01-16
+3865840	Añatuya	Anatuya	Anatuya,Añatuya,Unatuya,Uñatuya	-28.46064	-62.83472	P	PPLA2	AR		22				20261		111	America/Argentina/Cordoba	2014-03-07

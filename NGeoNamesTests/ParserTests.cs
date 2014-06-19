@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames;
 using NGeoNames.Parsers;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -121,7 +122,7 @@ namespace NGeoNamesTests
             //fr_1793 - French Revolution name
             Assert.AreEqual("Ile-de-la-Liberté", target[11].Name);
             Assert.AreEqual("fr_1793", target[11].Type);
-            
+
             Assert.AreEqual("ཞིང་རི", target[12].Name);
             Assert.AreEqual("bo", target[12].ISOLanguage);
 
@@ -196,7 +197,402 @@ namespace NGeoNamesTests
             Assert.AreEqual("XXX", target[1].EquivalentFipsCode);
         }
 
-        //TODO: ExtendedGeoNameParser
+        [TestMethod]
+        public void ExtendedGeoNameParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_extendedgeonames.txt").ToArray();
+            Assert.AreEqual(6, target.Length);
+
+            //No alternate names/countrycodes and empty admincodes
+            Assert.AreEqual(string.Empty, target[0].Admincodes[0]);
+            Assert.AreEqual(string.Empty, target[0].Admincodes[1]);
+            Assert.AreEqual(string.Empty, target[0].Admincodes[2]);
+            Assert.AreEqual(string.Empty, target[0].Admincodes[3]);
+            Assert.AreEqual(0, target[0].AlternateCountryCodes.Length);
+            Assert.AreEqual(0, target[0].AlternateNames.Length);
+
+            //Specified alternate names/countrycodes and specified admincodes
+            Assert.AreEqual("09", target[1].Admincodes[0]);
+            Assert.AreEqual("900", target[1].Admincodes[1]);
+            Assert.AreEqual("923", target[1].Admincodes[2]);
+            Assert.AreEqual("2771781", target[1].Admincodes[3]);
+            Assert.AreEqual(1, target[1].AlternateCountryCodes.Length);
+            Assert.AreEqual(2, target[1].AlternateNames.Length);
+
+            //Lots of alternate countrycodes/alternatenames
+            CollectionAssert.AreEqual(new[] { "DZ", "LY", "MR", "TN", "EG", "MA", "EH", "ML", "NE", "TD", "SD" }, target[2].AlternateCountryCodes);
+            #region Charset test
+            CollectionAssert.AreEqual(new[] { 
+                "An Bhoisnia agus Heirseagovein",
+                "An Bhoisnia agus Heirseagóvéin",
+                "An Bhoisnia-Heirseagaivein",
+                "An Bhoisnia-Heirseagaivéin",
+                "Bhosnia le Herzegovina",
+                "Bo-xni-a Hec-xe-go-vi-na",
+                "Bo-xni-a Hec-xe-go-vi-na (Bosnia va Herzegovina)",
+                "Bos'nija i Gercagavina",
+                "Bosenia me Hesegowina",
+                "Bosini mpe Hezegovine",
+                "Bosini mpé Hezegovine",
+                "Bosiniya na Herigozevine",
+                "Bosiniya na Herizegovina",
+                "Bosmudin boln Khercegudin Orn",
+                "Bosna",
+                "Bosna Hersek",
+                "Bosna a Hercegovina",
+                "Bosna a Hercegowina",
+                "Bosna agus Hearsagobhana",
+                "Bosna doo Hetsog Bikeyah",
+                "Bosna dóó Hetsog Bikéyah",
+                "Bosna i Hercegovina",
+                "Bosna i Khercegovina",
+                "Bosna in Hercegovina",
+                "Bosna kap Hercegovina",
+                "Bosna u Hersek",
+                "Bosna va Hercegovina",
+                "Bosna ve Hersek",
+                "Bosna và Hercegovina",
+                "Bosna-Gercegovina",
+                "Bosna-Hersek",
+                "Bosnaen e Haerzegovaen",
+                "Bosneja i Hercegovina",
+                "Bosneje er Hercuogovena",
+                "Bosni",
+                "Bosni a Gercegovina a",
+                "Bosni aemae Gercegovinae",
+                "Bosni ak Erzegovin",
+                "Bosni ba Gercegovina",
+                "Bosni ba Khercegovina",
+                "Bosni tata Gercegovina",
+                "Bosnia",
+                "Bosnia & Herzegovina",
+                "Bosnia - Erzegobine",
+                "Bosnia - Hercegovina - Bosna i Khercegovina",
+                "Bosnia - Hercegovina - Босна и Херцеговина",
+                "Bosnia Ercegovina",
+                "Bosnia Erzegovina",
+                "Bosnia Herzegovina",
+                "Bosnia Herzogovina",
+                "Bosnia Hèrzègovina",
+                "Bosnia a Hercegovina",
+                "Bosnia a Herzegovina",
+                "Bosnia aamma Herzegovina",
+                "Bosnia and Hercegovina",
+                "Bosnia and Herzegovina",
+                "Bosnia as Herzegovina",
+                "Bosnia at Herzegovina",
+                "Bosnia ati Herjegofina",
+                "Bosnia dan Herzegovina",
+                "Bosnia e Ercegovina",
+                "Bosnia e Erzegovina",
+                "Bosnia e Erzegòvina",
+                "Bosnia e Hercegovina",
+                "Bosnia e Hertsegovina",
+                "Bosnia e Herzegovina",
+                "Bosnia ed Erzegovina",
+                "Bosnia et Herzegovina",
+                "Bosnia ev Hercʻegovina",
+                "Bosnia ha Herzegovina",
+                "Bosnia i Gercagavina",
+                "Bosnia i Gercogovina",
+                "Bosnia i Hercegovina",
+                "Bosnia i Hercegowina",
+                "Bosnia i Hersegovina",
+                "Bosnia ihuan Hertzegovina",
+                "Bosnia ja Hercegovina",
+                "Bosnia ja Hertsegoviina",
+                "Bosnia ja Hertsegovina",
+                "Bosnia ja Herzegovina",
+                "Bosnia jeung Herzegovina",
+                "Bosnia jeung Hérzégovina",
+                "Bosnia kai Erzegobine",
+                "Bosnia ken Herzegovina",
+                "Bosnia kple Herzergovina nutome",
+                "Bosnia ma Herzegovina",
+                "Bosnia na Erzegovina",
+                "Bosnia na Herzegovina",
+                "Bosnia na Hezegovina",
+                "Bosnia ne Hɛzegovina",
+                "Bosnia og Hercegovina",
+                "Bosnia og Hersegovina",
+                "Bosnia si Hertegovina",
+                "Bosnia sy Herzegovina",
+                "Bosnia ta Gercogovina",
+                "Bosnia tan Hersegobina",
+                "Bosnia ug Herzegovina",
+                "Bosnia y Hercegovina",
+                "Bosnia y Herzegovina",
+                "Bosnia è Erzegovina",
+                "Bosnia īhuān Hertzegovina",
+                "Bosnia și Herțegovina",
+                "Bosnia-Ercegovina",
+                "Bosnia-Erzegovina",
+                "Bosnia-Hercegovina",
+                "Bosnia-Hersegovina",
+                "Bosnia-Hertsegovina",
+                "Bosnia-Herzegovina",
+                "Bosnia-ha-Herzegovina",
+                "Bosnie Herzegovina",
+                "Bosnie an Herzegovinae",
+                "Bosnie en Herzegovina",
+                "Bosnie en Herzegowina",
+                "Bosnie-Erzegovine",
+                "Bosnie-Hercegovina",
+                "Bosnie-Herzegovena",
+                "Bosnie-Herzegovina",
+                "Bosnie-Herzegovine",
+                "Bosnie-Herzegowina",
+                "Bosnie-Herzégovine",
+                "Bosnie-Hèrzègovena",
+                "Bosnie-Érzégovine",
+                "Bosniehreh Gercegovinehreh",
+                "Bosnien an Herzegowina",
+                "Bosnien och Hercegovina",
+                "Bosnien un Herzegowina",
+                "Bosnien und Herzegowina",
+                "Bosnien-Hercegovina",
+                "Bosnien-Herzegowina",
+                "Bosnii Hersegowiin",
+                "Bosnii da Gercegovin",
+                "Bosnii na Herzegovinni",
+                "Bosnij da Gercegovina",
+                "Bosnija",
+                "Bosnija bla Gercegovina",
+                "Bosnija da Gercegovina",
+                "Bosnija di Khercegovina",
+                "Bosnija i Gercegovina",
+                "Bosnija ir Hercegovina",
+                "Bosnija no Gercegovina",
+                "Bosnija un Hercegovina",
+                "Bosnija uonna Khercegovina",
+                "Bosnijo e Hercegowina",
+                "Bosnikondre",
+                "Bosnio kaj Hercegovino",
+                "Bosnio-Hercegovino",
+                "Bosniska a Hercegowina",
+                "Bosniska-Hercegowinska",
+                "Bosniya",
+                "Bosniya Harzagobina",
+                "Bosniya Hersigoviina",
+                "Bosniya ham Gertsegovina",
+                "Bosniya hem Hertegovina",
+                "Bosniya hem Herțegovina",
+                "Bosniya u Herzegovina",
+                "Bosniya va Gersegovina",
+                "Bosniya və Herseqovina",
+                "Bosniya və Herzokovina",
+                "Bosniya we Gersegowina",
+                "Bosniya û Herzegovîna",
+                "Bosnië Herzegovina",
+                "Bosnië en Herzegovina",
+                "Bosnië en Herzegowina",
+                "Bosnië-Hercegovina",
+                "Bosnië-Herzegovina",
+                "Bosnië-Herzegowina",
+                "Bosniýa we Gersegowina",
+                "Bosni–Hercegovina",
+                "Bosnja dhe Hercegovina",
+                "Bosnje",
+                "Bosnya a Hersegowina",
+                "Bosnya asin Hersegobina",
+                "Bosnya ngan Hersegovina",
+                "Bosnän e Härzegovän",
+                "Bosnía og Hersegóvína",
+                "Bosnïi na Herzegovînni",
+                "Bosnėjė ėr Hercuogovėna",
+                "Bossnije-Haezzejovina",
+                "Bosznia es Hercegovina",
+                "Bosznia és Hercegovina",
+                "Bosznia-Hercegovina",
+                "Boteniya me Erdegobina",
+                "Boziniya Hezegovina",
+                "Bozni-Ɛrizigovini",
+                "Boznia ne Herzegovina",
+                "Boznija Herzegovina",
+                "Boznija u Herzegovina",
+                "Boßnije-Häzzejovina",
+                "Bośnia i Hercegowina",
+                "Bośńa a Hercegowina",
+                "Bożnija u Ħerżegovina",
+                "Bożnija Ħerżegovina",
+                "Busna-Hirsiquwina",
+                "Bòsnia Erzegovina",
+                "Bòsnia e Ercegovina",
+                "Bòsnia e Erzegòvina",
+                "Bòsnia i Hercegovina",
+                "Bòsnia-Erçegòvina",
+                "Bòsnijô ë Hercegòwina",
+                "Bósnia Ercegovina",
+                "Bósnia e Herzegovina",
+                "Bósnia-Herzegóvina",
+                "Bósníà àti Hẹrjẹgòfínà",
+                "Bô-xni-a Héc-xê-gô-vi-na",
+                "Bô-xni-a Héc-xê-gô-vi-na (Bosnia và Herzegovina)",
+                "IBhosinya ne Hezegovi",
+                "Mbosini ne Hezegovine",
+                "Narodna Republika Bosna i Hercegovina",
+                "Orileede Bosinia ati Etisegofina",
+                "Orílẹ́ède Bọ̀síníà àti Ẹtisẹgófínà",
+                "People's Republic of Bosnia and Hercegovina",
+                "People’s Republic of Bosnia and Hercegovina",
+                "Po-su-ni-a lau Het-set-ko-vi-na",
+                "Pongia-Herekomina",
+                "Posinia mo Hesikovinia",
+                "Posinia mo Hesikōvinia",
+                "Pô-sṳ-nì-â lâu Het-set-kô-vì-ná",
+                "Pōngia-Herekōmina",
+                "Republic of Bosnia and Herzegovina",
+                "Republika Bosna i Hercegovina",
+                "Socialist Republic of Bosnia and Hercegovina",
+                "Socijalisticka Republika Bosna i Hercegovina",
+                "Socijalistička Republika Bosna i Hercegovina",
+                "Vonia ha Hesegovina",
+                "Vosnia kai Erzegovini",
+                "albwsnh w alhrsk",
+                "albwsnt w alhrsk",
+                "albwsnt walhrsk",
+                "basaniya baro harjegobhina",
+                "basaniya o harjegobhina",
+                "basaniya'o harjegobhina",
+                "basniya",
+                "basniya mariyu hirjigovina",
+                "bo si ni ya",
+                "bo si ni ya he hei sai ge wei na",
+                "bo si ni ya he hei shan gong he guo",
+                "bosani'a ate harazegovina",
+                "bosani'a ebam harjagobhina",
+                "bosani'a o harjagobhina",
+                "bosaniya harjigovina",
+                "boseunia heleuchegobina",
+                "boseuniaheleuchegobina",
+                "bosnia da hertsegovina",
+                "bosnia do hertsegovina",
+                "bosniya ane harjhegovina",
+                "bosniya ani harjegovina",
+                "bosniya ani harjhagovhina",
+                "bosniya aura harazegovina",
+                "bosniya aura harzegovina", 
+                "bosniya mariyu herjegovina",
+                "bosniya mattu harjegovina",
+                "bosniya mattu herjegovina",
+                "bosniya ra harjagobhina",
+                "bosniya ra harjagobhiniya",
+                "bosniya va harjagovina",
+                "bsny w hrzgwyn",
+                "bwsny hrzgwwyn",
+                "bwsny w hrzgwyn",
+                "bwsnyh whrzgwbynh",
+                "bwsnyyە vە ھېrsېgwvyna",
+                "bwsnʾ whrtsgwbynʾ",
+                "i-Bosnia ne-Herzegovina",
+                "pocuniya ercekovina",
+                "posniya marrum hersikovina",
+                "Βοσνία - Ερζεγοβίνη",
+                "Βοσνία και Ερζεγοβίνη",
+                "Босмудин болн Херцегудин Орн",
+                "Босна",
+                "Босна и Херцеговина",
+                "Босна-Герцеговина",
+                "Босни æмæ Герцеговинæ",
+                "Босни а Герцеговина а",
+                "Босни ба Герцеговина",
+                "Босни ба Херцеговина",
+                "Босни тата Герцеговина",
+                "Босний да Герцеговина",
+                "Босниэрэ Герцеговинэрэ",
+                "Босния",
+                "Босния бла Герцеговина",
+                "Босния ва Ҳерсеговина",
+                "Босния да Герцеговина",
+                "Босния ди Херцеговина",
+                "Босния және Герцеговина",
+                "Босния и Герцеговина",
+                "Босния но Герцеговина",
+                "Босния уонна Херцеговина",
+                "Босния һәм Герцеговина",
+                "Боснія та Герцоговина",
+                "Боснія і Герцагавіна",
+                "Боснія і Герцеговина",
+                "Боснія і Герцеґовина",
+                "Боснія і Герцоговина",
+                "Босьнія і Герцагавіна",
+                "Բոսնիա և Հերցեգովինա",
+                "Բոսնիա-Հերցեգովինա",
+                "באסניע און הערצעגאווינע",
+                "בוסניה והרצגובינה",
+                "البوسنة و الهرسك",
+                "البوسنة والهرسك",
+                "البوسنه و الهرسك",
+                "بسنی و هرزگوین",
+                "بوسنىيە ۋە ھېرسېگوۋىنا",
+                "بوسنی هرزگووین",
+                "بوسنی و هرزگوین",
+                "بوسنیا اور ہرزیگووینا",
+                "بوسنیا تے ہرزیگووینا",
+                "بوسنیا و ہرزیگووینا",
+                "بۆسنیا و ھەرزەگۆڤینا",
+                "ܒܘܣܢܐ ܘ ܗܪܣܟ",
+                "ܒܘܣܢܐ ܘܗܪܬܣܓܘܒܝܢܐ",
+                "ބޮސްނިޔާ އެންޑް ހެރްޒިގޮވީނާ",
+                "बास्निया",
+                "बॉस्निया आणि हर्झगोव्हिना",
+                "बॉस्निया और हर्ज़ेगोविना",
+                "बोसनिया हर्जिगोविना",
+                "बोस्निया अणि हर्जेगोविना",
+                "बोस्निया और हरज़ेगोविना",
+                "बोस्निया र हर्जगोभिना",
+                "बोस्निया र हर्जगोभिनिया",
+                "बोस्निया व हर्जगोविना",
+                "বসনিয়া ও হার্জেগোভিনা",
+                "বসনিয়া বারো হার্জেগোভিনা",
+                "বসনিয়াও হার্জেগোভিনা",
+                "ਬੋਸਨੀਆ ਅਤੇ ਹਰਜ਼ੇਗੋਵੀਨਾ",
+                "બોસ્નિયા અને હર્ઝેગોવિના",
+                "ବୋସନିଆ ଏବଂ ହର୍ଜଗୋଭିନା",
+                "ବୋସନିଆ ଓ ହର୍ଜଗୋଭିନା",
+                "பொசுனியா எர்செகோவினா",
+                "போஸ்னியா மற்றும் ஹெர்ஸிகோவினா",
+                "బాస్నియా మరియు హీర్జిగోవినా",
+                "బోస్నియా మరియు హెర్జెగొవీనా",
+                "ಬೊಸ್ನಿಯ ಮತ್ತು ಹೆರ್ಜೆಗೊವಿನ",
+                "ಬೋಸ್ನಿಯಾ ಮತ್ತು ಹರ್ಜೆಗೋವಿನಾ",
+                "ബോസ്നിയ ഹെർസെഗോവിന",
+                "ബോസ്നിയയും ഹെര്‍സഗോവിനയും",
+                "බොස්නියා සහ හර්සගෝවිනා",
+                "බොස්නියාව සහ හර්සගොවීනාව",
+                "บอสเนียและเฮอร์เซโกวีนา",
+                "ประเทศบอสเนียและเฮอร์เซโกวีนา",
+                "ບັອດສເນຍ ແລະ ເຮີດໂກວິເນຍ",
+                "ປະເທດບົດສະນີແຮກເຊໂກວີນ",
+                "བོསྣི་ཡ་དང་ཧརྫོ་གོ་ཝི་ན།",
+                "བྷོསུ་ནིཡ་དང་ཧར་ཛེ་གྷོ་ཝི་ན།",
+                "ဘော့စနီးယား နှင့် ဟာဇီဂိုဘီးနား",
+                "ဘော့စနီးယားနှင့် ဟာဇီဂိုဗီးနားနိုင်ငံ",
+                "ბოსნია და ჰერცეგოვინა",
+                "ბოსნია დო ჰერცეგოვინა",
+                "ቦስኒያ እና ሄርዞጎቪኒያ",
+                "ቦስኒያና ሄርጸጎቪና",
+                "ᏆᏍᏂᏯ ᎠᎴ ᎲᏤᎪᏫᎾ",
+                "បូស្ន៉ី",
+                "ボスニア・ヘルツェゴビナ",
+                "ボスニア・ヘルツェゴビナ共和国",
+                "波斯尼亚",
+                "波斯尼亚和黑塞哥维那",
+                "波斯尼亚和黑山共和国",
+                "波斯尼亞",
+                "보스니아 헤르체고비나",
+                "보스니아헤르체고비나" 
+            }, target[3].AlternateNames);
+            #endregion
+        
+            //Timezone should NOT have underscores
+            Assert.AreEqual("America/Argentina/Buenos Aires", target[4].Timezone);
+
+            
+            //Other misc checks
+            Assert.AreEqual(new DateTime(2009, 6, 28), target[0].ModificationDate); //DateTime parsing
+            Assert.AreEqual(3812366000, target[5].Population);    //Large (as in: > int.MaxValue) population
+        }
 
         [TestMethod]
         public void FeatureCodeParser_ParsesFileCorrectly()
@@ -214,18 +610,36 @@ namespace NGeoNamesTests
             ///When no dot in the featurecode is found, the class property should contain the entire string and code property should be null
             Assert.AreEqual("XXX", target[1].Class);
             Assert.IsNull(target[1].Code);
-            
+
             //When the featurecode is "null" both the code and class property should be null
             Assert.IsNull(target[2].Class);
             Assert.IsNull(target[2].Code);
         }
 
-        //TODO: GeoNameParser
+        [TestMethod]
+        public void GeoNameParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadGeoNames(@"testdata\test_geonames.txt").ToArray();
+            Assert.AreEqual(2, target.Length);
+
+            //Positive lat/long
+            Assert.AreEqual(1136469, target[0].Id);
+            Assert.AreEqual("Khōst", target[0].Name);
+            Assert.AreEqual(33.33951, target[0].Latitude);
+            Assert.AreEqual(69.92041, target[0].Longitude);
+
+            //Negative lat/long
+            Assert.AreEqual(3865840, target[1].Id);
+            Assert.AreEqual("Añatuya", target[1].Name);
+            Assert.AreEqual(-28.46064, target[1].Latitude);
+            Assert.AreEqual(-62.83472, target[1].Longitude);
+        }
+
         [TestMethod]
         public void HierarchyParser_ParsesFileCorrectly()
         {
             var target = GeoFileReader.ReadHierarchy(@"testdata\test_hierarchy.txt").ToArray();
-            Assert.AreEqual(4, target.Length); 
+            Assert.AreEqual(4, target.Length);
 
             //"Normal" record
             Assert.AreEqual(6295630, target[0].ParentId);
@@ -254,19 +668,54 @@ namespace NGeoNamesTests
             var target = GeoFileReader.ReadISOLanguageCodes(@"testdata\test_iso-languagecodes.txt").ToArray();
             Assert.AreEqual(2, target.Length);  //First line in file should've been skipped
 
-            
+
             Assert.AreEqual("alw", target[0].ISO_639_3);
             Assert.AreEqual(string.Empty, target[0].ISO_639_2);
             Assert.AreEqual(string.Empty, target[0].ISO_639_1);
             Assert.AreEqual("Alaba-K’abeena", target[0].LanguageName);
 
-            Assert.AreEqual("zul", target[1].ISO_639_3); 
-            Assert.AreEqual("zul", target[1].ISO_639_2);    
+            Assert.AreEqual("zul", target[1].ISO_639_3);
+            Assert.AreEqual("zul", target[1].ISO_639_2);
             Assert.AreEqual("zu", target[1].ISO_639_1);
             Assert.AreEqual("Zulu", target[1].LanguageName);
         }
 
-        //TODO: TimeZoneParser
+        [TestMethod]
+        public void TimeZonesParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadTimeZones(@"testdata\test_timeZones.txt").ToArray();
+            Assert.AreEqual(5, target.Length);    //First line in file should've been skipped
+
+            //Zero offsets
+            Assert.AreEqual("MR", target[0].CountryCode);
+            Assert.AreEqual("Africa/Nouakchott", target[0].TimeZoneId);
+            Assert.AreEqual(0, target[0].GMTOffset);
+            Assert.AreEqual(0, target[0].DSTOffset);
+            Assert.AreEqual(0, target[0].RawOffset);
+
+            //Negative offsets
+            Assert.AreEqual("US", target[1].CountryCode);
+            Assert.AreEqual("America/Adak", target[1].TimeZoneId);
+            Assert.AreEqual(-10, target[1].GMTOffset);
+            Assert.AreEqual(-9, target[1].DSTOffset);
+            Assert.AreEqual(-10, target[1].RawOffset);
+
+            //Float offsets
+            Assert.AreEqual("AU", target[2].CountryCode);
+            Assert.AreEqual("Australia/Darwin", target[2].TimeZoneId);
+            Assert.AreEqual(9.5, target[2].GMTOffset);
+            Assert.AreEqual(9.5, target[2].DSTOffset);
+            Assert.AreEqual(9.5, target[2].RawOffset);
+
+            Assert.AreEqual("AU", target[3].CountryCode);
+            Assert.AreEqual("Australia/Eucla", target[3].TimeZoneId);
+            Assert.AreEqual(8.75, target[3].GMTOffset);
+            Assert.AreEqual(8.75, target[3].DSTOffset);
+            Assert.AreEqual(8.75, target[3].RawOffset);
+
+            //TimeZoneId should NOT have underscores
+            Assert.AreEqual("Africa/Dar es Salaam", target[4].TimeZoneId);
+        }
 
         [TestMethod]
         public void UserTagParser_ParsesFileCorrectly()
@@ -285,7 +734,7 @@ namespace NGeoNamesTests
             Assert.AreEqual(6941058, target[2].GeoNameId);
             Assert.AreEqual("lyžařské", target[2].Tag);
         }
-        
+
         [TestMethod]
         public void CustomParser_IsUsedCorrectly()
         {
