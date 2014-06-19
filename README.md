@@ -11,19 +11,19 @@ This library is available as [NuGet package](https://www.nuget.org/packages/NGeo
 ```c#
 var datadirectory = @"D:\test\geo\";
 
-//Download file (optional; you can point a GeoFileReader to existing files ofcourse)
+// Download file (optional; you can point a GeoFileReader to existing files ofcourse)
 var downloader = new GeoFileDownloader();
-downloader.DownloadFile("NL.txt", datadirectory);    //Download NL.txt to D:\test\geo\
+downloader.DownloadFile("NL.txt", datadirectory);    // Download NL.txt to D:\test\geo\
 
-//Read NL.txt file to memory
-var cities = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadirectory, "NL.txt")).ToArray();   //"Materialize" file to memory by calling ToArray()
+// Read NL.txt file to memory
+var cities = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadirectory, "NL.txt")).ToArray();   // "Materialize" file to memory by calling ToArray()
 
-//We're going to use Amsterdam as "search-center"
+// We're going to use Amsterdam as "search-center"
 var amsterdam = cities.Where(n => n.Name.Equals("Amsterdam", StringComparison.OrdinalIgnoreCase) && n.FeatureCode.Equals("PPLC")).First();
 
-//Find first 50 items of interest closest to our center
+// Find first 50 items of interest closest to our center
 var reversegeocoder = new ReverseGeoCode<ExtendedGeoName>(cities);
-var results = reversegeocoder.RadialSearch(amsterdam, 250);  //Locate 250 geo-items near the center of Amsterdam
+var results = reversegeocoder.RadialSearch(amsterdam, 250);  // Locate 250 geo-items near the center of Amsterdam
 //Print the results
 foreach (var r in results)
     Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}, {1} {2} ({3:F4}Km)", r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam)));
