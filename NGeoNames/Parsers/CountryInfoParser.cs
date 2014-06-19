@@ -39,7 +39,7 @@ namespace NGeoNames.Parsers
                 Tld = fields[9],
                 CurrencyCode = fields[10],
                 CurrencyName = fields[11],
-                Phone = (fields[12] ?? string.Empty).Length > 0 && (fields[12] ?? string.Empty).StartsWith("+") ? fields[12] : "+" + fields[12],
+                Phone = fields[12].Length > 0 && fields[12].StartsWith("+") ? fields[12] : "+" + fields[12],
                 PostalCodeFormat = fields[13],
                 PostalCodeRegex = fields[14],
                 Languages = fields[15].Split(csv, StringSplitOptions.RemoveEmptyEntries),

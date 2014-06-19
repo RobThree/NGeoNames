@@ -181,7 +181,7 @@ namespace NGeoNamesTests
             Assert.AreEqual(string.Empty, target[1].FIPS);
             Assert.AreEqual("MADE UP COUNTRY", target[1].Country);
             Assert.AreEqual(string.Empty, target[1].Capital);
-            Assert.AreEqual(0, target[1].Area);
+            Assert.IsNull(target[1].Area);  //Can be unspecified/null
             Assert.AreEqual(0, target[1].Population);
             Assert.AreEqual("EU", target[1].Continent);
             Assert.AreEqual(".XX", target[1].Tld);
