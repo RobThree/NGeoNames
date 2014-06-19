@@ -201,7 +201,7 @@ namespace NGeoNamesTests
         public void ExtendedGeoNameParser_ParsesFileCorrectly()
         {
             var target = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_extendedgeonames.txt").ToArray();
-            Assert.AreEqual(6, target.Length);
+            Assert.AreEqual(7, target.Length);
 
             //No alternate names/countrycodes and empty admincodes
             Assert.AreEqual(string.Empty, target[0].Admincodes[0]);
@@ -584,14 +584,15 @@ namespace NGeoNamesTests
                 "보스니아헤르체고비나" 
             }, target[3].AlternateNames);
             #endregion
-        
+
             //Timezone should NOT have underscores
             Assert.AreEqual("America/Argentina/Buenos Aires", target[4].Timezone);
 
-            
+
             //Other misc checks
             Assert.AreEqual(new DateTime(2009, 6, 28), target[0].ModificationDate); //DateTime parsing
             Assert.AreEqual(3812366000, target[5].Population);    //Large (as in: > int.MaxValue) population
+            Assert.AreEqual(8848, target[6].Elevation);     //Elevation
         }
 
         [TestMethod]
