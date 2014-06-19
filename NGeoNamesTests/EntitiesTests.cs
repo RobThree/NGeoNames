@@ -23,5 +23,17 @@ namespace NGeoNamesTests
 
             //Actually, we're only 0,0135% off...
         }
+
+        [TestMethod]
+        public void DistanceTo_WrapsAroundLongitudeCorrectly()
+        {
+            var a = new GeoName { Latitude = 51.377020, Longitude = 179.431888, Name = "Amchitka Island" };
+            var b = new GeoName { Latitude = 51.272322, Longitude = -179.134396, Name = "Amatignak Island" };
+
+            var actual = 100.3;   // +/- a bit; checked with http://www.freemaptools.com/measure-distance.htm and (classic) google maps measure tool
+
+            var result = a.DistanceTo(b);
+            Assert.AreEqual(actual, result, actual * .0005);    // All we want is to be within .05% of the "actual" (according to our own measurements) value
+        }
     }
 }

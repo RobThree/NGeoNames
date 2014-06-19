@@ -7,7 +7,7 @@ using System.Linq;
 namespace NGeoNames
 {
     public class ReverseGeoCode<T>
-        where T : GeoName
+        where T : GeoName, new()
     {
         public double[] GetCoord(GeoName n)
         {
@@ -99,13 +99,13 @@ namespace NGeoNames
         }
 
         private static T LatLonToDummyGeo(double lat, double lng) {
-            return new GeoName
+            return new T()
             {
                 Latitude = lat,
                 Longitude = lng,
                 Name = null,
                 Id = 0
-            } as T;
+            };
         }
 
         private class DoubleMath : KdTree.Math.TypeMath<double>

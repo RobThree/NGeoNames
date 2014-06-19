@@ -56,6 +56,7 @@
     <Compile Include="GeoFileReaderTests.cs" />
     <Compile Include="ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReverseGeoCodeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGeoNames\NGeoNames.csproj">
