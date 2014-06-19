@@ -1,0 +1,8 @@
+This line will be skipped regardless the missing hashtag at the beginning of the line because this test will be run with skiplines = 1
+#comment line will be skipped as wel because this test wil be run with hascomments = true
+fields,in,this,test,are,comma-separated,instead,of,tab-separated
+
+#the above empty line should have been skipped as well
+,,,,,,,,
+#the above line should result in 9 empty data fields
+#the entire file should result in 2 records parsed

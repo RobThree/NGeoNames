@@ -737,9 +737,30 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
+        public void ContinentParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadContinents(@"testdata\test_continentCodes.txt").ToArray();
+            Assert.AreEqual(1, target.Length);  //First line in file should've been skipped
+
+            Assert.AreEqual("EU", target[0].Code);
+            Assert.AreEqual("Europe", target[0].Name);
+            Assert.AreEqual(6255148, target[0].Id);
+        }
+
+        [TestMethod]
+        public void FeatureClassesParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadFeatureClasses(@"testdata\test_featureClasses_en.txt").ToArray();
+            Assert.AreEqual(1, target.Length);  //First line in file should've been skipped
+
+            Assert.AreEqual("X", target[0].Class);
+            Assert.AreEqual("Test", target[0].Description);
+        }
+
+        [TestMethod]
         public void CustomParser_IsUsedCorrectly()
         {
-            var target = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\test_custom.txt", new CustomParser()).ToArray();
+            var target = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
 
             Assert.AreEqual(2, target.Length);
             CollectionAssert.AreEqual(target[0].Data, target[1].Data);
@@ -749,7 +770,7 @@ namespace NGeoNamesTests
         public void FileReader_HandlesEmptyFilesCorrectly()
         {
             //Could use ANY entity
-            var target1 = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\emptyfile.txt", new CustomParser()).ToArray();
+            var target1 = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\emptyfile.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
 
             Assert.AreEqual(0, target1.Length);
 
@@ -791,25 +812,6 @@ namespace NGeoNamesTests
 
             Assert.AreEqual(9, target.Length);
             CollectionAssert.AreEqual(target.OrderBy(c => c.Class).Select(c => c.Class).ToArray(), new[] { "A", "H", "L", "P", "R", "S", "T", "U", "V" });
-        }
-
-        private class CustomParser : IParser<CustomEntity>
-        {
-            public bool HasComments { get { return true; } }
-            public int SkipLines { get { return 5; } }
-            public int ExpectedNumberOfFields { get { return 19; } }
-            public Encoding Encoding { get { return Encoding.UTF7; } }
-            public char[] FieldSeparators { get { return new[] { '☃' }; } }
-
-            public CustomEntity Parse(string[] fields)
-            {
-                return new CustomEntity { Data = fields };
-            }
-        }
-
-        private class CustomEntity
-        {
-            public string[] Data { get; set; }
         }
     }
 }

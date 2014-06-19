@@ -1,0 +1,2 @@
+#See http://www.geonames.org/export/codes.html
+X	Test

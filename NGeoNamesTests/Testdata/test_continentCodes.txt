@@ -1,0 +1,2 @@
+#See http://download.geonames.org/export/dump/readme.txt
+EU	Europe	6255148
