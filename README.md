@@ -101,7 +101,7 @@ As you'll probably realize by now, the `GeoFileReader` class *combined* with [LI
 
 ### <a name="utilizing"></a>Utilizing geonames.org data
 
-The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor.
+The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor. Even if you choose to store your data in a database of custom (binary?) fileformat or anything else; as long as you provide an `IEnumerable` to this class you'll be able to use it.
 
 ```c#
 // Create our ReverseGeoCode class and supply it with data
