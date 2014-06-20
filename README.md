@@ -29,7 +29,7 @@ var amsterdam = cities.Where(n =>
 var reversegeocoder = new ReverseGeoCode<ExtendedGeoName>(cities);
 // Locate 250 geo-items near the center of Amsterdam
 var results = reversegeocoder.RadialSearch(amsterdam, 250);  
-//Print the results
+// Print the results
 foreach (var r in results) {
     Console.WriteLine(
         string.Format(
@@ -44,7 +44,7 @@ foreach (var r in results) {
 
 The library provides for the following main operations:
 
-1. [Downloading / retrieving data from geonames.org](#downloading)
+1. [Downloading / retrieving data from geonames.org](#downloading) (Optional)
 2. [Reading / parsing geonames.org data](#parsing)
 3. [Utilizing geonames.org data](#utilizing)
 
@@ -54,7 +54,7 @@ Because some "geoname files" can be very large (like `allcountries.txt`) we have
 
 Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
 
-### <a name="downloading"></a>Downloading / retrieving data from geonames.org
+### <a name="downloading"></a>Downloading / retrieving data from geonames.org (Optional)
 
 To download files from geonames.org you can use the `GeoFileDownloader` class which is, in essence, a wrapper for a basic [`WebClient`](http://msdn.microsoft.com/en-us/library/system.net.webclient.aspx). The simplest form is:
 
