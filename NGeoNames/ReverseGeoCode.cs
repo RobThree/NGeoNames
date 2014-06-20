@@ -9,7 +9,7 @@ namespace NGeoNames
     public class ReverseGeoCode<T>
         where T : GeoName, new()
     {
-        public double[] GetCoord(GeoName n)
+        private double[] GetCoord(GeoName n)
         {
             const double R = 6371000;   //Radius of the earth, in METERS
             return new[] {
