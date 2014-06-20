@@ -1,6 +1,6 @@
 # ![Logo](https://raw.githubusercontent.com/RobThree/NGeoNames/master/icon.png) NGeoNames
 
-Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). Uses [KdTree](https://github.com/codeandcats/KdTree).
+Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). You may also be interested in [GeoSharp](https://github.com/Necrolis/GeoSharp). Uses [KdTree](https://github.com/codeandcats/KdTree). Built and tested on .Net 4.5.
 
 This library provides classes for downloading and parsing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
 
@@ -97,6 +97,8 @@ The `GeoFileReader` also supports the use of [`Stream`](http://msdn.microsoft.co
 
 As you'll probably realize by now, the `GeoFileReader` class *combined* with [LINQ](http://msdn.microsoft.com/en-us/library/bb397926.aspx) allows for very powerful querying, filtering and sorting of the data.
 
+> I am playing with the idea of creating a `GeoFileWriter<T>` class (and corresponding IWriter<T> interface and classes implementing them for each entity) so you can \*write\* "geo files". This would allow you to, for example, easily combine several country files (e.g. "BE.txt", "NL.txt", "LU.txt" for [Benelux](http://en.wikipedia.org/wiki/Benelux)) into one file or pass "allCountries.txt" through a (series of) (LINQ) filter(s) etc. to create your own "persisted" views on the data.
+
 ### <a name="utilizing"></a>Utilizing geonames.org data
 
 The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor.
@@ -122,6 +124,6 @@ Both the `NearestNeighbourSearch()` and `RadialSearch()` methods have some overl
 
 ## Project status
 
-The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. More, better and extensive documentation ('[XMLDoc](http://msdn.microsoft.com/en-us/library/vstudio/b2s063f7(v=vs.100).aspx)') is currently in the works.
+<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. More, better and extensive documentation ('[XMLDoc](http://msdn.microsoft.com/en-us/library/vstudio/b2s063f7(v=vs.100).aspx)') is currently in the works.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
