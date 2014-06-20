@@ -45,7 +45,8 @@ namespace NGeoNames
 
         public void Balance()
         {
-            _tree.Balance();
+            if (_tree.Count > 0)
+                _tree.Balance();
         }
 
         public IEnumerable<T> RadialSearch(double lat, double lng, int maxcount)
@@ -98,7 +99,8 @@ namespace NGeoNames
             return _tree.GetNearestNeighbours(GetCoord(center), maxcount).Select(v => v.Value);
         }
 
-        public T CreateFromLatLong(double lat, double lng) {
+        public T CreateFromLatLong(double lat, double lng)
+        {
             return this.CreateFromLatLong(lat, lng, 0);
         }
         public T CreateFromLatLong(double lat, double lng, int id)
