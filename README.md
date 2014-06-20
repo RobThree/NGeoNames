@@ -116,6 +116,39 @@ var new_york = r.CreateFromLatLong(40.7056308, -73.9780035);
 r.NearestNeighbourSearch(new_york, 10);
 ```
 
+Ofcourse there's no need to dabble with lat/long at all:
+
+```c#
+// Read data into memory
+var data = GeoFileReader.ReadExtendedGeoNames(@"D:\foo\cities1000.txt")
+        .ToDictionary(p => p.Id);
+
+// Find New York by it's geoname ID (O(1) lookup)
+var new_york = data[5128581];
+
+// Find 10 nearest
+var r = new ReverseGeoCode<ExtendedGeoName>(data.Values);
+r.NearestNeighbourSearch(new_york, 10);
+```
+
+Or simply find by name:
+
+
+```c#
+// Read data into memory
+var data = GeoFileReader.ReadExtendedGeoNames(@"D:\foo\cities1000.txt")
+        .ToArray();
+
+// Find New York by it's name (linear search, O(n))
+var new_york = data.Where(p => p.Name.Equals("New York City")).First();
+
+// Find 10 nearest
+var r = new ReverseGeoCode<ExtendedGeoName>(data);
+r.NearestNeighbourSearch(new_york, 10);
+```
+
+Depending on how you want to search/use the underlying data you may want to use other, more optimal, datastructures than demonstrated above. It's up to you!
+
 Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance for example are specified in **meters**. If you want to use imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to meters.
 
 The `GeoName` class (and, by extension, the `ExtendedGeoName` class) has a `DistanceTo()` method which can be used to determine the exact distance betweem two points.
