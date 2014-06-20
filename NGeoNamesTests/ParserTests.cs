@@ -813,5 +813,96 @@ namespace NGeoNamesTests
             Assert.AreEqual(9, target.Length);
             CollectionAssert.AreEqual(target.OrderBy(c => c.Class).Select(c => c.Class).ToArray(), new[] { "A", "H", "L", "P", "R", "S", "T", "U", "V" });
         }
+
+        [TestMethod]
+        public void FileReader_Admin1Codes_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_admin1CodesASCII.txt"))
+                GeoFileReader.ReadAdmin1Codes(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_Admin2Codes_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_admin2Codes.txt"))
+                GeoFileReader.ReadAdmin2Codes(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_AlternateNames_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_alternateNames.txt"))
+                GeoFileReader.ReadAlternateNames(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_Continent_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_continentCodes.txt"))
+                GeoFileReader.ReadContinents(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_CountryInfo_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_CountryInfo.txt"))
+                GeoFileReader.ReadCountryInfo(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_ExtendedGeoNames_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_extendedgeonames.txt"))
+                GeoFileReader.ReadExtendedGeoNames(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_FeatureClasses_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_featureclasses_en.txt"))
+                GeoFileReader.ReadFeatureClasses(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_FeatureCodes_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_featurecodes_en.txt"))
+                GeoFileReader.ReadFeatureCodes(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_GeoNames_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_geonames.txt"))
+                GeoFileReader.ReadGeoNames(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_Hierarchy_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_hierarchy.txt"))
+                GeoFileReader.ReadHierarchy(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_ISOLanguageCode_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_iso-languagecodes.txt"))
+                GeoFileReader.ReadISOLanguageCodes(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_TimeZone_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_timeZones.txt"))
+                GeoFileReader.ReadTimeZones(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_UserTags_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_usertags.txt"))
+                GeoFileReader.ReadUserTags(s).Count();
+        }
     }
 }

@@ -1,13 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames;
-using NGeoNames.Parsers;
 using NGeoNames.Entities;
-using System;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace NGeoNamesTests
 {
@@ -28,6 +22,29 @@ namespace NGeoNamesTests
 
             // Search from the/a center in London for all points in a 10Km radius
             var searchresults = rg.RadialSearch(center, 100000.0).ToArray();
+            // Number of results should match length of expected_id array
+            Assert.AreEqual(expected_ids.Length, searchresults.Length);
+            // Check if each result is in the expected results array
+            foreach (var r in searchresults)
+                Assert.IsTrue(expected_ids.Contains(r.Id));
+        }
+
+        [TestMethod]
+        public void ReverseGeoCode_RadialSearch_ReturnsMaxCountResults()
+        {
+            // Read a file with data with points in and around London in a 20Km radius
+            var data = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArray();
+            var rg = new ReverseGeoCode<ExtendedGeoName>(data);
+            var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
+            var maxresults = 10;
+
+            Assert.AreEqual(47, data.Length);   //File should contain 47 records total
+
+            var expected_ids = new[] { 2643741, 2646003, 2643743, 6690870, 2651621, 2655775, 2636503, 2634677, 2656194, 2653266 };
+            Assert.AreEqual(maxresults, expected_ids.Length);
+
+            // Search from the/a center in London for all points in a 10Km radius, allowing only maxresults results
+            var searchresults = rg.RadialSearch(center, 100000.0, maxresults).ToArray();
             // Number of results should match length of expected_id array
             Assert.AreEqual(expected_ids.Length, searchresults.Length);
             // Check if each result is in the expected results array

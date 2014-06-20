@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NGeoNames;
+using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NGeoNames.Entities;
-using NGeoNames;
 
 namespace NGeoNamesTests
 {

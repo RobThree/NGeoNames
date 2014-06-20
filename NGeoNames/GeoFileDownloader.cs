@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
-using System.Reflection;
 
 namespace NGeoNames
 {
@@ -14,7 +13,7 @@ namespace NGeoNames
     {
         public static readonly Uri DEFAULTBASEURI = new Uri("http://download.geonames.org/export/dump/", UriKind.Absolute);
 
-        public static readonly string USERAGENT = string.Format("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+        public static readonly string USERAGENT = string.Format("{0} v{1}", typeof(GeoFileDownloader).Assembly.GetName().Name, typeof(GeoFileDownloader).Assembly.GetName().Version.ToString());
 
         public Uri BaseUri { get; set; }
         public RequestCachePolicy CachePolicy { get; set; }
