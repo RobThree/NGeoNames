@@ -56,6 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Composers\Admin2CodeComposer.cs" />
+    <Compile Include="Composers\AlternateNameComposer.cs" />
+    <Compile Include="Composers\ContinentComposer.cs" />
+    <Compile Include="Composers\CountryInfoComposer.cs" />
     <Compile Include="Entities\Admin2Code.cs" />
     <Compile Include="Entities\Admin1Code.cs" />
     <Compile Include="Entities\AlternateName.cs" />
@@ -67,6 +71,7 @@
     <Compile Include="Entities\GeoName.cs" />
     <Compile Include="Entities\UserTag.cs" />
     <Compile Include="GeoFileDownloader.cs" />
+    <Compile Include="GeoFileWriter.cs" />
     <Compile Include="GeoUtil.cs" />
     <Compile Include="Parsers\ParserException.cs" />
     <Compile Include="Parsers\Admin1CodeParser.cs" />
@@ -117,6 +122,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ReverseGeoCode.cs" />
+    <Compile Include="Composers\Admin1CodeComposer.cs" />
+    <Compile Include="Composers\BaseComposer.cs" />
+    <Compile Include="Composers\IComposer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

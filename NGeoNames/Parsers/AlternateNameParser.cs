@@ -28,11 +28,16 @@ namespace NGeoNames.Parsers
                 ISOLanguage = fields[2].Length <= 3 ? fields[2] : null,
                 Type = fields[2].Length <= 3 ? null : fields[2],
                 Name = fields[3],
-                IsPreferredName = fields[4].Equals("1"),
-                IsShortName = fields[5].Equals("1"),
-                IsColloquial = fields[6].Equals("1"),
-                IsHistoric = fields[7].Equals("1")
+                IsPreferredName = Bool2String(fields[4]),
+                IsShortName = Bool2String(fields[5]),
+                IsColloquial = Bool2String(fields[6]),
+                IsHistoric = Bool2String(fields[7])
             };
+        }
+
+        private static bool Bool2String(string value)
+        {
+            return value.Equals("1");
         }
     }
 }
