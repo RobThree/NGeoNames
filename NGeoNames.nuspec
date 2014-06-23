@@ -3,7 +3,7 @@
   <metadata>
     <id>NGeoNames</id>
     <title>NGeoNames</title>
-    <version>1.0.12</version>
+    <version>1.1.0</version>
     <authors>RobIII</authors>
     <owners>RobIII</owners>
     <projectUrl>https://github.com/RobThree/NGeoNames</projectUrl>
@@ -16,7 +16,7 @@
       Provides classes and methods for downloading, reading/parsing and utilizing files from GeoNames.org dumps.
     </summary>
     <releaseNotes>
-      * Minor bugfixes
+      * Added GeoFileWriter and composers to write geoname.org compatible files
     </releaseNotes>
     <tags>reverse-geocoding geocoding geocode reverse-geocode geocoder reverse-geocoder maps</tags>
   </metadata>
