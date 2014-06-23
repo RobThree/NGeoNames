@@ -76,6 +76,97 @@ namespace NGeoNames
         {
             new GeoFileWriter().WriteRecords<CountryInfo>(stream, values, new CountryInfoComposer());
         }
+
+        public static void WriteExtendedGeoNames(string filename, IEnumerable<ExtendedGeoName> values)
+        {
+            new GeoFileWriter().WriteRecords<ExtendedGeoName>(filename, values, new ExtendedGeoNameComposer());
+        }
+
+        public static void WriteExtendedGeoNames(Stream stream, IEnumerable<ExtendedGeoName> values)
+        {
+            new GeoFileWriter().WriteRecords<ExtendedGeoName>(stream, values, new ExtendedGeoNameComposer());
+        }
+
+        public static void WriteFeatureClasses(string filename, IEnumerable<FeatureClass> values)
+        {
+            new GeoFileWriter().WriteRecords<FeatureClass>(filename, values, new FeatureClassComposer());
+        }
+
+        public static void WriteFeatureClasses(Stream stream, IEnumerable<FeatureClass> values)
+        {
+            new GeoFileWriter().WriteRecords<FeatureClass>(stream, values, new FeatureClassComposer());
+        }
+
+        public static void WriteFeatureCodes(string filename, IEnumerable<FeatureCode> values)
+        {
+            new GeoFileWriter().WriteRecords<FeatureCode>(filename, values, new FeatureCodeComposer());
+        }
+
+        public static void WriteFeatureCodes(Stream stream, IEnumerable<FeatureCode> values)
+        {
+            new GeoFileWriter().WriteRecords<FeatureCode>(stream, values, new FeatureCodeComposer());
+        }
+
+        public static void WriteGeoNames(string filename, IEnumerable<GeoName> values)
+        {
+            WriteGeoNames(filename, values, false);
+        }
+
+        public static void WriteGeoNames(Stream stream, IEnumerable<GeoName> values)
+        {
+            WriteGeoNames(stream, values, false);
+        }
+
+        public static void WriteGeoNames(string filename, IEnumerable<GeoName> values, bool useextendedfileformat)
+        {
+            new GeoFileWriter().WriteRecords<GeoName>(filename, values, new GeoNameComposer(useextendedfileformat));
+        }
+
+        public static void WriteGeoNames(Stream stream, IEnumerable<GeoName> values, bool useextendedfileformat)
+        {
+            new GeoFileWriter().WriteRecords<GeoName>(stream, values, new GeoNameComposer(useextendedfileformat));
+        }
+
+
+        public static void WriteHierarchy(string filename, IEnumerable<HierarchyNode> values)
+        {
+            new GeoFileWriter().WriteRecords<HierarchyNode>(filename, values, new HierarchyComposer());
+        }
+
+        public static void WriteHierarchy(Stream stream, IEnumerable<HierarchyNode> values)
+        {
+            new GeoFileWriter().WriteRecords<HierarchyNode>(stream, values, new HierarchyComposer());
+        }
+
+        public static void WriteISOLanguageCodes(string filename, IEnumerable<ISOLanguageCode> values)
+        {
+            new GeoFileWriter().WriteRecords<ISOLanguageCode>(filename, values, new ISOLanguageCodeComposer());
+        }
+
+        public static void WriteISOLanguageCodes(Stream stream, IEnumerable<ISOLanguageCode> values)
+        {
+            new GeoFileWriter().WriteRecords<ISOLanguageCode>(stream, values, new ISOLanguageCodeComposer());
+        }
+
+        public static void WriteTimeZones(string filename, IEnumerable<TimeZone> values)
+        {
+            new GeoFileWriter().WriteRecords<TimeZone>(filename, values, new TimeZoneComposer());
+        }
+
+        public static void WriteTimeZones(Stream stream, IEnumerable<TimeZone> values)
+        {
+            new GeoFileWriter().WriteRecords<TimeZone>(stream, values, new TimeZoneComposer());
+        }
+
+        public static void WriteUserTags(string filename, IEnumerable<UserTag> values)
+        {
+            new GeoFileWriter().WriteRecords<UserTag>(filename, values, new UserTagComposer());
+        }
+
+        public static void WriteUserTags(Stream stream, IEnumerable<UserTag> values)
+        {
+            new GeoFileWriter().WriteRecords<UserTag>(stream, values, new UserTagComposer());
+        }
         #endregion
     }
 }

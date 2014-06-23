@@ -69,22 +69,118 @@ namespace NGeoNamesTests
             EnsureFilesAreFunctionallyEqual(src, dst, 19, 0, new[] { '\t' }, Encoding.UTF8, true);
         }
 
-        //TODO: ExtendedGeoNameComposer
-        //TODO: FeatureClassComposer
-        //TODO: FeatureCodeComposer
-        //TODO: GeoNameComposer
-        //TODO: HierarchyComposer
-        //TODO: ISOLanguageCodeComposer
-        //TODO: TimeZoneComposer
-        //TODO: UserTagComposer
+        [TestMethod]
+        public void ExtendedGeoNamesComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_extendedgeonames.txt";
+            var dst = @"testdata\test_extendedgeonames.out";
 
-        //Compares two data files using a GenericEntity to easily compare actual values without bothering with newline differences, comments etc.
+            GeoFileWriter.WriteExtendedGeoNames(dst, GeoFileReader.ReadExtendedGeoNames(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 19, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
+        public void FeatureClassComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_featureClasses_en.txt";
+            var dst = @"testdata\test_featureClasses_en.out";
+
+            GeoFileWriter.WriteFeatureClasses(dst, GeoFileReader.ReadFeatureClasses(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 2, 0, new[] { '\t' }, Encoding.UTF8, true);
+        }
+
+        [TestMethod]
+        public void FeatureCodeComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_featureCodes_en.txt";
+            var dst = @"testdata\test_featureCodes_en.out";
+
+            GeoFileWriter.WriteFeatureCodes(dst, GeoFileReader.ReadFeatureCodes(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 3, 0, new[] { '\t' }, Encoding.UTF8, true);
+        }
+
+        [TestMethod]
+        public void GeoNamesComposerSimple_ComposesFileCorrectly()
+        {
+            // In this test we test the "simple file format" (e.g. GeoName, not ExtendedGeoName)
+            var src = @"testdata\test_geonames_simple.txt";
+            var dst = @"testdata\test_geonames_simple.out";
+
+            GeoFileWriter.WriteGeoNames(dst, GeoFileReader.ReadGeoNames(src, false), false);
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 4, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
+        public void GeoNamesComposerExtended_ComposesFileCorrectly()
+        {
+            // In this test we test the "extended file format" (e.g. ExtendedGeoName, not GeoName)
+            // But since GeoName cannot provide all values, all other properties should be null/empty when writing
+            var src = @"testdata\test_geonames_ext.txt";
+            var dst = @"testdata\test_geonames_ext.out";
+
+            GeoFileWriter.WriteGeoNames(dst, GeoFileReader.ReadGeoNames(src, true), true);
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 19, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
+        public void HierarchyComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_hierarchy.txt";
+            var dst = @"testdata\test_hierarchy.out";
+
+            GeoFileWriter.WriteHierarchy(dst, GeoFileReader.ReadHierarchy(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 3, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
+        public void ISOLanguageCodeComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_iso-languagecodes.txt";
+            var dst = @"testdata\test_iso-languagecodes.out";
+
+            GeoFileWriter.WriteISOLanguageCodes(dst, GeoFileReader.ReadISOLanguageCodes(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 4, 1, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
+        public void TimeZoneComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_timeZones.txt";
+            var dst = @"testdata\test_timeZones.out";
+
+            GeoFileWriter.WriteTimeZones(dst, GeoFileReader.ReadTimeZones(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 5, 1, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+
+        [TestMethod]
+        public void UserTagComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_userTags.txt";
+            var dst = @"testdata\test_userTags.out";
+
+            GeoFileWriter.WriteUserTags(dst, GeoFileReader.ReadUserTags(src));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 2, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        // Compares two data files using a GenericEntity to easily compare actual values without bothering with newline differences, 
+        // comments etc. nor trying to "understand" what they mean
         private void EnsureFilesAreFunctionallyEqual(string src, string dst, int expectedfields, int skiplines, char[] fieldseparators, Encoding encoding, bool hascomments)
         {
-            var parser = new GenericParser(expectedfields, skiplines, fieldseparators, encoding, hascomments);
+            var parser_in = new GenericParser(expectedfields, skiplines, fieldseparators, encoding, hascomments);
+            var parser_out = new GenericParser(expectedfields, 0, fieldseparators, encoding, false);
 
-            var expected = new GeoFileReader().ReadRecords<GenericEntity>(src, FileType.Plain, parser).ToArray();
-            var actual = new GeoFileReader().ReadRecords<GenericEntity>(dst, FileType.Plain, parser).ToArray();
+            var expected = new GeoFileReader().ReadRecords<GenericEntity>(src, FileType.Plain, parser_in).ToArray();
+            var actual = new GeoFileReader().ReadRecords<GenericEntity>(dst, FileType.Plain, parser_out).ToArray();
 
             CollectionAssert.AreEqual(expected, actual, new GenericEntityComparer());
         }

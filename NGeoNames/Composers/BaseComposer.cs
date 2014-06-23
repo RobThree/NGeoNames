@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace NGeoNames.Composers
@@ -24,6 +25,16 @@ namespace NGeoNames.Composers
 
         protected string ArrayToValue(IEnumerable<string> values, string separator = ",") {
             return string.Join(separator, values);
+        }
+
+        protected string FloatToString(float value)
+        {
+            return value.ToString("0.0#", CultureInfo.InvariantCulture);
+        }
+
+        protected string DoubleToString(double value)
+        {
+            return value.ToString("0.0#######", CultureInfo.InvariantCulture);
         }
     }
 }

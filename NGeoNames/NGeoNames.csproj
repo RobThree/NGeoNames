@@ -60,6 +60,14 @@
     <Compile Include="Composers\AlternateNameComposer.cs" />
     <Compile Include="Composers\ContinentComposer.cs" />
     <Compile Include="Composers\CountryInfoComposer.cs" />
+    <Compile Include="Composers\ExtendedGeoNameComposer.cs" />
+    <Compile Include="Composers\FeatureClassComposer.cs" />
+    <Compile Include="Composers\FeatureCodeComposer.cs" />
+    <Compile Include="Composers\GeoNameComposer.cs" />
+    <Compile Include="Composers\HierarchyComposer.cs" />
+    <Compile Include="Composers\ISOLanguageCodeComposer.cs" />
+    <Compile Include="Composers\TimeZoneComposer.cs" />
+    <Compile Include="Composers\UserTagComposer.cs" />
     <Compile Include="Entities\Admin2Code.cs" />
     <Compile Include="Entities\Admin1Code.cs" />
     <Compile Include="Entities\AlternateName.cs" />

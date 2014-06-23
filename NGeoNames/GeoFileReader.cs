@@ -92,12 +92,22 @@ namespace NGeoNames
 
         public static IEnumerable<GeoName> ReadGeoNames(string filename)
         {
-            return new GeoFileReader().ReadRecords<GeoName>(filename, new GeoNameParser());
+            return ReadGeoNames(filename, true);
         }
 
         public static IEnumerable<GeoName> ReadGeoNames(Stream stream)
         {
-            return new GeoFileReader().ReadRecords<GeoName>(stream, new GeoNameParser());
+            return ReadGeoNames(stream, true);
+        }
+
+        public static IEnumerable<GeoName> ReadGeoNames(string filename, bool useextendedfileformat)
+        {
+            return new GeoFileReader().ReadRecords<GeoName>(filename, new GeoNameParser(useextendedfileformat));
+        }
+
+        public static IEnumerable<GeoName> ReadGeoNames(Stream stream, bool useextendedfileformat)
+        {
+            return new GeoFileReader().ReadRecords<GeoName>(stream, new GeoNameParser(useextendedfileformat));
         }
 
         public static IEnumerable<Admin1Code> ReadAdmin1Codes(string filename)
