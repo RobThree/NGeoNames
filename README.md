@@ -162,7 +162,7 @@ Below is an example of what this would look like (with an extra filter added to 
 
 ```c#
 // Filter 'allcountries.txt' to only BE, NL, LU entries with a population of >= 1000
-GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux.txt",
+GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux1000.txt",
    GeoFileReader.ReadExtendedGeoNames(@"d:\foo\allcountries.txt")
       .Where(e => new[] { "BE", "NL", "LU" }.Contains(e.CountryCode) && e.Population >= 1000)
       .OrderBy(e => e.CountryCode).ThenBy(e => e.Name)
@@ -171,10 +171,10 @@ GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux.txt",
 // ...or...
 
 // Join BE, NL en LU datasets, filter records with a population of >= 1000
-GeoFileWriter.WriteExtendedGeoNames(@"d:\out.txt",
-   GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\BE.txt")
-      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\NL.txt"))
-      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\LU.txt"))
+GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux1000.txt",
+   GeoFileReader.ReadExtendedGeoNames(@"d:\foo\BE.txt")
+      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\foo\NL.txt"))
+      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\foo\LU.txt"))
         .Where(e => e.Population >= 1000)
         .OrderBy(e => e.CountryCode).ThenBy(e => e.Name)
 );
