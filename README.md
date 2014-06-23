@@ -2,7 +2,7 @@
 
 Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). You may also be interested in [GeoSharp](https://github.com/Necrolis/GeoSharp). Uses [KdTree](https://github.com/codeandcats/KdTree). Built and tested on .Net 4.5.
 
-This library provides classes for downloading and parsing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
+This library provides classes for downloading, reading and parsing, writing and composing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
 
 This library is available as [NuGet package](https://www.nuget.org/packages/NGeoNames/).
 
@@ -47,10 +47,11 @@ The library provides for the following main operations:
 1. [Downloading / retrieving data from geonames.org](#downloading) (Optional)
 2. [Reading / parsing geonames.org data](#parsing)
 3. [Utilizing geonames.org data](#utilizing)
+4. [Writing / composing geonames.org data](#composing)
 
-The library consists mainly of parsers and entities (in the `NGeoNames.Entities` and `NGeoNames.Parsers` namespaces) and a `GeoFileReader` to read and parse files from geonames.org, a `GeoFileDownloader` to retrieve files from geonames.org and a `ReverseGeoCode<T>` class to do the heavy lifting of the reverse geocoding.
+The library consists mainly of parsers, composers and entities (in their respective namespaces) and a `GeoFileReader` and `GeoFileWriter` to read/parse and write/compose files from geonames.org, a `GeoFileDownloader` to retrieve files from geonames.org and a `ReverseGeoCode<T>` class to do the heavy lifting of the reverse geocoding itself.
 
-Because some "geoname files" can be very large (like `allcountries.txt`) we have a `GeoName` entity which is a simplified version (and baseclass) of an `ExtendedGeoName`. The `GeoName` class contains a unique id which can be used to resolve the `ExtendedGeoName` easily for more information when required. It is, however, recommended to use `<countrycode>.txt` (e.g. `GB.txt`) or `cities1000.txt` for example to reduce the dataset to a smaller size.
+Because some "geoname files" can be very large (like `allcountries.txt`) we have a `GeoName` entity which is a simplified version (and baseclass) of an `ExtendedGeoName`. The `GeoName` class contains a unique id which can be used to resolve the `ExtendedGeoName` easily for more information when required. It is, however, recommended to use `<countrycode>.txt` (e.g. `GB.txt`) or `cities1000.txt` for example to reduce the dataset to a smaller size or to compose your own custom datasets using the `GeoFileWriter` and composers.
 
 Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
 
@@ -95,9 +96,7 @@ Another thing to note is that the `GeoFileReader` will try to "autodetect" if th
 
 The `GeoFileReader` also supports the use of [`Stream`](http://msdn.microsoft.com/en-us/library/system.io.stream.aspx)s so you can provide data from a MemoryStream for example or any other source that can be wrapped in a stream.
 
-As you'll probably realize by now, the `GeoFileReader` class *combined* with [LINQ](http://msdn.microsoft.com/en-us/library/bb397926.aspx) allows for very powerful querying, filtering and sorting of the data.
-
-> I am playing with the idea of creating a `GeoFileWriter<T>` class (and corresponding IWriter<T> interface and classes implementing them for each entity) so you can \*write\* "geo files". This would allow you to, for example, easily combine several country files (e.g. "BE.txt", "NL.txt", "LU.txt" for [Benelux](http://en.wikipedia.org/wiki/Benelux)) into one file or pass "allCountries.txt" through a (series of) (LINQ) filter(s) etc. to create your own "persisted" views on the data.
+As you'll probably realize by now, the `GeoFileReader` class *combined* with [LINQ](http://msdn.microsoft.com/en-us/library/bb397926.aspx) allows for very powerful querying, filtering and sorting of the data. Combine it with the `GeoFileWriter` to persist custom datasets (custom "materialized views") and the sky is the limit.
 
 ### <a name="utilizing"></a>Utilizing geonames.org data
 
@@ -154,6 +153,37 @@ Note that the library is based on the [**International System of Units (SI)**](h
 The `GeoName` class (and, by extension, the `ExtendedGeoName` class) has a `DistanceTo()` method which can be used to determine the exact distance betweem two points.
 
 Both the `NearestNeighbourSearch()` and `RadialSearch()` methods have some overloads that accept lat/long pairs as *doubles* as well.
+
+### <a name="composing"></a>Writing / composing geonames.org data
+
+The `NGeoNames.Composers` namespace holds composers (the opposite of parsers) to enable you to write geoname.org datafiles. For this you can use the `GeoNameFileWriter` class which, like the `GeoNameFileReader` class, has generic methods for writing records (`WriteRecords<T>`) and static "convenience methods" to write specific entities to a file. If you wanted to 'transform' a file like `allcountries.txt` to a file with data from, say, the [Benelux](http://en.wikipedia.org/wiki/Benelux)) you could supply the `GeoNameFileWriter` with data from `BE.txt`, `NL.txt` and `LU.txt` *or* data from `allcountries.txt` or `cities1000.txt` filtered with a LINQ query to only data from these countries.
+
+Below is an example of what this would look like (with an extra filter added to filter out records with < 1000 population):
+
+```c#
+// Filter 'allcountries.txt' to only BE, NL, LU entries with a population of >= 1000
+GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux.txt",
+   GeoFileReader.ReadExtendedGeoNames(@"d:\foo\allcountries.txt")
+      .Where(e => new[] { "BE", "NL", "LU" }.Contains(e.CountryCode) && e.Population >= 1000)
+      .OrderBy(e => e.CountryCode).ThenBy(e => e.Name)
+);
+
+// ...or...
+
+// Join BE, NL en LU datasets, filter records with a population of >= 1000
+GeoFileWriter.WriteExtendedGeoNames(@"d:\out.txt",
+   GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\BE.txt")
+      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\NL.txt"))
+      .Union(GeoFileReader.ReadExtendedGeoNames(@"d:\test\geo\LU.txt"))
+        .Where(e => e.Population >= 1000)
+        .OrderBy(e => e.CountryCode).ThenBy(e => e.Name)
+);
+
+```
+
+### A word about "extended format"
+
+The `GeoNamesReader` and `GeoNamesWriter` and the (Extended)GeoName parsers/composers always assume the `ExtendedGeoName` format (e.g. 19 fields of data) unless explicitly specified. The parameter **extendedfileformat** may pop-up on some method overloads; whenever this parameter is passed `false` the class will assume a 'simple' (or non-extended) format with only 4 fields of data: Id, Name, Latitude and Longitude. This format is more compact; especially when writing `GeoName` entities instead of `ExtendedGeoName` entities to a file. However, to remain compatible with the original files you probably don't want to use this 'simple' format. Make sure you understand the consequences before you do!
 
 ## Project status
 
