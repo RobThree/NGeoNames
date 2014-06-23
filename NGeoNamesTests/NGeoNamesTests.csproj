@@ -76,6 +76,7 @@
     <None Include="Testdata\invalid.ext">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="CustomComposer.cs" />
     <Content Include="Testdata\test_geonames_ext.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

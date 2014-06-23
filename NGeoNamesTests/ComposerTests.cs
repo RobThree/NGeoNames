@@ -172,6 +172,17 @@ namespace NGeoNamesTests
             EnsureFilesAreFunctionallyEqual(src, dst, 2, 0, new[] { '\t' }, Encoding.UTF8, false);
         }
 
+        [TestMethod]
+        public void CustomComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_custom.txt";
+            var dst = @"testdata\test_custom.out";
+
+            new GeoFileWriter().WriteRecords<CustomEntity>(dst, new GeoFileReader().ReadRecords<CustomEntity>(src, new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)), new CustomComposer(Encoding.UTF7, '☃'));
+
+            EnsureFilesAreFunctionallyEqual(src, dst, 19, 5, new[] { '☃' }, Encoding.UTF7, true);
+        }
+
         // Compares two data files using a GenericEntity to easily compare actual values without bothering with newline differences, 
         // comments etc. nor trying to "understand" what they mean
         private void EnsureFilesAreFunctionallyEqual(string src, string dst, int expectedfields, int skiplines, char[] fieldseparators, Encoding encoding, bool hascomments)
