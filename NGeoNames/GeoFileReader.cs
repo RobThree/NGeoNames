@@ -6,13 +6,6 @@ using System.IO.Compression;
 
 namespace NGeoNames
 {
-    public enum FileType
-    {
-        AutoDetect = 0,
-        Plain = 1,
-        GZip = 2
-    }
-
     public class GeoFileReader
     {
         public IEnumerable<T> ReadRecords<T>(string path, IParser<T> parser)
@@ -55,7 +48,7 @@ namespace NGeoNames
             var filestream = File.OpenRead(path);
 
             //Figure out how we're supposed to read the file
-            FileType readastype = filetype == FileType.AutoDetect ? GetFileTypeFromExtension(path) : filetype;
+            FileType readastype = filetype == FileType.AutoDetect ? FileUtil.GetFileTypeFromExtension(path) : filetype;
             switch (readastype)
             {
                 case FileType.Plain:
@@ -66,18 +59,6 @@ namespace NGeoNames
             throw new System.NotSupportedException(string.Format("Filetype not supported: {0}", readastype));
         }
 
-        private static FileType GetFileTypeFromExtension(string path)
-        {
-            var fi = new FileInfo(path);
-            switch (fi.Extension.ToLowerInvariant())
-            {
-                case ".txt":
-                    return FileType.Plain;
-                case ".gz":
-                    return FileType.GZip;
-            }
-            throw new System.NotSupportedException("Unable to detect filetype from file extension");
-        }
 
         #region Convenience methods
         public static IEnumerable<ExtendedGeoName> ReadExtendedGeoNames(string filename)

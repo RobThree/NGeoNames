@@ -2,6 +2,7 @@
 using NGeoNames.Entities;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 
 namespace NGeoNames
 {
@@ -11,7 +12,12 @@ namespace NGeoNames
 
         public void WriteRecords<T>(string path, IEnumerable<T> values, IComposer<T> composer, string lineseparator = DEFAULTLINESEPARATOR)
         {
-            using (var s = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read))
+            WriteRecords(path, values, composer, FileUtil.GetFileTypeFromExtension(path), lineseparator);
+        }
+
+        public void WriteRecords<T>(string path, IEnumerable<T> values, IComposer<T> composer, FileType filetype, string lineseparator = DEFAULTLINESEPARATOR)
+        {
+            using (var s = GetStream(path, filetype))
                 this.WriteRecords(s, values, composer, lineseparator);
         }
 
@@ -24,6 +30,22 @@ namespace NGeoNames
                     w.Write(composer.Compose(v) + lineseparator);
                 }
             }
+        }
+
+        private static Stream GetStream(string path, FileType filetype)
+        {
+            var filestream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+
+            //Figure out how we're supposed to read the file
+            FileType writeastype = filetype == FileType.AutoDetect ? FileUtil.GetFileTypeFromExtension(path) : filetype;
+            switch (writeastype)
+            {
+                case FileType.Plain:
+                    return filestream;
+                case FileType.GZip:
+                    return new GZipStream(filestream, CompressionLevel.Optimal);
+            }
+            throw new System.NotSupportedException(string.Format("Filetype not supported: {0}", writeastype));
         }
 
         #region Convenience methods
