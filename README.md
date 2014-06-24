@@ -187,6 +187,5 @@ The `GeoNamesReader` and `GeoNamesWriter` and the (Extended)GeoName parsers/comp
 
 ## Project status
 
-<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. More, better and extensive documentation ('[XMLDoc](http://msdn.microsoft.com/en-us/library/vstudio/b2s063f7(v=vs.100).aspx)') is currently in the works.
-
+<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. 
 [![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
