@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="GeoName"/>.
+    /// Provides methods for composing a string representing a <see cref="GeoName"/>.
     /// </summary>
     public class GeoNameComposer : BaseComposer<GeoName>
     {

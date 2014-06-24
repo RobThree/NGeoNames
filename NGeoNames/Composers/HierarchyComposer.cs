@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="HierarchyNode"/>.
+    /// Provides methods for composing a string representing a <see cref="HierarchyNode"/>.
     /// </summary>
     public class HierarchyComposer : BaseComposer<HierarchyNode>
     {

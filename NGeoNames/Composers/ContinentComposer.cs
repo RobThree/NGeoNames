@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="Continent"/>.
+    /// Provides methods for composing a string representing a <see cref="Continent"/>.
     /// </summary>
     public class ContinentComposer : BaseComposer<Continent>
     {

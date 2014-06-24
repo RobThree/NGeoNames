@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="FeatureClass"/>.
+    /// Provides methods for composing a string representing a <see cref="FeatureClass"/>.
     /// </summary>
     public class FeatureClassComposer : BaseComposer<FeatureClass>
     {

@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="CountryInfo"/>.
+    /// Provides methods for composing a string representing a <see cref="CountryInfo"/>.
     /// </summary>
     public class CountryInfoComposer : BaseComposer<CountryInfo>
     {
