@@ -55,7 +55,6 @@
     <Compile Include="CustomParser.cs" />
     <Compile Include="EntitiesTests.cs" />
     <Compile Include="FileUtil.cs" />
-    <Compile Include="GenericEntity.cs" />
     <Compile Include="GeoFileReaderTests.cs" />
     <Compile Include="GeoFileWriterTests.cs" />
     <Compile Include="ParserTests.cs" />

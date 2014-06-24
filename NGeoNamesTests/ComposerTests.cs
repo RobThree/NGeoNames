@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames;
-using NGeoNames.Parsers;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 

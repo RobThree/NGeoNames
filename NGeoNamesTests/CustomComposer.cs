@@ -1,5 +1,4 @@
 ﻿using NGeoNames.Composers;
-using NGeoNames.Entities;
 using NGeoNamesTests;
 using System.Text;
 

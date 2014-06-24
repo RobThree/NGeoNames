@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames;
-using System.Text;
-using System.Linq;
 using System;
+using System.Linq;
+using System.Text;
 
 namespace NGeoNamesTests
 {

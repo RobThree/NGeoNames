@@ -29,7 +29,8 @@
     <Preliminary>False</Preliminary>
     <DocumentationSources>
       <DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.dll" />
-<DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.xml" />
+    </DocumentationSources>
     <ProjectSummary>This library provides classes for downloading, reading and parsing, writing and composing files from GeoNames.org and provides %28reverse%29 geocoding methods like NearestNeighbourSearch%28%29 and RadialSearch%28%29 on the downloaded dataset%28s%29.</ProjectSummary>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
@@ -39,7 +40,11 @@
     <PresentationStyle>VS2005</PresentationStyle>
     <NamingMethod>Guid</NamingMethod>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <NamespaceSummaries />
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="NGeoNames.Entities" isDocumented="True">The NGeoNames.Entities namespace contains classes that represent the entities defined by geonames.org and are dictated by their respective "dump files".</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NGeoNames" isDocumented="True">The NGeoNames namespace contains classes that allow you to download, read and parse, compose and write geonames.org "dump files" and that can be used to do offline reverse geocoding.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NGeoNames.Composers" isDocumented="True">The NGeoNames.Composers namespace contains interfaces and classes that allow you to compose and write geoname.org compatible "dump files".</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NGeoNames.Parsers" isDocumented="True">The NGeoNames.Parsers namespace contains interfaces and classes that allow you to read and parse geoname.org compatible "dump files".</NamespaceSummaryItem></NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
