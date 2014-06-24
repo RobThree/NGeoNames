@@ -46,7 +46,7 @@ namespace NGeoNames.Parsers
             {
                 Id = int.Parse(fields[0]),
                 Name = fields[1],
-                ASCIIName = fields[2],
+                NameASCII = fields[2],
                 AlternateNames = fields[3].Split(csv, StringSplitOptions.RemoveEmptyEntries),
                 Latitude = double.Parse(fields[4], CultureInfo.InvariantCulture),
                 Longitude = double.Parse(fields[5], CultureInfo.InvariantCulture),

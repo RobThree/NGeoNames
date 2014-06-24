@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames.Entities;
+using System;
 
 namespace NGeoNamesTests
 {
@@ -34,6 +35,75 @@ namespace NGeoNamesTests
 
             var result = a.DistanceTo(b);
             Assert.AreEqual(actual, result, actual * .0005);    // All we want is to be within .05% of the "actual" (according to our own measurements) value
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void Admin1Code_ThrowsWhenNameASCIIContainsNonASCIICharacters1()
+        {
+            var target = new Admin1Code();
+            target.NameASCII = "Ég get etið gler án þess að meiða mig.";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void Admin1Code_ThrowsWhenNameASCIIContainsNonASCIICharacters2()
+        {
+            var target = new Admin1Code();
+            target.NameASCII = "€";
+        }
+
+        [TestMethod]
+        public void Admin1Code_AllowsAllASCIICharacters()
+        {
+            var target = new Admin1Code();
+            target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void Admin2Code_ThrowsWhenNameASCIIContainsNonASCIICharacters1()
+        {
+            var target = new Admin2Code();
+            target.NameASCII = "Ég get etið gler án þess að meiða mig.";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void Admin2Code_ThrowsWhenNameASCIIContainsNonASCIICharacters2()
+        {
+            var target = new Admin2Code();
+            target.NameASCII = "€";
+        }
+
+        [TestMethod]
+        public void Admin2Code_AllowsAllASCIICharacters()
+        {
+            var target = new Admin2Code();
+            target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ExtendedGeoName_ThrowsWhenNameASCIIContainsNonASCIICharacters1()
+        {
+            var target = new ExtendedGeoName();
+            target.NameASCII = "Ég get etið gler án þess að meiða mig.";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ExtendedGeoName_ThrowsWhenNameASCIIContainsNonASCIICharacters2()
+        {
+            var target = new ExtendedGeoName();
+            target.NameASCII = "€";
+        }
+
+        [TestMethod]
+        public void ExtendedGeoName_AllowsAllASCIICharacters()
+        {
+            var target = new ExtendedGeoName();
+            target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         }
     }
 }

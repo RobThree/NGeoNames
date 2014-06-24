@@ -744,7 +744,7 @@ namespace NGeoNamesTests
 
             Assert.AreEqual("EU", target[0].Code);
             Assert.AreEqual("Europe", target[0].Name);
-            Assert.AreEqual(6255148, target[0].Id);
+            Assert.AreEqual(6255148, target[0].GeoNameId);
         }
 
         [TestMethod]
