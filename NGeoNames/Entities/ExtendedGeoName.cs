@@ -24,8 +24,9 @@ namespace NGeoNames.Entities
         }
 
         /// <summary>
-        /// Gets/sets the alternatenames / ascii names of the <see cref="ExtendedGeoName"/>.
+        /// Gets/sets the alternatenames / ASCII names of the <see cref="ExtendedGeoName"/>.
         /// </summary>
+        /// <remarks>See <see cref="AlternateName"/>.</remarks>
         public string[] AlternateNames { get; set; }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace NGeoNames.Entities
         /// </summary>
         public string[] AlternateCountryCodes { get; set; }
 
+        private string[] _admincodes;
         /// <summary>
         /// Gets/sets 1 up to 4 admin codes (indexed 0 to 3) of the <see cref="ExtendedGeoName"/>.
         /// <list type="bullet">
@@ -62,7 +64,15 @@ namespace NGeoNames.Entities
         /// an additional level between country and FIPS code. The code '00' stands for general features where no
         /// specific Admincode[0] code is defined.
         /// </remarks>
-        public string[] Admincodes { get; set; }
+        public string[] Admincodes {
+            get { return _admincodes; }
+            set
+            {
+                if (value.Length != 4)
+                    throw new ArgumentOutOfRangeException("Admincodes array must be of length 4");
+                _admincodes = value;
+            }
+        }
 
         /// <summary>
         /// Gets/sets the population of the <see cref="ExtendedGeoName"/>.

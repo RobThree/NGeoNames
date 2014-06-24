@@ -105,5 +105,13 @@ namespace NGeoNamesTests
             var target = new ExtendedGeoName();
             target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ExtendedGeoName_ThrowsWhenAdminCodesIsNotOfLength4()
+        {
+            var target = new ExtendedGeoName();
+            target.Admincodes = new[] { "" };
+        }
     }
 }
