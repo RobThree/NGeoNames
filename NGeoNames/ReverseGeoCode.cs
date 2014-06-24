@@ -9,16 +9,6 @@ namespace NGeoNames
     public class ReverseGeoCode<T>
         where T : GeoName, new()
     {
-        private double[] GetCoord(GeoName n)
-        {
-            const double R = 6371000;   //Radius of the earth, in METERS
-            return new[] {
-                R * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(n.Longitude)),
-                R * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Sin(GeoUtil.Deg2Rad(n.Longitude)),
-                R * Math.Sin(GeoUtil.Deg2Rad(n.Latitude))
-            };
-        }
-
         private KdTree.KdTree<double, T> _tree;
 
         public ReverseGeoCode()
@@ -34,7 +24,7 @@ namespace NGeoNames
 
         public void Add(T node)
         {
-            _tree.Add(GetCoord(node), node);
+            _tree.Add(GeoUtil.GetCoord(node), node);
         }
 
         public void AddRange(IEnumerable<T> nodes)
@@ -76,7 +66,7 @@ namespace NGeoNames
 
         public IEnumerable<T> RadialSearch(T center, double radius, int maxcount)
         {
-            return _tree.RadialSearch(GetCoord(center), radius, maxcount).Select(v => v.Value);
+            return _tree.RadialSearch(GeoUtil.GetCoord(center), radius, maxcount).Select(v => v.Value);
         }
 
         public IEnumerable<T> NearestNeighbourSearch(double lat, double lng)
@@ -96,7 +86,7 @@ namespace NGeoNames
 
         public IEnumerable<T> NearestNeighbourSearch(T center, int maxcount)
         {
-            return _tree.GetNearestNeighbours(GetCoord(center), maxcount).Select(v => v.Value);
+            return _tree.GetNearestNeighbours(GeoUtil.GetCoord(center), maxcount).Select(v => v.Value);
         }
 
         public T CreateFromLatLong(double lat, double lng)
