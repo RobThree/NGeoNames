@@ -2,8 +2,16 @@
 
 namespace NGeoNames.Composers
 {
+    /// <summary>
+    /// Provides methods for composing a string representing an <see cref="CountryInfo"/>.
+    /// </summary>
     public class CountryInfoComposer : BaseComposer<CountryInfo>
     {
+        /// <summary>
+        /// Composes the specified <see cref="CountryInfo"/> into a string.
+        /// </summary>
+        /// <param name="value">The <see cref="CountryInfo"/> to be composed into a string.</param>
+        /// <returns>A string representing the specified <see cref="CountryInfo"/>.</returns>
         public override string Compose(CountryInfo value)
         {
             return string.Join(this.FieldSeparator.ToString(), value.ISO_Alpha2, value.ISO_Alpha3, value.ISO_Numeric, value.FIPS, value.Country,

@@ -1,7 +1,7 @@
 ﻿namespace NGeoNames.Entities
 {
     /// <summary>
-    /// Represents a ("simple") GeoName record; this class also serves as baseclass for <see cref="ExtendedGeoName"/>.
+    /// Represents a ("compact") GeoName record; this class also serves as baseclass for <see cref="ExtendedGeoName"/>.
     /// </summary>
     /// <seealso cref="ExtendedGeoName"/>
     public class GeoName

@@ -105,7 +105,7 @@ namespace NGeoNamesTests
         [TestMethod]
         public void GeoNamesComposerSimple_ComposesFileCorrectly()
         {
-            // In this test we test the "simple file format" (e.g. GeoName, not ExtendedGeoName)
+            // In this test we test the "compact file format" (e.g. GeoName, not ExtendedGeoName)
             var src = @"testdata\test_geonames_simple.txt";
             var dst = @"testdata\test_geonames_simple.out.txt";
 

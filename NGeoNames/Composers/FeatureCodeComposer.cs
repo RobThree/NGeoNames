@@ -2,9 +2,16 @@
 
 namespace NGeoNames.Composers
 {
+    /// <summary>
+    /// Provides methods for composing a string representing an <see cref="FeatureCode"/>.
+    /// </summary>
     public class FeatureCodeComposer : BaseComposer<FeatureCode>
     {
-
+        /// <summary>
+        /// Composes the specified <see cref="FeatureCode"/> into a string.
+        /// </summary>
+        /// <param name="value">The <see cref="FeatureCode"/> to be composed into a string.</param>
+        /// <returns>A string representing the specified <see cref="FeatureCode"/>.</returns>
         public override string Compose(FeatureCode value)
         {
             return string.Join(this.FieldSeparator.ToString(), GetFeatureCodeString(value), value.Name, value.Description);
