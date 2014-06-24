@@ -6,7 +6,7 @@ namespace NGeoNames
     /// </summary>
     public enum FileType
     {
-        /// <summary>Auto detect the file type; uses the file's extension to determin filetype.</summary>
+        /// <summary>Auto detect the file type; uses the file's extension to determine filetype.</summary>
         AutoDetect = 0,
         /// <summary>The file is a plain textfile.</summary>
         Plain = 1,
