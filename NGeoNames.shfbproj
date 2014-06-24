@@ -32,7 +32,7 @@
       <DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.xml" />
     </DocumentationSources>
     <ProjectSummary>This library provides classes for downloading, reading and parsing, writing and composing files from GeoNames.org and provides %28reverse%29 geocoding methods like NearestNeighbourSearch%28%29 and RadialSearch%28%29 on the downloaded dataset%28s%29.</ProjectSummary>
-    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <HelpFileVersion>1.2.32.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SyntaxFilters>Standard</SyntaxFilters>
@@ -46,6 +46,10 @@
       <NamespaceSummaryItem name="NGeoNames.Composers" isDocumented="True">The NGeoNames.Composers namespace contains interfaces and classes that allow you to compose and write geoname.org compatible "dump files".</NamespaceSummaryItem>
       <NamespaceSummaryItem name="NGeoNames.Parsers" isDocumented="True">The NGeoNames.Parsers namespace contains interfaces and classes that allow you to read and parse geoname.org compatible "dump files".</NamespaceSummaryItem>
     </NamespaceSummaries>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <MSHelp2SdkLinkType>Msdn</MSHelp2SdkLinkType>
+    <IncludeStopWordList>True</IncludeStopWordList>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional

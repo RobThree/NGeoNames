@@ -58,6 +58,8 @@ namespace NGeoNamesTests
         {
             var target = new Admin1Code();
             target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            target.NameASCII = string.Empty;
+            target.NameASCII = null;
         }
 
         [TestMethod]
@@ -81,6 +83,8 @@ namespace NGeoNamesTests
         {
             var target = new Admin2Code();
             target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            target.NameASCII = string.Empty;
+            target.NameASCII = null;
         }
 
         [TestMethod]
@@ -104,6 +108,8 @@ namespace NGeoNamesTests
         {
             var target = new ExtendedGeoName();
             target.NameASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            target.NameASCII = string.Empty;
+            target.NameASCII = null;
         }
 
         [TestMethod]

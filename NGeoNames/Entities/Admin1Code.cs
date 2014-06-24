@@ -25,7 +25,7 @@ namespace NGeoNames.Entities
             get { return _nameascii; }
             set
             {
-                if (!value.IsASCIIOnly())
+                if (!value.IsASCIIOnlyOrNull())
                     throw new FormatException("ASCII characters ONLY allowed");
                 _nameascii = value;
             }
