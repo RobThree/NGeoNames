@@ -3,7 +3,7 @@
   <metadata>
     <id>NGeoNames</id>
     <title>NGeoNames</title>
-    <version>1.1.24</version>
+    <version>1.2.29</version>
     <authors>RobIII</authors>
     <owners>RobIII</owners>
     <projectUrl>https://github.com/RobThree/NGeoNames</projectUrl>
@@ -16,13 +16,15 @@
       Provides classes and methods for downloading, reading/parsing and utilizing files from GeoNames.org dumps.
     </summary>
     <releaseNotes>
-      * Added GZip support to GeoFileWriter
+      * Cleanup, minor changes/bugfixes, documentation
     </releaseNotes>
     <tags>reverse-geocoding geocoding geocode reverse-geocode geocoder reverse-geocoder maps</tags>
   </metadata>
   <files>
     <file src="NGeoNames\bin\Release\NGeoNames.dll" target="lib\net45" />
     <file src="NGeoNames\bin\Release\NGeoNames.XML" target="lib\net45" />
+    <file src="NGeoNames\bin\Release\NGeoNames.XML" target="lib\net45" />
+    <file src="Help\NGeoNames.chm" target="content" />
     <file src="NGeoNames\bin\Release\KdTreeLib.dll" target="lib\net45" />
   </files>
 </package>

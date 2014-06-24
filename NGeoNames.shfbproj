@@ -16,7 +16,7 @@
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <OutputPath>Help\</OutputPath>
-    <HtmlHelpName>Documentation</HtmlHelpName>
+    <HtmlHelpName>NGeoNames</HtmlHelpName>
     <Language>en-US</Language>
     <CopyrightHref>http://robiii.nl</CopyrightHref>
     <CopyrightText>%28C%29 2014 Devcorner.nl</CopyrightText>
@@ -42,9 +42,10 @@
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="NGeoNames.Entities" isDocumented="True">The NGeoNames.Entities namespace contains classes that represent the entities defined by geonames.org and are dictated by their respective "dump files".</NamespaceSummaryItem>
-<NamespaceSummaryItem name="NGeoNames" isDocumented="True">The NGeoNames namespace contains classes that allow you to download, read and parse, compose and write geonames.org "dump files" and that can be used to do offline reverse geocoding.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="NGeoNames.Composers" isDocumented="True">The NGeoNames.Composers namespace contains interfaces and classes that allow you to compose and write geoname.org compatible "dump files".</NamespaceSummaryItem>
-<NamespaceSummaryItem name="NGeoNames.Parsers" isDocumented="True">The NGeoNames.Parsers namespace contains interfaces and classes that allow you to read and parse geoname.org compatible "dump files".</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="NGeoNames" isDocumented="True">The NGeoNames namespace contains classes that allow you to download, read and parse, compose and write geonames.org "dump files" and that can be used to do offline reverse geocoding.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="NGeoNames.Composers" isDocumented="True">The NGeoNames.Composers namespace contains interfaces and classes that allow you to compose and write geoname.org compatible "dump files".</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="NGeoNames.Parsers" isDocumented="True">The NGeoNames.Parsers namespace contains interfaces and classes that allow you to read and parse geoname.org compatible "dump files".</NamespaceSummaryItem>
+    </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
