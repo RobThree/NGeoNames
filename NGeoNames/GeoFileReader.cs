@@ -532,6 +532,34 @@ namespace NGeoNames
         {
             return new GeoFileReader().ReadRecords<UserTag>(stream, new UserTagParser());
         }
+
+        /// <summary>
+        /// Reads <see cref="Postalcode"/> records from the specified file, using the default <see cref="PostalcodeParser"/>.
+        /// </summary>
+        /// <param name="filename">The name/path of the file.</param>
+        /// <returns>Returns an IEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
+        /// <remarks>
+        /// This static method is a convenience-method; see the ReadRecords&lt;T&gt; overloaded instance-methods for
+        /// more control over how the file is read.
+        /// </remarks>
+        public static IEnumerable<Postalcode> ReadPostalcodes(string filename)
+        {
+            return new GeoFileReader().ReadRecords<Postalcode>(filename, new PostalcodeParser());
+        }
+
+        /// <summary>
+        /// Reads <see cref="Postalcode"/> records from the <see cref="Stream"/>, using the default <see cref="PostalcodeParser"/>.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
+        /// <returns>Returns an IEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
+        /// <remarks>
+        /// This static method is a convenience-method; see the ReadRecords&lt;T&gt; overloaded instance-methods for
+        /// more control over how the stream is read.
+        /// </remarks>
+        public static IEnumerable<Postalcode> ReadPostalcodes(Stream stream)
+        {
+            return new GeoFileReader().ReadRecords<Postalcode>(stream, new PostalcodeParser());
+        }
         #endregion
     }
 }

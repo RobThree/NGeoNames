@@ -86,6 +86,8 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the value.</returns>
         protected string DoubleToString(double value)
         {
+            if (double.IsNaN(value))
+                return null;
             return value.ToString("0.0#######", CultureInfo.InvariantCulture);
         }
     }

@@ -1,0 +1,4 @@
+AU	0200	Australian National University	Australian Capital Territory	ACT	CANBERRA						
+CZ	561 13	Orlické Podhůří-Rozsocha x)			Ústí nad Orlicí	3611			50.0333	16.2833	
+RU	216270	Пржевальское	Смоленская Область		ДЕМИДОВСКИЙ РАЙОН				55.5075	31.85	4
+CH	2023	Gorgier	Canton de Neuchâtel	NE	District de Boudry	2401	Gorgier	6410	46.9211	6.7559	6

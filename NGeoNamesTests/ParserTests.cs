@@ -758,6 +758,44 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
+        public void PostalCodeParser_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadPostalcodes(@"testdata\test_postalcodes.txt").ToArray();
+            Assert.AreEqual(4, target.Length);  //First line in file should've been skipped
+
+            Assert.AreEqual("AU", target[0].CountryCode);
+            Assert.AreEqual("0200", target[0].PostalCode);
+            Assert.AreEqual("Australian National University", target[0].PlaceName);
+            Assert.IsTrue(double.IsNaN(target[0].Latitude));
+            Assert.IsTrue(double.IsNaN(target[0].Longitude));
+            Assert.IsNull(target[0].Accuracy);
+
+            Assert.AreEqual("CZ", target[1].CountryCode);
+            Assert.AreEqual("561 13", target[1].PostalCode);
+            Assert.AreEqual("Orlické Podhůří-Rozsocha x)", target[1].PlaceName);
+            Assert.AreEqual(50.0333, target[1].Latitude);
+            Assert.AreEqual(16.2833, target[1].Longitude);
+            Assert.IsNull(target[1].Accuracy);
+
+            Assert.AreEqual("RU", target[2].CountryCode);
+            Assert.AreEqual("216270", target[2].PostalCode);
+            Assert.AreEqual("Пржевальское", target[2].PlaceName);
+            Assert.AreEqual(55.5075, target[2].Latitude);
+            Assert.AreEqual(31.85, target[2].Longitude);
+            Assert.AreEqual(4, target[2].Accuracy);
+
+            Assert.AreEqual("CH", target[3].CountryCode);
+            Assert.AreEqual("2023", target[3].PostalCode);
+            Assert.AreEqual("Gorgier", target[3].PlaceName);
+            Assert.AreEqual("NE", target[3].AdminCode[0]);
+            Assert.AreEqual("2401", target[3].AdminCode[1]);
+            Assert.AreEqual("6410", target[3].AdminCode[2]);
+            Assert.AreEqual("Canton de Neuchâtel", target[3].AdminName[0]);
+            Assert.AreEqual("District de Boudry", target[3].AdminName[1]);
+            Assert.AreEqual("Gorgier", target[3].AdminName[2]);
+        }
+
+        [TestMethod]
         public void CustomParser_IsUsedCorrectly()
         {
             var target = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();

@@ -36,5 +36,25 @@ namespace NGeoNamesTests
             var result = a.DistanceTo(b);
             Assert.AreEqual(actual, result, actual * .0005);    // All we want is to be within .05% of the "actual" (according to our own measurements) value
         }
+
+        [TestMethod]
+        public void DistanceTo_WorksOnAllIGeoLocationObjects()
+        {
+            var gn = new GeoName { Latitude = 50.0333, Longitude = 16.2833 };
+            var en = new ExtendedGeoName { Latitude = 55.5075, Longitude = 31.85 };
+            var pc = new Postalcode { Latitude = 51.5558, Longitude = 5.6903 };
+
+            var a = gn.DistanceTo(en);
+            var b = gn.DistanceTo(pc);
+            var c = gn.DistanceTo(gn);
+
+            var d = en.DistanceTo(gn);
+            var e = en.DistanceTo(pc);
+            var f = en.DistanceTo(en);
+
+            var g = pc.DistanceTo(gn);
+            var h = pc.DistanceTo(en);
+            var i = pc.DistanceTo(pc);
+        }
     }
 }

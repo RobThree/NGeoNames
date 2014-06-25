@@ -66,6 +66,7 @@
     <Compile Include="Composers\GeoNameComposer.cs" />
     <Compile Include="Composers\HierarchyComposer.cs" />
     <Compile Include="Composers\ISOLanguageCodeComposer.cs" />
+    <Compile Include="Composers\PostalcodeComposer.cs" />
     <Compile Include="Composers\TimeZoneComposer.cs" />
     <Compile Include="Composers\UserTagComposer.cs" />
     <Compile Include="Entities\Admin2Code.cs" />
@@ -77,8 +78,11 @@
     <Compile Include="Entities\FeatureCode.cs" />
     <Compile Include="Entities\HierarchyNode.cs" />
     <Compile Include="Entities\GeoName.cs" />
+    <Compile Include="Entities\IGeoLocation.cs" />
+    <Compile Include="Entities\Postalcode.cs" />
     <Compile Include="Entities\UserTag.cs" />
     <Compile Include="FileType.cs" />
+    <Compile Include="GeoExtensionMethods.cs" />
     <Compile Include="GeoFileDownloader.cs" />
     <Compile Include="GeoFileWriter.cs" />
     <Compile Include="GeoUtil.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Parsers\ISOLanguageCodeParser.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Parsers\PostalcodeParser.cs" />
     <Compile Include="Parsers\TimeZoneParser.cs">
       <SubType>Code</SubType>
     </Compile>

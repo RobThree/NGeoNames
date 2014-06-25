@@ -169,6 +169,17 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
+        public void PostalcodeComposer_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_postalCodes.txt";
+            var dst = @"testdata\test_postalCodes.out.txt";
+
+            GeoFileWriter.WritePostalcodes(dst, GeoFileReader.ReadPostalcodes(src));
+
+            FileUtil.EnsureFilesAreFunctionallyEqual(src, dst, 12, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
         public void CustomComposer_ComposesFileCorrectly()
         {
             var src = @"testdata\test_custom.txt";

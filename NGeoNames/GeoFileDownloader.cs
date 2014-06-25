@@ -24,7 +24,12 @@ namespace NGeoNames
         /// <summary>
         /// Gets the default URI where geonames.org export files can be found.
         /// </summary>
-        public static readonly Uri DEFAULTBASEURI = new Uri("http://download.geonames.org/export/dump/", UriKind.Absolute);
+        public static readonly Uri DEFAULTGEOFILEBASEURI = new Uri("http://download.geonames.org/export/dump/", UriKind.Absolute);
+
+        /// <summary>
+        /// Gets the default URI where geonames.org postal codes files can be found.
+        /// </summary>
+        public static readonly Uri DEFAULTPOSTALCODEBASEURI = new Uri("http://download.geonames.org/export/zip/", UriKind.Absolute);
 
         /// <summary>
         /// Gets the useragent string used to identify when downloading files from geonames.org.
@@ -58,15 +63,6 @@ namespace NGeoNames
         public TimeSpan DefaultTTL { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class using the <see cref="DEFAULTBASEURI"/> as <see cref="BaseUri"/>.
-        /// </summary>
-        /// <remarks>
-        /// The <see cref="DefaultTTL"/> is 24 hours.
-        /// </remarks>
-        public GeoFileDownloader()
-            : this(DEFAULTBASEURI) { }
-
-        /// <summary>
         /// Initializes a new instance of the GeoFileDownloader class using the specified URI as <see cref="BaseUri"/>.
         /// </summary>
         /// <param name="baseUri">The base URI to use when downloading files and relative paths are specified.</param>
@@ -74,9 +70,59 @@ namespace NGeoNames
         /// The <see cref="DefaultTTL"/> is 24 hours.
         /// </remarks>
         public GeoFileDownloader(Uri baseUri)
+            : this(baseUri, TimeSpan.FromHours(24)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class using the specified URI as <see cref="BaseUri"/>
+        /// and specified TTL.
+        /// </summary>
+        /// <param name="baseUri">The base URI to use when downloading files and relative paths are specified.</param>
+        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
+        public GeoFileDownloader(Uri baseUri, TimeSpan ttl)
         {
             this.BaseUri = baseUri;
-            this.DefaultTTL = TimeSpan.FromHours(24);
+            this.DefaultTTL = ttl;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="DefaultTTL"/> is 24 hours.
+        /// </remarks>
+        public static GeoFileDownloader CreateGeoFileDownloader()
+        {
+            return new GeoFileDownloader(DEFAULTGEOFILEBASEURI);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files with the specified TTL.
+        /// </summary>
+        public static GeoFileDownloader CreateGeoFileDownloader(TimeSpan ttl)
+        {
+            return new GeoFileDownloader(DEFAULTGEOFILEBASEURI, ttl);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="DefaultTTL"/> is 24 hours.
+        /// </remarks>
+        public static GeoFileDownloader CreatePostalcodeDownloader()
+        {
+            return new GeoFileDownloader(DEFAULTPOSTALCODEBASEURI);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files with the specified TTL.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="DefaultTTL"/> is 24 hours.
+        /// </remarks>
+        public static GeoFileDownloader CreatePostalcodeDownloader(TimeSpan ttl)
+        {
+            return new GeoFileDownloader(DEFAULTPOSTALCODEBASEURI, ttl);
         }
 
         /// <summary>

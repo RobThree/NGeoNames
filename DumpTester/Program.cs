@@ -17,26 +17,25 @@ namespace DumpTester
     /// </remarks>
     class Program
     {
-        private static Uri BaseUri = new Uri(ConfigurationManager.AppSettings["baseuri"], UriKind.Absolute);
-        private static string DownloadDirectory = ConfigurationManager.AppSettings["downloaddirectory"];
+        private static string Dump_DownloadDirectory = ConfigurationManager.AppSettings["dump_downloaddirectory"];
 
         static void Main(string[] args)
         {
-            var dumpfiles = GetDumps();
-            var downloader = new GeoFileDownloader(BaseUri);
+            var downloader = GeoFileDownloader.CreateGeoFileDownloader();
+            var dumpfiles = GetDumps(downloader);
 
             foreach (var geofile in dumpfiles)
             {
                 Console.Write("Download: {0}", geofile.Filename);
-                downloader.DownloadFile(geofile.Filename, DownloadDirectory);
+                downloader.DownloadFile(geofile.Filename, Dump_DownloadDirectory);
                 Console.Write(" Testing: ");
-                Console.WriteLine("{0}", geofile.Test(Path.Combine(DownloadDirectory, geofile.Filename)));
+                Console.WriteLine("{0}", geofile.Test(Path.Combine(Dump_DownloadDirectory, geofile.Filename)));
             }
 
             Console.WriteLine("All done!");
         }
 
-        private static GeoFile[] GetDumps()
+        private static GeoFile[] GetDumps(GeoFileDownloader downloader)
         {
             return new[] {
                 new GeoFile { Filename = "admin1CodesASCII.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAdmin1Codes(fn).Count(); }) },
@@ -53,13 +52,13 @@ namespace DumpTester
                 new GeoFile { Filename = "no-country.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
                 new GeoFile { Filename = "timeZones.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadTimeZones(fn).Count(); }) },
                 new GeoFile { Filename = "userTags.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadUserTags(fn).Count(); }) },
-            }.Union(GetCountryDumps()).ToArray();
+            }.Union(GetCountryDumps(downloader)).ToArray();
         }
 
-        private static GeoFile[] GetCountryDumps()
+        private static GeoFile[] GetCountryDumps(GeoFileDownloader downloader)
         {
             var w = new WebClient();
-            var document = w.DownloadString(BaseUri);
+            var document = w.DownloadString(downloader.BaseUri);
 
             var countries = new Regex("href=\"([A-Z]{2}.zip)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
                 .Matches(document)

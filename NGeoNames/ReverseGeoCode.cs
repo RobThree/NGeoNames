@@ -10,7 +10,7 @@ namespace NGeoNames
     /// </summary>
     /// <typeparam name="T">The type of elements in ReverseGeoCoder.</typeparam>
     public class ReverseGeoCode<T>
-        where T : GeoName, new()
+        where T : IGeoLocation, new()
     {
         private KdTree.KdTree<double, T> _tree;
 
@@ -22,10 +22,10 @@ namespace NGeoNames
 
         /// <summary>
         /// Initializes a new <see cref="ReverseGeoCode&lt;T&gt;"/> object, populating the internal structures with the provided
-        /// <see cref="GeoName"/>s, <see cref="ExtendedGeoName"/>s or derived.
+        /// <see cref="IGeoLocation"/>s.
         /// </summary>
         /// <param name="nodes">
-        /// An IEnumerable&lt;T&gt; of <see cref="GeoName"/> (or derived) to populate the <see cref="ReverseGeoCode&lt;T&gt;"/> with.
+        /// An IEnumerable&lt;T&gt; of <see cref="IGeoLocation"/> to populate the <see cref="ReverseGeoCode&lt;T&gt;"/> with.
         /// </param>
         /// <remarks>
         /// This constructor will, internally, call the <see cref="Balance"/> method when the internal structure is initialized.
@@ -41,7 +41,7 @@ namespace NGeoNames
         /// <summary>
         /// Adds a node to the <see cref="ReverseGeoCode&lt;T&gt;"/> internal structure.
         /// </summary>
-        /// <param name="node">The <see cref="GeoName"/> (or derived) to add.</param>
+        /// <param name="node">The <see cref="IGeoLocation"/> to add.</param>
         public void Add(T node)
         {
             _tree.Add(GeoUtil.GetCoord(node), node);
@@ -51,7 +51,7 @@ namespace NGeoNames
         /// <summary>
         /// Adds the specified nodes to the <see cref="ReverseGeoCode&lt;T&gt;"/> internal structure.
         /// </summary>
-        /// <param name="nodes">An IEnumerable&lt;T&gt; of <see cref="GeoName"/>s (or derived) to add.</param>
+        /// <param name="nodes">An IEnumerable&lt;T&gt; of <see cref="IGeoLocation"/>s to add.</param>
         public void AddRange(IEnumerable<T> nodes)
         {
             foreach (var i in nodes)
@@ -190,56 +190,17 @@ namespace NGeoNames
         }
 
         /// <summary>
-        /// Creates a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived from a latitude and longitude.
+        /// Creates a <see cref="IGeoLocation"/> from a latitude and longitude.
         /// </summary>
         /// <param name="lat">The latitude of the object.</param>
         /// <param name="lng">The longitude of the object.</param>
         /// <returns>Returns a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived.</returns>
         public T CreateFromLatLong(double lat, double lng)
         {
-            return this.CreateFromLatLong(lat, lng, 0);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived from a latitude and longitude.
-        /// </summary>
-        /// <param name="lat">The latitude of the object.</param>
-        /// <param name="lng">The longitude of the object.</param>
-        /// <param name="id">The geoname database Id of the object.</param>
-        /// <returns>Returns a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived.</returns>        
-        public T CreateFromLatLong(double lat, double lng, int id)
-        {
-            return this.CreateFromLatLong(lat, lng, id, null);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived from a latitude and longitude.
-        /// </summary>
-        /// <param name="lat">The latitude of the object.</param>
-        /// <param name="lng">The longitude of the object.</param>
-        /// <param name="name">The name of the object.</param>
-        /// <returns>Returns a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived.</returns>
-        public T CreateFromLatLong(double lat, double lng, string name)
-        {
-            return this.CreateFromLatLong(lat, lng, 0, name);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived from a latitude and longitude.
-        /// </summary>
-        /// <param name="lat">The latitude of the object.</param>
-        /// <param name="lng">The longitude of the object.</param>
-        /// <param name="id">The geoname database Id of the object.</param>
-        /// <param name="name">The name of the object.</param>
-        /// <returns>Returns a <see cref="GeoName"/>, <see cref="ExtendedGeoName"/> or derived.</returns>
-        public T CreateFromLatLong(double lat, double lng, int id, string name)
-        {
             return new T()
             {
                 Latitude = lat,
-                Longitude = lng,
-                Name = name,
-                Id = id
+                Longitude = lng
             };
         }
 

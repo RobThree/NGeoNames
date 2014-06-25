@@ -494,6 +494,34 @@ namespace NGeoNames
         {
             new GeoFileWriter().WriteRecords<UserTag>(stream, values, new UserTagComposer());
         }
+
+        /// <summary>
+        /// Writes <see cref="Postalcode"/> records to the specified file, using the default <see cref="PostalcodeComposer"/>.
+        /// </summary>
+        /// <param name="filename">The name/path of the file.</param>
+        /// <param name="values">The values to write to the file.</param>
+        /// <remarks>
+        /// This static method is a convenience-method; see the WriteRecords&lt;T&gt; overloaded instance-methods for
+        /// more control over how the file is written.
+        /// </remarks>
+        public static void WritePostalcodes(string filename, IEnumerable<Postalcode> values)
+        {
+            new GeoFileWriter().WriteRecords<Postalcode>(filename, values, new PostalcodeComposer());
+        }
+
+        /// <summary>
+        /// Writes <see cref="Postalcode"/> records to the <see cref="Stream"/>, using the default <see cref="PostalcodeComposer"/>.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to write to.</param>
+        /// <param name="values">The values to write to the stream.</param>
+        /// <remarks>
+        /// This static method is a convenience-method; see the WriteRecords&lt;T&gt; overloaded instance-methods for
+        /// more control over how the stream is written.
+        /// </remarks>
+        public static void WritePostalcodes(Stream stream, IEnumerable<Postalcode> values)
+        {
+            new GeoFileWriter().WriteRecords<Postalcode>(stream, values, new PostalcodeComposer());
+        }
         #endregion
     }
 }
