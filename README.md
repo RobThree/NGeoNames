@@ -49,11 +49,11 @@ The library provides for the following main operations:
 3. [Utilizing geonames.org data](#utilizing)
 4. [Writing / composing geonames.org data](#composing)
 
-The library consists mainly of parsers, composers and entities (in their respective namespaces) and a `GeoFileReader` and `GeoFileWriter` to read/parse and write/compose files from geonames.org, a `GeoFileDownloader` to retrieve files from geonames.org and a `ReverseGeoCode<T>` class to do the heavy lifting of the reverse geocoding itself.
+The library consists mainly of parsers, composers and entities (in their respective namespaces) and a `GeoFileReader` and `GeoFileWriter` to read/parse and write/compose geonames.org compatible files, a `GeoFileDownloader` to retrieve files from geonames.org and a `ReverseGeoCode<T>` class to do the heavy lifting of the reverse geocoding itself.
 
-Because some "geoname files" can be very large (like `allcountries.txt`) we have a `GeoName` entity which is a simplified version (and baseclass) of an `ExtendedGeoName`. The `GeoName` class contains a unique id which can be used to resolve the `ExtendedGeoName` easily for more information when required. It is, however, recommended to use `<countrycode>.txt` (e.g. `GB.txt`) or `cities1000.txt` for example to reduce the dataset to a smaller size or to compose your own custom datasets using the `GeoFileWriter` and composers.
+Because some "geoname files" can be very large (like `allcountries.txt`) we have a `GeoName` entity which is a simplified version (and baseclass) of an `ExtendedGeoName`. The `GeoName` class contains a unique id which can be used to resolve the `ExtendedGeoName` easily for more information when required. It is, however, recommended to use `<countrycode>.txt` (e.g. `GB.txt`) `cities15000.txt` or `cities1000.txt` for example to reduce the dataset to a smaller size, You can also compose your own custom datasets using the `GeoFileWriter` and composers.
 
-Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
+Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary()` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
 
 ### <a name="downloading"></a>Downloading / retrieving data from geonames.org (Optional)
 
@@ -65,9 +65,9 @@ new GeoFileDownloader()
     .DownloadFile("NL.zip", @"D:\my\geodata\directory");
 ```
 
-You can specify the BaseUrl in the `GeoFileDownloader` constructor or just pass an absolute url to the `DownloadFile()` method if you want to use another location than the default `http://download.geonames.org/export/dump/`. The class has properties to set a (HTTP) `CachePolicy`, `Proxy` and `Credentials` to use when downloading the file. The filedownloader, by default, downloads a file only if the destination file doesn't exist *or* when the destination file has "expired" (by default 24 hours). It uses the files CreationDate to determine when the file was downloaded and if a newer version should be downloaded. The "TTL", how long a file will be 'valid', can be set using the `DefaultTTL` property of the `GeoFileDownloader` class. You can also use the `DownloadFileWhenOlderThan()` method which allows you to explicitly set a TTL. When a filename is specified (e.g. `d:\folder\foo.txt`) the file will be named accordingly.
+You can specify the BaseUri in the `GeoFileDownloader` constructor or just pass an absolute url to the `DownloadFile()` method if you want to use another location than the default `http://download.geonames.org/export/dump/`. The class has properties to set a (HTTP) `CachePolicy`, `Proxy` and `Credentials` to use when downloading the file. The filedownloader, by default, downloads a file only if the destination file doesn't exist *or* when the destination file has "expired" (by default 24 hours). It uses the file's CreationDate to determine when the file was downloaded and if a newer version should be downloaded. The "TTL", how long a file will be 'valid', can be set using the `DefaultTTL` property of the `GeoFileDownloader` class. You can also use the `DownloadFileWhenOlderThan()` method which allows you to explicitly set a TTL. When a filename is specified (e.g. `d:\folder\foo.txt`) the file will be named accordingly.
 
-Zipfiles are automatically extracted in the destinationfolder; the original zipfile is preserved because the `GeoFileDownloader` needs to know which files are supposed to be in the zipfile and thus in the destinationdirectory in their extracted form.
+ZIP files are automatically extracted in the destinationfolder; the original zipfile is preserved because the `GeoFileDownloader` needs to know which files are supposed to be in the zipfile and thus in the destinationdirectory in their extracted form.
 
 ### <a name="parsing"></a>Reading / parsing geonames.org data
 
@@ -90,7 +90,7 @@ var data = new GeoFileReader().ReadRecords<MyEntity>("d:\foo\bar.txt", new MyEnt
 
 As long as your parser implements `IParser<MyEntity>` you're good to go. A parser can skip a fixed number of lines in a file (for example a 'header' record), skip comments (for example lines starting with `#`) and you can even specify the encoding to use etc. Examples and more information can be found in the unittests.
 
-Another thing to note is that the `GeoFileReader` will try to "autodetect" if the file is a plain text file (`.txt` extension) or a GZipped file (`.gz` extension). Support for GZip was added to keep the footprint of the files lower when desired. This will, however, trade-off I/O speed and CPU load for space. The `ReadRecords<T>()` method has an overload wher you can explicitly specify the type of the file (should you want to use your own file-extensions like `.dat` for example).
+Another thing to note is that the `GeoFileReader` will try to "autodetect" if the file is a plain text file (`.txt` extension) or a GZipped file (`.gz` extension). Support for GZip was added to keep the footprint of the files lower when desired. This will, however, trade-off I/O speed and CPU load for space. The `ReadRecords<T>()` method has an overload where you can explicitly specify the type of the file (should you want to use your own file-extensions like `.dat` for example).
 
 > Support for compressing downloaded files using the `GeoFileDownloader` on the fly is planned for a later version; for now you will have to GZip the files manually.
 
@@ -100,7 +100,7 @@ As you'll probably realize by now, the `GeoFileReader` class *combined* with [LI
 
 ### <a name="utilizing"></a>Utilizing geonames.org data
 
-The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor. Even if you choose to store your data in a database of custom (binary?) fileformat or anything else; as long as you provide an `IEnumerable` to this class you'll be able to use it.
+The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor. Even if you choose to store your data in a database or custom (binary?) fileformat or anything else; as long as you provide an `IEnumerable` to this class you'll be able to use it.
 
 ```c#
 // Create our ReverseGeoCode class and supply it with data
@@ -148,7 +148,7 @@ r.NearestNeighbourSearch(new_york, 10);
 
 Depending on how you want to search/use the underlying data you may want to use other, more optimal, datastructures than demonstrated above. It's up to you!
 
-Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance for example are specified in **meters**. If you want to use imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to meters.
+Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance are specified in **meters**. If you want to use the imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to/from meters.
 
 The `GeoName` class (and, by extension, the `ExtendedGeoName` class) has a `DistanceTo()` method which can be used to determine the exact distance betweem two points.
 
@@ -158,7 +158,7 @@ Both the `NearestNeighbourSearch()` and `RadialSearch()` methods have some overl
 
 The `NGeoNames.Composers` namespace holds composers (the opposite of parsers) to enable you to write geoname.org datafiles. For this you can use the `GeoNameFileWriter` class which, like the `GeoNameFileReader` class, has generic methods for writing records (`WriteRecords<T>`) and static "convenience methods" to write specific entities to a file. If you wanted to 'transform' a file like `allcountries.txt` to a file with data from, say, the [Benelux](http://en.wikipedia.org/wiki/Benelux)) you could supply the `GeoNameFileWriter` with data from `BE.txt`, `NL.txt` and `LU.txt` *or* data from `allcountries.txt` or `cities1000.txt` filtered with a LINQ query to only data from these countries.
 
-Below is an example of what this would look like (with an extra filter added to filter out records with < 1000 population):
+Below is an example of what this would look like (with an extra filter added to filter out records with `population < 1000`):
 
 ```c#
 // Filter 'allcountries.txt' to only BE, NL, LU entries with a population of >= 1000
@@ -185,7 +185,10 @@ GeoFileWriter.WriteExtendedGeoNames(@"d:\foo\benelux1000.txt",
 
 The `GeoNamesReader` and `GeoNamesWriter` and the (Extended)GeoName parsers/composers always assume the `ExtendedGeoName` format (e.g. 19 fields of data) unless explicitly specified. The parameter **extendedfileformat** may pop-up on some method overloads; whenever this parameter is passed `false` the class will assume a 'simple' (or non-extended) format with only 4 fields of data: Id, Name, Latitude and Longitude. This format is more compact; especially when writing `GeoName` entities instead of `ExtendedGeoName` entities to a file. However, to remain compatible with the original files you probably don't want to use this 'simple' format. Make sure you understand the consequences before you do!
 
+## Help
+
+The [NuGet package](https://www.nuget.org/packages/NGeoNames/) comes with a Windows Help File (`NGeonames.chm`) with lots more information. You can also build this help file, or other formats, yourself using [Sandcastle Help File Builder](https://shfb.codeplex.com/). And finally you can use the richly commented code if you don't want to build or use help files.
+
 ## Project status
 
-<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. 
-[![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
+<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. If you have any issues please [open an issue](https://github.com/RobThree/NGeoNames/issues).<br>[![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
