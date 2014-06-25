@@ -82,8 +82,8 @@ namespace DumpTester.cs
                 var file = filename.Replace(".zip", ".txt");
                 
                 //Haaaaaaaaaack
-                if (filename.EndsWith("no-country.txt"))
-                    filename = "null.txt";
+                if (file.EndsWith("no-country.txt"))
+                    file = file.Replace("no-country.txt", "null.txt");
 
                 return string.Format("{0} records OK", test(file));
             }
@@ -101,7 +101,7 @@ namespace DumpTester.cs
 
         public GeoFile()
         {
-            this.Test = (f) => { return "NO TEST AVAILABLE!"; };
+            this.Test = (f) => { throw new NotImplementedException(); };
         }
     }
 }
