@@ -13,26 +13,58 @@ namespace DumpTester
     /// all files. Use at own risk!
     /// </summary>
     /// <remarks>
-    /// This code is full of hacks / shortcuts / sloppy work; it's not intended to be used in producten
+    /// This code is full of hacks / shortcuts / sloppy work; it's NOT intended to be used in production. This project
+    /// is a simple "brute force" approach to test all of the files (by forcing the parsers to parse each record) made 
+    /// available by geonames.org.
     /// </remarks>
     class Program
     {
         private static string Dump_DownloadDirectory = ConfigurationManager.AppSettings["dump_downloaddirectory"];
+        private static string Postal_DownloadDirectory = ConfigurationManager.AppSettings["postal_downloaddirectory"];
 
         static void Main(string[] args)
         {
-            var downloader = GeoFileDownloader.CreateGeoFileDownloader();
-            var dumpfiles = GetDumps(downloader);
+            //Test GeoName dumps
+            var dumpdownloader = GeoFileDownloader.CreateGeoFileDownloader();
+            var dumpfiles = GetDumps(dumpdownloader);
+
 
             foreach (var geofile in dumpfiles)
             {
                 Console.Write("Download: {0}", geofile.Filename);
-                downloader.DownloadFile(geofile.Filename, Dump_DownloadDirectory);
+                dumpdownloader.DownloadFile(geofile.Filename, Dump_DownloadDirectory);
                 Console.Write(" Testing: ");
                 Console.WriteLine("{0}", geofile.Test(Path.Combine(Dump_DownloadDirectory, geofile.Filename)));
             }
 
+            //Test Postalcode dumps
+            var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
+            var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
+
+            foreach (var geofile in postalcodefiles)
+            {
+                Console.Write("Download: {0}", geofile.Filename);
+                postalcodedownloader.DownloadFile(geofile.Filename, Postal_DownloadDirectory);
+                Console.Write(" Testing: ");
+                Console.WriteLine("{0}", geofile.Test(Path.Combine(Postal_DownloadDirectory, geofile.Filename)));
+            }
+
             Console.WriteLine("All done!");
+        }
+
+        private static GeoFile[] GetCountryPostalcodes(GeoFileDownloader downloader)
+        {
+            var w = new WebClient();
+            var document = w.DownloadString(downloader.BaseUri);
+
+            var countries = new Regex("href=\"([A-Z]{2}.zip)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+                .Matches(document)
+                .Cast<Match>()
+                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) });
+
+            return new [] { 
+                new GeoFile { Filename = "allCountries.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) }
+            }.Union(countries.OrderBy(m => m.Filename)).ToArray();
         }
 
         private static GeoFile[] GetDumps(GeoFileDownloader downloader)
@@ -79,7 +111,7 @@ namespace DumpTester
             {
                 //Haaaack
                 var file = filename.Replace(".zip", ".txt");
-                
+
                 //Haaaaaaaaaack
                 if (file.EndsWith("no-country.txt"))
                     file = file.Replace("no-country.txt", "null.txt");
