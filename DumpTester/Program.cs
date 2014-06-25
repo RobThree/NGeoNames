@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace DumpTester.cs
+namespace DumpTester
 {
     /// <summary>
     /// Quick'n'Dirty program to download all dumpfiles and iterate over all of them to ensure parsing works for

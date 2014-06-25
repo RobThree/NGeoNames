@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumpTester.cs", "DumpTester.cs\DumpTester.cs.csproj", "{F3407F70-D016-40CD-A394-B56FACA6307B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumpTester", "DumpTester\DumpTester.csproj", "{F3407F70-D016-40CD-A394-B56FACA6307B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

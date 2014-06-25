@@ -7,8 +7,8 @@
     <ProjectGuid>{F3407F70-D016-40CD-A394-B56FACA6307B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DumpTester.cs</RootNamespace>
-    <AssemblyName>DumpTester.cs</AssemblyName>
+    <RootNamespace>DumpTester</RootNamespace>
+    <AssemblyName>DumpTester</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -47,7 +47,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGeoNames\NGeoNames.csproj">
