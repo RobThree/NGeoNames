@@ -12,7 +12,7 @@ This library is available as [NuGet package](https://www.nuget.org/packages/NGeo
 var datadir = @"D:\test\geo\";
 
 // Download file (optional; you can point a GeoFileReader to existing files ofcourse)
-var downloader = new GeoFileDownloader();
+var downloader = GeoFileDownloader.CreateGeoFileDownloader();
 downloader.DownloadFile("NL.txt", datadir);    // Download NL.txt to D:\test\geo\
 
 // Read NL.txt file to memory
@@ -60,12 +60,16 @@ Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make 
 To download files from geonames.org you can use the `GeoFileDownloader` class which is, in essence, a wrapper for a basic [`WebClient`](http://msdn.microsoft.com/en-us/library/system.net.webclient.aspx). The simplest form is:
 
 ```c#
-// Downloads (and extracts) NL.zip from geonames.org to D:\my\geodata\directory
-new GeoFileDownloader()
-    .DownloadFile("NL.zip", @"D:\my\geodata\directory");
+// Downloads (and extracts) geoname data in NL.zip from geonames.org
+GeoFileDownloader.CreateGeoFileDownloader()
+    .DownloadFile("NL.zip", @"D:\my\geodata\geo");
+    
+// Downloads (and extracts) postalcode data in NL.zip from geonames.org
+GeoFileDownloader.CreatePostalcodeDownloader()
+    .DownloadFile("NL.zip", @"D:\my\geodata\postalcode");
 ```
 
-You can specify the BaseUri in the `GeoFileDownloader` constructor or just pass an absolute url to the `DownloadFile()` method if you want to use another location than the default `http://download.geonames.org/export/dump/`. The class has properties to set a (HTTP) `CachePolicy`, `Proxy` and `Credentials` to use when downloading the file. The filedownloader, by default, downloads a file only if the destination file doesn't exist *or* when the destination file has "expired" (by default 24 hours). It uses the file's CreationDate to determine when the file was downloaded and if a newer version should be downloaded. The "TTL", how long a file will be 'valid', can be set using the `DefaultTTL` property of the `GeoFileDownloader` class. You can also use the `DownloadFileWhenOlderThan()` method which allows you to explicitly set a TTL. When a filename is specified (e.g. `d:\folder\foo.txt`) the file will be named accordingly.
+You can specify the BaseUri in the `GeoFileDownloader` constructor or just pass an absolute url to the `DownloadFile()` method if you want to use another location than the default `http://download.geonames.org/export/dump/`. The static 'factory methods'  `CreateGeoFileDownloader()` and `CreatePostalcodeDownloader` are the easiest way to create a `GeoFileDownloader`; these use the built-in values for the BaseUri. The `GeoFileDownloader` has properties to set a (HTTP) `CachePolicy`, `Proxy` and `Credentials` to use when downloading the file. The filedownloader, by default, downloads a file only if the destination file doesn't exist *or* when the destination file has "expired" (by default 24 hours). It uses the file's CreationDate to determine when the file was downloaded and if a newer version should be downloaded. The "TTL", how long a file will be 'valid', can be set using the `DefaultTTL` property of the `GeoFileDownloader` class. You can also use the `DownloadFileWhenOlderThan()` method which allows you to explicitly set a TTL. When a filename is specified (e.g. `d:\folder\foo.txt`) the file will be named accordingly.
 
 ZIP files are automatically extracted in the destinationfolder; the original zipfile is preserved because the `GeoFileDownloader` needs to know which files are supposed to be in the zipfile and thus in the destinationdirectory in their extracted form.
 
