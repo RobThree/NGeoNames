@@ -8,20 +8,14 @@ namespace NGeoNames.Entities
     /// <seealso cref="GeoName"/>
     public class ExtendedGeoName : GeoName
     {
-        private string _nameascii;
         /// <summary>
         /// Gets/sets the name of the <see cref="ExtendedGeoName"/>.
         /// </summary>
-        public string NameASCII
-        {
-            get { return _nameascii; }
-            set
-            {
-                if (!value.IsASCIIOnlyOrNull())
-                    throw new FormatException("ASCII characters ONLY allowed");
-                _nameascii = value;
-            }
-        }
+        /// <remarks>
+        /// Non-ASCII values have been found in the data; it is unfortunately (currently) *NOT* guaranteed that this
+        /// property contains ASCII-only strings.
+        /// </remarks>
+        public string NameASCII { get; set; }
 
         /// <summary>
         /// Gets/sets the alternatenames / ASCII names of the <see cref="ExtendedGeoName"/>.

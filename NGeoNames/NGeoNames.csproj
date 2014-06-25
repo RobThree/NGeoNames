@@ -78,7 +78,6 @@
     <Compile Include="Entities\HierarchyNode.cs" />
     <Compile Include="Entities\GeoName.cs" />
     <Compile Include="Entities\UserTag.cs" />
-    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="FileType.cs" />
     <Compile Include="GeoFileDownloader.cs" />
     <Compile Include="GeoFileWriter.cs" />
