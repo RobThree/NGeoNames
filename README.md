@@ -2,7 +2,7 @@
 
 Inspired by [OfflineReverseGeocode](https://github.com/AReallyGoodName/OfflineReverseGeocode) found at [this Reddit post](http://www.reddit.com/r/programming/comments/281msj/). You may also be interested in [GeoSharp](https://github.com/Necrolis/GeoSharp). Uses [KdTree](https://github.com/codeandcats/KdTree). Built and tested on .Net 4.5.
 
-This library provides classes for downloading, reading and parsing, writing and composing [files from GeoNames.org](download.geonames.org/export/dump/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
+This library provides classes for downloading, reading and parsing, writing and composing [files from](http://download.geonames.org/export/dump/) [GeoNames.org](http://download.geonames.org/export/zip/) and provides (reverse) geocoding methods like `NearestNeighbourSearch()` and `RadialSearch()` on the downloaded dataset(s).
 
 This library is available as [NuGet package](https://www.nuget.org/packages/NGeoNames/).
 
