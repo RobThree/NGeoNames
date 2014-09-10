@@ -17,8 +17,12 @@ namespace NGeoNames.Entities
         /// <remarks>
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
-        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters.
+        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters. You can use the
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
+        /// conversion.
         /// </remarks>
+        /// <seealso cref="GeoUtil.MilesToMeters"/>
+        /// <seealso cref="GeoUtil.MetersToMiles"/>
         public static double DistanceTo(this IGeoLocation loc, double lat, double lng)
         {
             return GeoUtil.DistanceTo(loc, new GeoName { Latitude = lat, Longitude = lng });
@@ -35,8 +39,12 @@ namespace NGeoNames.Entities
         /// <remarks>
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
-        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters.
+        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters. You can use the
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
+        /// conversion.
         /// </remarks>
+        /// <seealso cref="GeoUtil.MilesToMeters"/>
+        /// <seealso cref="GeoUtil.MetersToMiles"/>
         public static double DistanceTo(this IGeoLocation loc, double lat, double lng, double radiusofearthinmeters)
         {
             return GeoUtil.DistanceTo(loc, new GeoName { Latitude = lat, Longitude = lng }, radiusofearthinmeters);
@@ -51,8 +59,12 @@ namespace NGeoNames.Entities
         /// <remarks>
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
-        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters.
+        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters. You can use the
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
+        /// conversion.
         /// </remarks>
+        /// <seealso cref="GeoUtil.MilesToMeters"/>
+        /// <seealso cref="GeoUtil.MetersToMiles"/>
         public static double DistanceTo(this IGeoLocation src, IGeoLocation dst)
         {
             return GeoUtil.DistanceTo(src, dst);
@@ -68,8 +80,12 @@ namespace NGeoNames.Entities
         /// <remarks>
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
-        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters.
+        /// miles, nautical miles, yards, foot and other units) you need to convert from/to meters. You can use the
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
+        /// conversion.
         /// </remarks>
+        /// <seealso cref="GeoUtil.MilesToMeters"/>
+        /// <seealso cref="GeoUtil.MetersToMiles"/>
         public static double DistanceTo(this IGeoLocation src, IGeoLocation dst, double radiusofearthinmeters)
         {
             return GeoUtil.DistanceTo(src, dst, radiusofearthinmeters);

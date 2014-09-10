@@ -87,6 +87,7 @@ namespace NGeoNames
         /// <summary>
         /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files.
         /// </summary>
+        /// <returns>Returns a default GeoFileDownloader intialized with the default geofiles URI as base URI.</returns>
         /// <remarks>
         /// The <see cref="DefaultTTL"/> is 24 hours.
         /// </remarks>
@@ -98,6 +99,11 @@ namespace NGeoNames
         /// <summary>
         /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files with the specified TTL.
         /// </summary>
+        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
+        /// <returns>
+        /// Returns a default GeoFileDownloaderintialized with the default geofiles URI as base URI and with specified
+        /// <see cref="DefaultTTL">TTL</see>.
+        /// </returns>
         public static GeoFileDownloader CreateGeoFileDownloader(TimeSpan ttl)
         {
             return new GeoFileDownloader(DEFAULTGEOFILEBASEURI, ttl);
@@ -106,6 +112,7 @@ namespace NGeoNames
         /// <summary>
         /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files.
         /// </summary>
+        /// <returns>Returns a default GeoFileDownloader intialized with the default postalcode URI as base URI.</returns>
         /// <remarks>
         /// The <see cref="DefaultTTL"/> is 24 hours.
         /// </remarks>
@@ -117,6 +124,11 @@ namespace NGeoNames
         /// <summary>
         /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files with the specified TTL.
         /// </summary>
+        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
+        /// <returns>
+        /// Returns a default GeoFileDownloaderintialized with the default postalcode URI as base URI and with specified
+        /// <see cref="DefaultTTL">TTL</see>.
+        /// </returns>
         /// <remarks>
         /// The <see cref="DefaultTTL"/> is 24 hours.
         /// </remarks>

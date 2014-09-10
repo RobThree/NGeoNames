@@ -4,18 +4,19 @@ using System;
 namespace NGeoNames
 {
     /// <summary>
-    /// Internal utility class.
+    /// Utility class.
     /// </summary>
-    internal static class GeoUtil
+    public static class GeoUtil
     {
         private const double RADIUSOFEARTH = 6371000;   //Radius of the earth, in METERS
+        private const double METERSPERMILE = 1609.344;  //Number of kilometers in an "international" mile (http://en.wikipedia.org/wiki/Mile)
 
         /// <summary>
         /// Converts degrees to radians.
         /// </summary>
         /// <param name="deg">Degrees.</param>
         /// <returns>Radians.</returns>
-        public static double Deg2Rad(double deg)
+        internal static double Deg2Rad(double deg)
         {
             return (Math.PI / 180.0) * deg;
         }
@@ -30,9 +31,11 @@ namespace NGeoNames
         /// <remarks>
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
-        /// miles, nautical miles, yards, foot and whathaveyou's) you need to convert from/to meters.
+        /// miles, nautical miles, yards, foot and whathaveyou's) you need to convert from/to meters. You can use the
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
+        /// conversion.
         /// </remarks>
-        public static double DistanceTo(IGeoLocation src, IGeoLocation dest, double radiusofearth = RADIUSOFEARTH)
+        internal static double DistanceTo(IGeoLocation src, IGeoLocation dest, double radiusofearth = RADIUSOFEARTH)
         {
             double dLat = GeoUtil.Deg2Rad(dest.Latitude - src.Latitude);
             double dLon = GeoUtil.Deg2Rad(dest.Longitude - src.Longitude);
@@ -46,13 +49,33 @@ namespace NGeoNames
         /// <param name="radiusofearth">Radius of the earth, in meters.</param>
         /// <returns>Returns a coordinate (represented as an array of 3 doubles).</returns>
         /// <remarks>This method is for internal use (for the KdTree) only.</remarks>
-        public static double[] GetCoord(IGeoLocation n, double radiusofearth = RADIUSOFEARTH)
+        internal static double[] GetCoord(IGeoLocation n, double radiusofearth = RADIUSOFEARTH)
         {
             return new[] {
                 radiusofearth * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(n.Longitude)),
                 radiusofearth * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Sin(GeoUtil.Deg2Rad(n.Longitude)),
                 radiusofearth * Math.Sin(GeoUtil.Deg2Rad(n.Latitude))
             };
+        }
+
+        /// <summary>
+        /// Converts meters to miles
+        /// </summary>
+        /// <param name="meters">The number of meters to convert to miles.</param>
+        /// <returns>Returns the number of miles.</returns>
+        public static double MetersToMiles(double meters)
+        {
+            return meters / METERSPERMILE;
+        }
+
+        /// <summary>
+        /// Converts miles to meters
+        /// </summary>
+        /// <param name="miles">The number of miles to convert to meters.</param>
+        /// <returns>Returns the number of meters.</returns>
+        public static double MilesToMeters(double miles)
+        {
+            return miles * METERSPERMILE;
         }
     }
 }

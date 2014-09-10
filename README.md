@@ -152,7 +152,7 @@ r.NearestNeighbourSearch(new_york, 10);
 
 Depending on how you want to search/use the underlying data you may want to use other, more optimal, datastructures than demonstrated above. It's up to you!
 
-Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance are specified in **meters**. If you want to use the imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to/from meters.
+Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance are specified in **meters**. If you want to use the imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to/from meters. The `GeoUtil` class provides helper-methods for converting miles to meters and vice versa.
 
 The `GeoName` class (and, by extension, the `ExtendedGeoName` class) has a `DistanceTo()` method which can be used to determine the exact distance betweem two points.
 
