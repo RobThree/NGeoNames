@@ -15,18 +15,18 @@ var datadir = @"D:\test\geo\";
 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
 downloader.DownloadFile("NL.txt", datadir);    // Download NL.txt to D:\test\geo\
 
-// Read NL.txt file to memory
-var cities = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadir, "NL.txt")).ToArray();   
+// Read NL.txt file to memory (NL = ISO3166-2:The Netherlands)
+var nldata = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadir, "NL.txt")).ToArray();   
 // Note: we "Materialize" the file to memory by calling ToArray()
 
 // We're going to use Amsterdam as "search-center"
-var amsterdam = cities.Where(n => 
+var amsterdam = nldata.Where(n => 
         n.Name.Equals("Amsterdam", StringComparison.OrdinalIgnoreCase) 
         && n.FeatureCode.Equals("PPLC")
     ).First();
 
-// Find first 50 items of interest closest to our center
-var reversegeocoder = new ReverseGeoCode<ExtendedGeoName>(cities);
+// Initialize a reversegeocoder with our geo-items from The Netherlands
+var reversegeocoder = new ReverseGeoCode<ExtendedGeoName>(nldata);
 // Locate 250 geo-items near the center of Amsterdam
 var results = reversegeocoder.RadialSearch(amsterdam, 250);  
 // Print the results
@@ -152,7 +152,7 @@ r.NearestNeighbourSearch(new_york, 10);
 
 Depending on how you want to search/use the underlying data you may want to use other, more optimal, datastructures than demonstrated above. It's up to you!
 
-Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance are specified in **meters**. If you want to use the imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to/from meters. The `GeoUtil` class provides helper-methods for converting miles to meters and vice versa.
+Note that the library is based on the [**International System of Units (SI)**](http://en.wikipedia.org/wiki/International_System_of_Units); units of distance are specified in **meters**. If you want to use the imperial system (e.g. miles, nautical miles, yards, foot and whathaveyou's) you need to convert to/from meters. The `GeoUtil` class provides helper-methods for converting miles/yards to meters and vice versa.
 
 The `GeoName` class (and, by extension, the `ExtendedGeoName` class) has a `DistanceTo()` method which can be used to determine the exact distance betweem two points.
 
