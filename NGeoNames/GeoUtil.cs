@@ -10,6 +10,7 @@ namespace NGeoNames
     {
         private const double RADIUSOFEARTH = 6371000;   //Radius of the earth, in METERS
         private const double METERSPERMILE = 1609.344;  //Number of kilometers in an "international" mile (http://en.wikipedia.org/wiki/Mile)
+        private const double METERSPERYARD = 0.9144;    //Number of meters in an "international" yard (http://en.wikipedia.org/wiki/Yard)
 
         /// <summary>
         /// Converts degrees to radians.
@@ -32,8 +33,8 @@ namespace NGeoNames
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
         /// miles, nautical miles, yards, foot and whathaveyou's) you need to convert from/to meters. You can use the
-        /// helper methods <see cref="GeoUtil.MilesToMeters"/> and <see cref="GeoUtil.MetersToMiles"/> for quick
-        /// conversion.
+        /// helper methods <see cref="GeoUtil.MilesToMeters"/> / <see cref="GeoUtil.MetersToMiles"/> and 
+        /// <see cref="GeoUtil.YardsToMeters"/> / <see cref="GeoUtil.MetersToYards"/> for quick conversion.
         /// </remarks>
         internal static double DistanceTo(IGeoLocation src, IGeoLocation dest, double radiusofearth = RADIUSOFEARTH)
         {
@@ -76,6 +77,26 @@ namespace NGeoNames
         public static double MilesToMeters(double miles)
         {
             return miles * METERSPERMILE;
+        }
+
+        /// <summary>
+        /// Converts meters to yards
+        /// </summary>
+        /// <param name="meters">The number of meters to convert to yards.</param>
+        /// <returns>Returns the number of yards.</returns>
+        public static double MetersToYards(double meters)
+        {
+            return meters / METERSPERYARD;
+        }
+
+        /// <summary>
+        /// Converts yards to meters
+        /// </summary>
+        /// <param name="yards">The number of yards to convert to meters.</param>
+        /// <returns>Returns the number of meters.</returns>
+        public static double YardsToMeters(double yards)
+        {
+            return yards * METERSPERYARD;
         }
     }
 }
