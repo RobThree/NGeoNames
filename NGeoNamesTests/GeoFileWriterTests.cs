@@ -16,7 +16,7 @@ namespace NGeoNamesTests
         };
 
         [TestMethod]
-        public void GeoFilWriter_ComposesFileCorrectly1()
+        public void GeoFileWriter_ComposesFileCorrectly1()
         {
             new GeoFileWriter().WriteRecords<CustomEntity>(@"testdata\test_geofilewritercustom1.txt", testvalues, new CustomComposer(Encoding.UTF8, ','));
 
@@ -27,7 +27,7 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void GeoFilWriter_ComposesFileCorrectly2()
+        public void GeoFileWriter_ComposesFileCorrectly2()
         {
             new GeoFileWriter().WriteRecords<CustomEntity>(@"testdata\test_geofilewritercustom2.txt", testvalues, new CustomComposer(Encoding.UTF7, '!'));
 
@@ -39,14 +39,14 @@ namespace NGeoNamesTests
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public void GeoFilWriter_ThrowsOnFailureWhenAutodetectingFileType()
+        public void GeoFileWriter_ThrowsOnFailureWhenAutodetectingFileType()
         {
             //When filetype == autodetect and an unknown extension is used an exception should be thrown
             new GeoFileWriter().WriteRecords<CustomEntity>(@"testdata\invalid.out.ext", testvalues, new CustomComposer(Encoding.UTF8, '\t'));
         }
 
         [TestMethod]
-        public void GeoFilWriter_DoesNotThrowOnInvalidExtensionButSpecifiedFileType()
+        public void GeoFileWriter_DoesNotThrowOnInvalidExtensionButSpecifiedFileType()
         {
             //When filetype is specified and an unknown extension is used it should be written fine
             new GeoFileWriter().WriteRecords<CustomEntity>(@"testdata\invalid.out.ext", testvalues, new CustomComposer(Encoding.UTF8, '\t'), FileType.Plain);
@@ -54,7 +54,7 @@ namespace NGeoNamesTests
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public void GeoFilWriter_ThrowsOnUnknownSpecifiedFileType()
+        public void GeoFileWriter_ThrowsOnUnknownSpecifiedFileType()
         {
             //When and unknown filetype is specified an exception should be thrown
             new GeoFileWriter().WriteRecords<CustomEntity>(@"testdata\invalid.out.ext", testvalues, new CustomComposer(Encoding.UTF8, '\t'), (FileType)999);
