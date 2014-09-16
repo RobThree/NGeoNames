@@ -254,7 +254,7 @@ namespace NGeoNames
         /// <returns>Returns true when the file has expired it's TTL *or* the file doesn't exist; false otherwise.</returns>
         private static bool IsFileExpired(string path, TimeSpan ttl)
         {
-            return (!File.Exists(path) || (DateTime.UtcNow - new FileInfo(path).CreationTimeUtc) > ttl);
+            return (!File.Exists(path) || (DateTime.UtcNow - new FileInfo(path).LastWriteTimeUtc) > ttl);
         }
 
         /// <summary>

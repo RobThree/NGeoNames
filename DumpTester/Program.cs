@@ -1,7 +1,6 @@
 ﻿using NGeoNames;
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -50,7 +49,7 @@ namespace DumpTester
                 Console.WriteLine("{0}", geofile.Test(Path.Combine(Postal_DownloadDirectory, geofile.Filename)));
             }
 
-            //DumpASCIILies();
+            //DumpASCIILies(Dump_DownloadDirectory);
 
             Console.WriteLine("All done!");
         }
@@ -127,35 +126,39 @@ namespace DumpTester
             }
         }
 
-        private static void DumpASCIILies()
+        private static void DumpASCIILies(string logpath)
         {
-            //Test for fields that claim to contain ASCII only but contain non-ASCII data anyways
-            var nonasciifilter = new Regex("[^\x00-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-            var geofilefilter = new Regex("^[A-Z]{2}.txt$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            using (var lw = File.CreateText(Path.Combine(logpath, "_asciilies.log")))
+            {
 
-            Trace.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
+                //Test for fields that claim to contain ASCII only but contain non-ASCII data anyways
+                var nonasciifilter = new Regex("[^\x00-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                var geofilefilter = new Regex("^[A-Z]{2}.txt$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-            var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "null" }
-                .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
-                .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
-                .Where(f => geofilefilter.IsMatch(Path.GetFileName(f))));
+                lw.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
 
-            var lies = extgeofiles
-                .SelectMany(f => GeoFileReader.ReadExtendedGeoNames(f)
-                    .Where(e => nonasciifilter.IsMatch(e.NameASCII))
-                    .Select(i => new NonASCIIEntry { FileName = f, Id = i.Id, Value = i.NameASCII })
-                ).Union(
-                    GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt"))
-                        .Where(c => nonasciifilter.IsMatch(c.NameASCII))
-                        .Select(i => new NonASCIIEntry { FileName = "admin1CodesASCII.txt", Id = i.GeoNameId, Value = i.NameASCII })
-                ).Union(
-                    GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt"))
-                        .Where(c => nonasciifilter.IsMatch(c.NameASCII))
-                        .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
-                );
+                var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "null" }
+                    .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
+                    .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
+                    .Where(f => geofilefilter.IsMatch(Path.GetFileName(f))));
 
-            foreach (var lie in lies)
-                Trace.WriteLine(string.Join("\t", Path.GetFileName(lie.FileName), lie.Id, lie.Value));
+                var lies = extgeofiles
+                    .SelectMany(f => GeoFileReader.ReadExtendedGeoNames(f)
+                        .Where(e => nonasciifilter.IsMatch(e.NameASCII))
+                        .Select(i => new NonASCIIEntry { FileName = f, Id = i.Id, Value = i.NameASCII })
+                    ).Union(
+                        GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt"))
+                            .Where(c => nonasciifilter.IsMatch(c.NameASCII))
+                            .Select(i => new NonASCIIEntry { FileName = "admin1CodesASCII.txt", Id = i.GeoNameId, Value = i.NameASCII })
+                    ).Union(
+                        GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt"))
+                            .Where(c => nonasciifilter.IsMatch(c.NameASCII))
+                            .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
+                    );
+
+                foreach (var lie in lies)
+                    lw.WriteLine(string.Join("\t", Path.GetFileName(lie.FileName), lie.Id, lie.Value));
+            }
         }
     }
 
