@@ -276,7 +276,7 @@ namespace NGeoNames
                         var dest = Path.Combine(Path.GetDirectoryName(path), c.Name);
                         if (IsFileExpired(dest, ttl))
                         {
-                            using (var e = File.OpenWrite(dest))
+                            using (var e = File.Create(dest))
                                 c.Open().CopyTo(e);
                         }
                         files.Add(dest);
