@@ -132,7 +132,7 @@ namespace DumpTester
             {
 
                 //Test for fields that claim to contain ASCII only but contain non-ASCII data anyways
-                var nonasciifilter = new Regex("[^\x00-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                var nonasciifilter = new Regex("[^\x20-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
                 var geofilefilter = new Regex("^[A-Z]{2}.txt$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
                 lw.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
