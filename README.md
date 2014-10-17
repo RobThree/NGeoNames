@@ -13,7 +13,7 @@ var datadir = @"D:\test\geo\";
 
 // Download file (optional; you can point a GeoFileReader to existing files ofcourse)
 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
-downloader.DownloadFile("NL.txt", datadir);    // Download NL.txt to D:\test\geo\
+downloader.DownloadFile("NL.zip", datadir);    // Zipfile will be automatically extracted
 
 // Read NL.txt file to memory (NL = ISO3166-2:The Netherlands)
 var nldata = GeoFileReader.ReadExtendedGeoNames(Path.Combine(datadir, "NL.txt")).ToArray();   
