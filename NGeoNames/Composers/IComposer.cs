@@ -14,14 +14,14 @@ namespace NGeoNames.Composers
         Encoding Encoding { get; }
 
         /// <summary>
-        /// Gets the field separator tu use when writing/composing the file/stream. 
+        /// Gets the field separator to use when writing/composing the file/stream. 
         /// </summary>
         char FieldSeparator { get; }
 
         /// <summary>
         /// Composes a string representing an object of type T to be used in geoname.org files.
         /// </summary>
-        /// <param name="value">An array that contains the elements to concatenate.</param>
+        /// <param name="value">An object that represents the value to be written.</param>
         /// <returns>A string representing an object of type T to be used in geoname.org files.</returns>
         string Compose(T value);
     }
