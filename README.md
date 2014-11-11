@@ -195,4 +195,6 @@ The [NuGet package](https://www.nuget.org/packages/NGeoNames/) comes with a Wind
 
 ## Project status
 
-<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. If you have any issues please [open an issue](https://github.com/RobThree/NGeoNames/issues).<br>[![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames)
+<img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. If you have any issues please [open an issue](https://github.com/RobThree/NGeoNames/issues).
+
+[![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames) <img src="http://img.shields.io/nuget/v/NGeoNames.svg?style=flat-square" alt="NuGet version" height="18"> <img src="http://img.shields.io/nuget/dt/NGeoNames.svg?style=flat-square" alt="NuGet version" height="18">
