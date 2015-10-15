@@ -26,6 +26,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumpTester", "DumpTester\DumpTester.csproj", "{F3407F70-D016-40CD-A394-B56FACA6307B}"
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "NGeoNamesHelp", "NGeoNamesHelp.shfbproj", "{D6A78785-3434-4544-A495-B201AFBD0964}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5BC5A09-1185-465A-971B-DB86DBD73A84} = {A5BC5A09-1185-465A-971B-DB86DBD73A84}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
