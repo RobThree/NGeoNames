@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://raw.githubusercontent.com/RobThree/NGeoNames/master/LICENSE</licenseUrl>
     <description>Easy to use, simple, offline (reverse) geocoding using GeoNames.org.</description>
-    <copyright>(C)2014 Devcorner.nl</copyright>
+    <copyright>(C)2014-2016 Devcorner.nl</copyright>
     <summary>
       Provides classes and methods for downloading, reading/parsing and utilizing files from GeoNames.org dumps.
     </summary>
