@@ -203,28 +203,28 @@ namespace NGeoNames
                 Longitude = lng
             };
         }
+    }
 
-        /// <summary>
-        /// This class is for internal use (Kd-Tree) only.
-        /// </summary>
-        private class DoubleMath : KdTree.Math.TypeMath<double>
+    /// <summary>
+    /// This class is for internal use (Kd-Tree) only.
+    /// </summary>
+    internal class DoubleMath : KdTree.Math.TypeMath<double>
+    {
+        static DoubleMath()
         {
-            static DoubleMath()
-            {
-                // Make sure we register ourselves!
-                TypeMath<double>.Register(new DoubleMath());
-            }
-
-            public override double Add(double a, double b) { return a + b; }
-            public override bool AreEqual(double a, double b) { return a == b; }
-            public override int Compare(double a, double b) { return a.CompareTo(b); }
-            public override double MaxValue { get { return double.MaxValue; } }
-            public override double MinValue { get { return double.MinValue; } }
-            public override double Multiply(double a, double b) { return a * b; }
-            public override double NegativeInfinity { get { return double.NegativeInfinity; } }
-            public override double PositiveInfinity { get { return double.PositiveInfinity; } }
-            public override double Subtract(double a, double b) { return a - b; }
-            public override double Zero { get { return 0; } }
+            // Make sure we register ourselves!
+            TypeMath<double>.Register(new DoubleMath());
         }
+
+        public override double Add(double a, double b) { return a + b; }
+        public override bool AreEqual(double a, double b) { return a == b; }
+        public override int Compare(double a, double b) { return a.CompareTo(b); }
+        public override double MaxValue { get { return double.MaxValue; } }
+        public override double MinValue { get { return double.MinValue; } }
+        public override double Multiply(double a, double b) { return a * b; }
+        public override double NegativeInfinity { get { return double.NegativeInfinity; } }
+        public override double PositiveInfinity { get { return double.PositiveInfinity; } }
+        public override double Subtract(double a, double b) { return a - b; }
+        public override double Zero { get { return 0; } }
     }
 }

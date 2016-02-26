@@ -72,5 +72,15 @@ namespace NGeoNamesTests
             foreach (var r in searchresults)
                 Assert.IsTrue(expected_ids.Contains(r.Id));
         }
+
+        /// <summary>
+        /// https://github.com/RobThree/NGeoNames/issues/1
+        /// </summary>
+        [TestMethod]
+        public void Geonames_MultipleEntities()
+        {
+            var rgc1 = new ReverseGeoCode<Postalcode>();
+            var rgc2 = new ReverseGeoCode<ExtendedGeoName>();
+        }
     }
 }
