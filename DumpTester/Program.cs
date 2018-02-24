@@ -28,28 +28,25 @@ namespace DumpTester
             var dumpdownloader = GeoFileDownloader.CreateGeoFileDownloader();
             var dumpfiles = GetDumps(dumpdownloader);
 
-
-            foreach (var geofile in dumpfiles)
+            dumpfiles.AsParallel().ForAll(g =>
             {
-                Console.Write("Download: {0}", geofile.Filename);
-                dumpdownloader.DownloadFile(geofile.Filename, Dump_DownloadDirectory);
-                Console.Write(" Testing: ");
-                Console.WriteLine("{0}", geofile.Test(Path.Combine(Dump_DownloadDirectory, geofile.Filename)));
-            }
+                Console.WriteLine("Download: {0}", g.Filename);
+                dumpdownloader.DownloadFile(g.Filename, Dump_DownloadDirectory);
+            });
 
-            //Test Postalcode dumps
-            var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
-            var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
+            ////Test Postalcode dumps
+            //var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
+            //var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
 
-            foreach (var geofile in postalcodefiles)
-            {
-                Console.Write("Download: {0}", geofile.Filename);
-                postalcodedownloader.DownloadFile(geofile.Filename, Postal_DownloadDirectory);
-                Console.Write(" Testing: ");
-                Console.WriteLine("{0}", geofile.Test(Path.Combine(Postal_DownloadDirectory, geofile.Filename)));
-            }
+            //foreach (var geofile in postalcodefiles)
+            //{
+            //    Console.Write("Download: {0}", geofile.Filename);
+            //    postalcodedownloader.DownloadFile(geofile.Filename, Postal_DownloadDirectory);
+            //    Console.Write(" Testing: ");
+            //    Console.WriteLine("{0}", geofile.Test(Path.Combine(Postal_DownloadDirectory, geofile.Filename)));
+            //}
 
-            //DumpASCIILies(Dump_DownloadDirectory);
+            DumpASCIILies(Dump_DownloadDirectory);
 
             Console.WriteLine("All done!");
         }
@@ -64,7 +61,7 @@ namespace DumpTester
                 .Cast<Match>()
                 .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) });
 
-            return new[] { 
+            return new[] {
                 new GeoFile { Filename = "allCountries.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) }
             }.Union(countries.OrderBy(m => m.Filename)).ToArray();
         }
@@ -140,24 +137,27 @@ namespace DumpTester
                 var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "null" }
                     .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
                     .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
-                    .Where(f => geofilefilter.IsMatch(Path.GetFileName(f))));
+                        .Where(f => geofilefilter.IsMatch(Path.GetFileName(f)))
+                    );
 
-                var lies = extgeofiles
+                var lies = extgeofiles.AsParallel()
                     .SelectMany(f => GeoFileReader.ReadExtendedGeoNames(f)
                         .Where(e => nonasciifilter.IsMatch(e.NameASCII))
                         .Select(i => new NonASCIIEntry { FileName = f, Id = i.Id, Value = i.NameASCII })
                     ).Union(
-                        GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt"))
+                        GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt")).AsParallel()
                             .Where(c => nonasciifilter.IsMatch(c.NameASCII))
                             .Select(i => new NonASCIIEntry { FileName = "admin1CodesASCII.txt", Id = i.GeoNameId, Value = i.NameASCII })
                     ).Union(
-                        GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt"))
+                        GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt")).AsParallel()
                             .Where(c => nonasciifilter.IsMatch(c.NameASCII))
                             .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
                     );
 
-                foreach (var lie in lies)
-                    lw.WriteLine(string.Join("\t", Path.GetFileName(lie.FileName), lie.Id, lie.Value));
+                foreach (var l in lies.OrderBy(l => l.FileName).ThenBy(l => l.Value)) {
+                    lw.WriteLine(string.Join("\t", Path.GetFileName(l.FileName), l.Id, l.Value));
+                };
+
             }
         }
     }

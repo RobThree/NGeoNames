@@ -1,25 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGeoNames", "NGeoNames\NGeoNames.csproj", "{A5BC5A09-1185-465A-971B-DB86DBD73A84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGeoNamesTests", "NGeoNamesTests\NGeoNamesTests.csproj", "{A099E590-8239-4589-9355-E004D5F790C8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E63B5CF1-5A93-46E2-8D89-3BE36E8CE26C}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5AA06099-00A1-4527-944E-1A69E498D1FE}"
 	ProjectSection(SolutionItems) = preProject
-		buildnugetpackage.cmd = buildnugetpackage.cmd
 		icon.png = icon.png
 		LICENSE = LICENSE
-		NGeoNames.nuspec = NGeoNames.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -54,5 +45,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81473F55-FA05-4A6E-BDE1-C481DD88A3B0}
 	EndGlobalSection
 EndGlobal
