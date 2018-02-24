@@ -51,8 +51,8 @@ namespace NGeoNames.Composers
         /// <param name="fieldseparator">Field separator to use when composing the file/stream.</param>
         public BaseComposer(Encoding encoding, char fieldseparator)
         {
-            this.Encoding = encoding;
-            this.FieldSeparator = fieldseparator;
+            Encoding = encoding;
+            FieldSeparator = fieldseparator;
         }
 
         /// <summary>

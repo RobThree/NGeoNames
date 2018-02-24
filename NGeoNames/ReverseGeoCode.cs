@@ -32,9 +32,9 @@ namespace NGeoNames
         public ReverseGeoCode(IEnumerable<T> nodes)
         {
             _tree = new KdTree.KdTree<double, T>(3, new DoubleMath());
-            this.AddRange(nodes);
+            AddRange(nodes);
 
-            this.Balance();
+            Balance();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace NGeoNames
         public void AddRange(IEnumerable<T> nodes)
         {
             foreach (var i in nodes)
-                this.Add(i);
+                Add(i);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace NGeoNames
         /// <returns>Returns up to maxcount nodes matching the radial search.</returns>
         public IEnumerable<T> RadialSearch(double lat, double lng, int maxcount)
         {
-            return this.RadialSearch(CreateFromLatLong(lat, lng), maxcount);
+            return RadialSearch(CreateFromLatLong(lat, lng), maxcount);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NGeoNames
         /// <returns>Returns up to maxcount nodes matching the radial search.</returns>
         public IEnumerable<T> RadialSearch(T center, int maxcount)
         {
-            return this.RadialSearch(center, double.MaxValue, maxcount);
+            return RadialSearch(center, double.MaxValue, maxcount);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace NGeoNames
         /// <returns>Returns the nodes matching the radial search.</returns>
         public IEnumerable<T> RadialSearch(double lat, double lng, double radius)
         {
-            return this.RadialSearch(CreateFromLatLong(lat, lng), radius);
+            return RadialSearch(CreateFromLatLong(lat, lng), radius);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace NGeoNames
         /// <returns>Returns the nodes matching the radial search.</returns>
         public IEnumerable<T> RadialSearch(T center, double radius)
         {
-            return this.RadialSearch(center, radius, _tree.Count);
+            return RadialSearch(center, radius, _tree.Count);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace NGeoNames
         /// <returns>Returns up to maxcount nodes matching the radial search.</returns>
         public IEnumerable<T> RadialSearch(double lat, double lng, double radius, int maxcount)
         {
-            return this.RadialSearch(CreateFromLatLong(lat, lng), radius, maxcount);
+            return RadialSearch(CreateFromLatLong(lat, lng), radius, maxcount);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace NGeoNames
         /// <returns>Returns nodes in matching order of the nearest neighbour search.</returns>
         public IEnumerable<T> NearestNeighbourSearch(double lat, double lng)
         {
-            return this.NearestNeighbourSearch(CreateFromLatLong(lat, lng), _tree.Count);
+            return NearestNeighbourSearch(CreateFromLatLong(lat, lng), _tree.Count);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace NGeoNames
         /// <returns>Returns up to maxcount nodes in matching order of the nearest neighbour search.</returns>
         public IEnumerable<T> NearestNeighbourSearch(double lat, double lng, int maxcount)
         {
-            return this.NearestNeighbourSearch(CreateFromLatLong(lat, lng), maxcount);
+            return NearestNeighbourSearch(CreateFromLatLong(lat, lng), maxcount);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace NGeoNames
         /// <returns>Returns nodes in matching order of the nearest neighbour search.</returns>
         public IEnumerable<T> NearestNeighbourSearch(T center)
         {
-            return this.NearestNeighbourSearch(center, _tree.Count);
+            return NearestNeighbourSearch(center, _tree.Count);
         }
 
         /// <summary>

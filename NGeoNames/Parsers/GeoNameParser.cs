@@ -60,7 +60,7 @@ namespace NGeoNames.Parsers
         /// <returns>Returns a new <see cref="GeoName"/> object.</returns>
         public override GeoName Parse(string[] fields)
         {
-            switch (this.ExpectedNumberOfFields)
+            switch (ExpectedNumberOfFields)
             {
                 case 4:
                     return new GeoName
@@ -79,7 +79,7 @@ namespace NGeoNames.Parsers
                         Longitude = double.Parse(fields[5], CultureInfo.InvariantCulture),
                     };
             }
-            throw new NotSupportedException(string.Format("Unsupported number of fields: {0}", this.ExpectedNumberOfFields));
+            throw new NotSupportedException(string.Format("Unsupported number of fields: {0}", ExpectedNumberOfFields));
         }
 
     }

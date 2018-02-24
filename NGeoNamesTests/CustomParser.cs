@@ -14,16 +14,16 @@ namespace NGeoNamesTests
 
         public CustomParser(int expectedfields, int skiplines, char[] fieldseparators, Encoding encoding, bool hascomments)
         {
-            this.SkipLines = skiplines;
-            this.ExpectedNumberOfFields = expectedfields;
-            this.FieldSeparators = fieldseparators;
-            this.Encoding = encoding;
-            this.HasComments = hascomments;
+            SkipLines = skiplines;
+            ExpectedNumberOfFields = expectedfields;
+            FieldSeparators = fieldseparators;
+            Encoding = encoding;
+            HasComments = hascomments;
         }
 
         public CustomEntity Parse(string[] fields)
         {
-            Assert.AreEqual(this.ExpectedNumberOfFields, fields.Length);
+            Assert.AreEqual(ExpectedNumberOfFields, fields.Length);
             return new CustomEntity { Data = fields };
         }
     }

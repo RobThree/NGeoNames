@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="HierarchyNode"/>.</returns>
         public override string Compose(HierarchyNode value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.ParentId, value.ChildId, value.Type);
+            return string.Join(FieldSeparator.ToString(), value.ParentId, value.ChildId, value.Type);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="Admin1Code"/>.</returns>
         public override string Compose(Admin1Code value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.Code, value.Name, value.NameASCII, value.GeoNameId);
+            return string.Join(FieldSeparator.ToString(), value.Code, value.Name, value.NameASCII, value.GeoNameId);
         }
     }
 }

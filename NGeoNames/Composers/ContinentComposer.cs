@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="Continent"/>.</returns>
         public override string Compose(Continent value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.Code, value.Name, value.GeoNameId);
+            return string.Join(FieldSeparator.ToString(), value.Code, value.Name, value.GeoNameId);
         }
     }
 }

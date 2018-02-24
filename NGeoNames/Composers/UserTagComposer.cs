@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="UserTag"/>.</returns>
         public override string Compose(UserTag value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.GeoNameId, value.Tag);
+            return string.Join(FieldSeparator.ToString(), value.GeoNameId, value.Tag);
         }
     }
 }

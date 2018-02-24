@@ -29,7 +29,7 @@ namespace NGeoNames.Composers
         /// </param>
         public GeoNameComposer(bool useextendedfileformat)
         {
-            this.UseExtendedFileFormat = useextendedfileformat;
+            UseExtendedFileFormat = useextendedfileformat;
         }
 
         /// <summary>
@@ -39,14 +39,14 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="GeoName"/>.</returns>
         public override string Compose(GeoName value)
         {
-            if (this.UseExtendedFileFormat)
+            if (UseExtendedFileFormat)
             {
-                return string.Join(this.FieldSeparator.ToString(), value.Id, value.Name, null, null, DoubleToString(value.Latitude), DoubleToString(value.Longitude),
+                return string.Join(FieldSeparator.ToString(), value.Id, value.Name, null, null, DoubleToString(value.Latitude), DoubleToString(value.Longitude),
                     null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
             else
             {
-                return string.Join(this.FieldSeparator.ToString(), value.Id, value.Name, DoubleToString(value.Latitude), DoubleToString(value.Longitude));
+                return string.Join(FieldSeparator.ToString(), value.Id, value.Name, DoubleToString(value.Latitude), DoubleToString(value.Longitude));
             }
         }
     }

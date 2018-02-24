@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="FeatureCode"/>.</returns>
         public override string Compose(FeatureCode value)
         {
-            return string.Join(this.FieldSeparator.ToString(), GetFeatureCodeString(value), value.Name, value.Description);
+            return string.Join(FieldSeparator.ToString(), GetFeatureCodeString(value), value.Name, value.Description);
         }
 
         private string GetFeatureCodeString(FeatureCode value)

@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="FeatureClass"/>.</returns>
         public override string Compose(FeatureClass value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.Class, value.Description);
+            return string.Join(FieldSeparator.ToString(), value.Class, value.Description);
         }
     }
 }

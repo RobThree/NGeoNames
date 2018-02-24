@@ -63,8 +63,8 @@ namespace NGeoNames.Parsers
         /// <param name="fieldseparators">Field separator(s) to use when parsing the file/stream.</param>
         public BaseParser(Encoding encoding, char[] fieldseparators)
         {
-            this.Encoding = encoding;
-            this.FieldSeparators = fieldseparators;
+            Encoding = encoding;
+            FieldSeparators = fieldseparators;
         }
     }
 }

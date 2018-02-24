@@ -80,8 +80,8 @@ namespace NGeoNames
         /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
         public GeoFileDownloader(Uri baseUri, TimeSpan ttl)
         {
-            this.BaseUri = baseUri;
-            this.DefaultTTL = ttl;
+            BaseUri = baseUri;
+            DefaultTTL = ttl;
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace NGeoNames
         /// </remarks>
         public string[] DownloadFile(Uri uri, string destinationpath)
         {
-            return DownloadFileWhenOlderThan(uri, destinationpath, this.DefaultTTL);
+            return DownloadFileWhenOlderThan(uri, destinationpath, DefaultTTL);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace NGeoNames
         /// </remarks>
         public string[] DownloadFileWhenOlderThan(string uri, string destinationpath, TimeSpan ttl)
         {
-            return this.DownloadFileWhenOlderThan(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath, ttl);
+            return DownloadFileWhenOlderThan(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath, ttl);
         }
 
         /// <summary>
@@ -233,9 +233,9 @@ namespace NGeoNames
             {
                 using (var w = new WebClient())
                 {
-                    w.CachePolicy = this.CachePolicy;
-                    w.Credentials = this.Credentials;
-                    w.Proxy = this.Proxy;
+                    w.CachePolicy = CachePolicy;
+                    w.Credentials = Credentials;
+                    w.Proxy = Proxy;
                     w.Headers.Add(HttpRequestHeader.UserAgent, USERAGENT);
                     w.DownloadFile(downloaduri, destinationpath);
                 }
@@ -297,7 +297,7 @@ namespace NGeoNames
         private Uri DetermineDownloadPath(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
-                return new Uri(this.BaseUri, uri.OriginalString);
+                return new Uri(BaseUri, uri.OriginalString);
             return uri;
         }
 

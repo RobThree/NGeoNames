@@ -22,7 +22,7 @@ namespace NGeoNamesTests
 
         public int Compare(object x, object y)
         {
-            return this.Compare(x as CustomEntity, y as CustomEntity);
+            return Compare(x as CustomEntity, y as CustomEntity);
         }
     }
 }

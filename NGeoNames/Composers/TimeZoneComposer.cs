@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="TimeZone"/>.</returns>
         public override string Compose(TimeZone value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.CountryCode, value.TimeZoneId.Replace(" ", "_"), FloatToString(value.GMTOffset), 
+            return string.Join(FieldSeparator.ToString(), value.CountryCode, value.TimeZoneId.Replace(" ", "_"), FloatToString(value.GMTOffset), 
                 FloatToString(value.DSTOffset), FloatToString(value.RawOffset));
         }
     }

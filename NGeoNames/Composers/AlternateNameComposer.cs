@@ -14,7 +14,7 @@ namespace NGeoNames.Composers
         /// <returns>A string representing the specified <see cref="AlternateName"/>.</returns>
         public override string Compose(AlternateName value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.Id, value.GeoNameId, string.IsNullOrEmpty(value.Type) ? value.ISOLanguage : value.Type,
+            return string.Join(FieldSeparator.ToString(), value.Id, value.GeoNameId, string.IsNullOrEmpty(value.Type) ? value.ISOLanguage : value.Type,
                 value.Name, Bool2String(value.IsPreferredName), Bool2String(value.IsShortName), Bool2String(value.IsColloquial), Bool2String(value.IsHistoric));
         }
 

@@ -8,13 +8,13 @@ namespace NGeoNames
     {
         public CustomComposer(Encoding encoding, char fieldseparator)
         {
-            this.Encoding = encoding;
-            this.FieldSeparator = fieldseparator;
+            Encoding = encoding;
+            FieldSeparator = fieldseparator;
         }
 
         public override string Compose(CustomEntity value)
         {
-            return string.Join(this.FieldSeparator.ToString(), value.Data);
+            return string.Join(FieldSeparator.ToString(), value.Data);
         }
     }
 }

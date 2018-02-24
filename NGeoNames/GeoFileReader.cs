@@ -40,7 +40,7 @@ namespace NGeoNames
         {
             using (var f = GetStream(path, filetype))
             {
-                foreach (var r in this.ReadRecords(f, parser))
+                foreach (var r in ReadRecords(f, parser))
                     yield return r;
             }
         }

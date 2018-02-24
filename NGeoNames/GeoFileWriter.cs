@@ -46,7 +46,7 @@ namespace NGeoNames
         public void WriteRecords<T>(string path, IEnumerable<T> values, IComposer<T> composer, FileType filetype, string lineseparator = DEFAULTLINESEPARATOR)
         {
             using (var s = GetStream(path, filetype))
-                this.WriteRecords(s, values, composer, lineseparator);
+                WriteRecords(s, values, composer, lineseparator);
         }
 
         /// <summary>
