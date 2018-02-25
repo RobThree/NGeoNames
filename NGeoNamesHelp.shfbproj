@@ -28,8 +28,8 @@
     <SelfBranded>False</SelfBranded>
     <Preliminary>False</Preliminary>
     <DocumentationSources>
-      <DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.dll" />
-      <DocumentationSource sourceFile="NGeoNames\bin\Release\NGeoNames.xml" />
+      <DocumentationSource sourceFile="NGeoNames\bin\Release\net45\NGeoNames.dll" />
+      <DocumentationSource sourceFile="NGeoNames\bin\Release\net45\NGeoNames.xml" />
     </DocumentationSources>
     <ProjectSummary>This library provides classes for downloading, reading and parsing, writing and composing files from GeoNames.org and provides %28reverse%29 geocoding methods like NearestNeighbourSearch%28%29 and RadialSearch%28%29 on the downloaded dataset%28s%29.</ProjectSummary>
     <HelpFileVersion>1.3.52.0</HelpFileVersion>
