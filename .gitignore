@@ -174,3 +174,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 /Help
 /.vs/
+*.chm
