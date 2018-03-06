@@ -32,20 +32,21 @@ namespace DumpTester
             {
                 Console.WriteLine("Download: {0}", g.Filename);
                 dumpdownloader.DownloadFile(g.Filename, Dump_DownloadDirectory);
+                Console.WriteLine("Testing {0}: {1}", g.Filename, g.Test(Path.Combine(Dump_DownloadDirectory, g.Filename)));
             });
 
-            ////Test Postalcode dumps
-            //var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
-            //var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
+            //Test Postalcode dumps
+            var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
+            var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
 
-            //foreach (var geofile in postalcodefiles)
-            //{
-            //    Console.Write("Download: {0}", geofile.Filename);
-            //    postalcodedownloader.DownloadFile(geofile.Filename, Postal_DownloadDirectory);
-            //    Console.Write(" Testing: ");
-            //    Console.WriteLine("{0}", geofile.Test(Path.Combine(Postal_DownloadDirectory, geofile.Filename)));
-            //}
+            postalcodefiles.AsParallel().ForAll(g =>
+            {
+                Console.WriteLine("Download: {0}", g.Filename);
+                postalcodedownloader.DownloadFile(g.Filename, Postal_DownloadDirectory);
+                Console.WriteLine("Testing {0}: {1}", g.Filename, g.Test(Path.Combine(Postal_DownloadDirectory, g.Filename)));
+            });
 
+            Console.WriteLine("Testing ASCII fields");
             DumpASCIILies(Dump_DownloadDirectory);
 
             Console.WriteLine("All done!");
@@ -112,8 +113,8 @@ namespace DumpTester
                 var file = filename.Replace(".zip", ".txt");
 
                 //Haaaaaaaaaack
-                if (file.EndsWith("no-country.txt"))
-                    file = file.Replace("no-country.txt", "null.txt");
+                //if (file.EndsWith("no-country.txt"))
+                //    file = file.Replace("no-country.txt", "null.txt");
 
                 return string.Format("{0} records OK", test(file));
             }
@@ -134,7 +135,7 @@ namespace DumpTester
 
                 lw.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
 
-                var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "null" }
+                var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "no-country" }
                     .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
                     .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
                         .Where(f => geofilefilter.IsMatch(Path.GetFileName(f)))
@@ -154,7 +155,8 @@ namespace DumpTester
                             .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
                     );
 
-                foreach (var l in lies.OrderBy(l => l.FileName).ThenBy(l => l.Value)) {
+                foreach (var l in lies.OrderBy(l => l.FileName).ThenBy(l => l.Value))
+                {
                     lw.WriteLine(string.Join("\t", Path.GetFileName(l.FileName), l.Id, l.Value));
                 };
 
