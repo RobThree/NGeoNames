@@ -150,7 +150,7 @@ namespace NGeoNames
         /// </param>
         /// <returns>Returns the path(s) to the file(s) downloaded.</returns>
         /// <remarks>
-        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is whe this method returns
+        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive. This method uses the <see cref="DefaultTTL"/>.
         /// </remarks>
         public string[] DownloadFile(string uri, string destinationpath)
@@ -171,7 +171,7 @@ namespace NGeoNames
         /// </param>
         /// <returns>Returns the path(s) to the file(s) downloaded.</returns>
         /// <remarks>
-        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is whe this method returns
+        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive. This method uses the <see cref="DefaultTTL"/>.
         /// </remarks>
         public string[] DownloadFile(Uri uri, string destinationpath)
@@ -196,7 +196,7 @@ namespace NGeoNames
         /// </param>
         /// <returns>Returns the path(s) to the file(s) downloaded.</returns>
         /// <remarks>
-        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is whe this method returns
+        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive.
         /// </remarks>
         public string[] DownloadFileWhenOlderThan(string uri, string destinationpath, TimeSpan ttl)
@@ -221,7 +221,7 @@ namespace NGeoNames
         /// </param>
         /// <returns>Returns the path(s) to the file(s) downloaded.</returns>
         /// <remarks>
-        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is whe this method returns
+        /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive.
         /// </remarks>
         public string[] DownloadFileWhenOlderThan(Uri uri, string destinationpath, TimeSpan ttl)
