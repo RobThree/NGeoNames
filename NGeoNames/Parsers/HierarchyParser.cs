@@ -40,8 +40,8 @@ namespace NGeoNames.Parsers
         {
             return new HierarchyNode
             {
-                ParentId = int.Parse(fields[0]),
-                ChildId = int.Parse(fields[1]),
+                ParentId = StringToInt(fields[0]),
+                ChildId = StringToInt(fields[1]),
                 Type = fields[2]
             };
         }

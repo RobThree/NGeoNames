@@ -40,7 +40,7 @@ namespace NGeoNames.Parsers
         {
             return new UserTag
             {
-                GeoNameId = int.Parse(fields[0]),
+                GeoNameId = StringToInt(fields[0]),
                 Tag = fields[1]
             };
         }

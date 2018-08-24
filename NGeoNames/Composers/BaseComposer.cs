@@ -123,5 +123,26 @@ namespace NGeoNames.Composers
                 return null;
             return value.ToString("0.0#######", CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Converts a timezone string to a timezonestring for geoname files (where a space is converted to an underscore).
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A string representing the value.</returns>
+        protected string TimeZoneToString(string value)
+        {
+            return value?.Replace(" ", "_");
+        }
+
+        /// <summary>
+        /// Converts a datetime to a string using the specified format.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="format">The format to use.</param>
+        /// <returns>A string representing the value.</returns>
+        protected string DateTimeToString(DateTime value, string format = "yyyy-MM-dd")
+        {
+            return value.ToString(format, CultureInfo.InvariantCulture);
+        }
     }
 }

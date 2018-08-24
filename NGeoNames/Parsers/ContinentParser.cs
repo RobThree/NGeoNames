@@ -42,7 +42,7 @@ namespace NGeoNames.Parsers
             {
                 Code = fields[0],
                 Name = fields[1],
-                GeoNameId = int.Parse(fields[2])
+                GeoNameId = StringToInt(fields[2])
             };
         }
     }

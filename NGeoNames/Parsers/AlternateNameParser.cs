@@ -40,19 +40,19 @@ namespace NGeoNames.Parsers
         {
             return new AlternateName
             {
-                Id = int.Parse(fields[0]),
-                GeoNameId = int.Parse(fields[1]),
+                Id = StringToInt(fields[0]),
+                GeoNameId = StringToInt(fields[1]),
                 ISOLanguage = fields[2].Length <= 3 ? fields[2] : null,
                 Type = fields[2].Length <= 3 ? null : fields[2],
                 Name = fields[3],
-                IsPreferredName = Bool2String(fields[4]),
-                IsShortName = Bool2String(fields[5]),
-                IsColloquial = Bool2String(fields[6]),
-                IsHistoric = Bool2String(fields[7])
+                IsPreferredName = BoolToString(fields[4]),
+                IsShortName = BoolToString(fields[5]),
+                IsColloquial = BoolToString(fields[6]),
+                IsHistoric = BoolToString(fields[7])
             };
         }
 
-        private static bool Bool2String(string value)
+        private static bool BoolToString(string value)
         {
             return value.Equals("1");
         }

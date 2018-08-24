@@ -9,31 +9,20 @@ namespace NGeoNames.Parsers
     /// </summary>
     public class ExtendedGeoNameParser : BaseParser<ExtendedGeoName>
     {
-        private static readonly char[] csv = { ',' };
-
         /// <summary>
         /// Gets wether the file/stream has (or is expected to have) comments (lines starting with "#").
         /// </summary>
-        public override bool HasComments
-        {
-            get { return false; }
-        }
+        public override bool HasComments => false;
 
         /// <summary>
         /// Gets the number of lines to skip when parsing the file/stream (e.g. 'headers' etc.).
         /// </summary>
-        public override int SkipLines
-        {
-            get { return 0; }
-        }
+        public override int SkipLines => 0;
 
         /// <summary>
         /// Gets the number of fields the file/stream is expected to have; anything else will cause a <see cref="ParserException"/>.
         /// </summary>
-        public override int ExpectedNumberOfFields
-        {
-            get { return 19; }
-        }
+        public override int ExpectedNumberOfFields => 19;
 
         /// <summary>
         /// Parses the specified data into an <see cref="ExtendedGeoName"/> object.
@@ -44,22 +33,22 @@ namespace NGeoNames.Parsers
         {
             return new ExtendedGeoName
             {
-                Id = int.Parse(fields[0]),
+                Id = StringToInt(fields[0]),
                 Name = fields[1],
                 NameASCII = fields[2],
-                AlternateNames = fields[3].Split(csv, StringSplitOptions.RemoveEmptyEntries),
-                Latitude = double.Parse(fields[4], CultureInfo.InvariantCulture),
-                Longitude = double.Parse(fields[5], CultureInfo.InvariantCulture),
+                AlternateNames = StringToArray(fields[3]),
+                Latitude = StringToDouble(fields[4]),
+                Longitude = StringToDouble(fields[5]),
                 FeatureClass = fields[6],
                 FeatureCode = fields[7],
                 CountryCode = fields[8],
-                AlternateCountryCodes = fields[9].Split(csv, StringSplitOptions.RemoveEmptyEntries),
+                AlternateCountryCodes = StringToArray(fields[9]),
                 Admincodes = new[] { fields[10], fields[11], fields[12], fields[13] },
-                Population = long.Parse(fields[14]),
-                Elevation = fields[15].Length > 0 ? (int?)int.Parse(fields[15]) : null,
-                Dem = int.Parse(fields[16]),
-                Timezone = fields[17].Replace("_", " "),
-                ModificationDate = DateTime.ParseExact(fields[18], "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                Population = StringToLong(fields[14]),
+                Elevation = fields[15].Length > 0 ? (int?)StringToInt(fields[15]) : null,
+                Dem = StringToInt(fields[16]),
+                Timezone = StringToTimeZone(fields[17]),
+                ModificationDate = StringToDateTime(fields[18])
             };
         }
     }

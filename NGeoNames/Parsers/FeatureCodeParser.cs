@@ -14,26 +14,17 @@ namespace NGeoNames.Parsers
         /// <summary>
         /// Gets wether the file/stream has (or is expected to have) comments (lines starting with "#").
         /// </summary>
-        public override bool HasComments
-        {
-            get { return false; }
-        }
+        public override bool HasComments => false;
 
         /// <summary>
         /// Gets the number of lines to skip when parsing the file/stream (e.g. 'headers' etc.).
         /// </summary>
-        public override int SkipLines
-        {
-            get { return 0; }
-        }
+        public override int SkipLines => 0;
 
         /// <summary>
         /// Gets the number of fields the file/stream is expected to have; anything else will cause a <see cref="ParserException"/>.
         /// </summary>
-        public override int ExpectedNumberOfFields
-        {
-            get { return 3; }
-        }
+        public override int ExpectedNumberOfFields => 3;
 
         /// <summary>
         /// Parses the specified data into a <see cref="FeatureCode"/> object.
@@ -42,7 +33,7 @@ namespace NGeoNames.Parsers
         /// <returns>Returns a new <see cref="FeatureCode"/> object.</returns>
         public override FeatureCode Parse(string[] fields)
         {
-            var d = fields[0].Split(fcodesep);
+            var d = StringToArray(fields[0], fcodesep);
             return new FeatureCode
             {
                 Class = d[0].Equals("null", StringComparison.OrdinalIgnoreCase) ? null : d[0],

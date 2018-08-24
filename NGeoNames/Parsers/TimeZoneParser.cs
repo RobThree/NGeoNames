@@ -42,10 +42,10 @@ namespace NGeoNames.Parsers
             return new TimeZone
             {
                 CountryCode = fields[0],
-                TimeZoneId = fields[1].Replace("_", " "),
-                GMTOffset = float.Parse(fields[2], CultureInfo.InvariantCulture),
-                DSTOffset = float.Parse(fields[3], CultureInfo.InvariantCulture),
-                RawOffset = float.Parse(fields[4], CultureInfo.InvariantCulture)
+                TimeZoneId =  StringToTimeZone(fields[1]),
+                GMTOffset = StringToFloat(fields[2]),
+                DSTOffset = StringToFloat(fields[3]),
+                RawOffset = StringToFloat(fields[4])
             };
         }
     }

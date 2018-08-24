@@ -65,18 +65,18 @@ namespace NGeoNames.Parsers
                 case 4:
                     return new GeoName
                     {
-                        Id = int.Parse(fields[0]),
+                        Id = StringToInt(fields[0]),
                         Name = fields[1],
-                        Latitude = double.Parse(fields[2], CultureInfo.InvariantCulture),
-                        Longitude = double.Parse(fields[3], CultureInfo.InvariantCulture),
+                        Latitude = StringToDouble(fields[2]),
+                        Longitude = StringToDouble(fields[3]),
                     };
                 case 19:
                     return new GeoName
                     {
-                        Id = int.Parse(fields[0]),
+                        Id = StringToInt(fields[0]),
                         Name = fields[1],
-                        Latitude = double.Parse(fields[4], CultureInfo.InvariantCulture),
-                        Longitude = double.Parse(fields[5], CultureInfo.InvariantCulture),
+                        Latitude = StringToDouble(fields[4]),
+                        Longitude = StringToDouble(fields[5]),
                     };
             }
             throw new NotSupportedException(string.Format("Unsupported number of fields: {0}", ExpectedNumberOfFields));

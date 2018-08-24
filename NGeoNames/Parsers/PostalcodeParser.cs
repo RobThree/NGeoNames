@@ -46,9 +46,9 @@ namespace NGeoNames.Parsers
                 PlaceName = fields[2],
                 AdminName = new[] { fields[3], fields[5], fields[7] },
                 AdminCode = new[] { fields[4], fields[6], fields[8] },
-                Latitude = fields[9].Length > 0 ? double.Parse(fields[9], CultureInfo.InvariantCulture) : double.NaN,
-                Longitude = fields[10].Length > 0 ? double.Parse(fields[10], CultureInfo.InvariantCulture) : double.NaN,
-                Accuracy = fields[11].Length > 0 ? (int?)int.Parse(fields[11]) : null
+                Latitude = fields[9].Length > 0 ? StringToDouble(fields[9]) : double.NaN,
+                Longitude = fields[10].Length > 0 ? StringToDouble(fields[10]) : double.NaN,
+                Accuracy = fields[11].Length > 0 ? (int?)StringToInt(fields[11]) : null
             };
         }
     }
