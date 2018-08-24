@@ -17,8 +17,8 @@ namespace NGeoNamesTests
             var parser_in = new GenericParser(expectedfields, skiplines, fieldseparators, encoding, hascomments);
             var parser_out = new GenericParser(expectedfields, 0, fieldseparators, encoding, false);
 
-            var expected = new GeoFileReader().ReadRecords<GenericEntity>(src, FileType.Plain, parser_in).ToArray();
-            var actual = new GeoFileReader().ReadRecords<GenericEntity>(dst, FileType.Plain, parser_out).ToArray();
+            var expected = new GeoFileReader().ReadRecords(src, FileType.Plain, parser_in).ToArray();
+            var actual = new GeoFileReader().ReadRecords(dst, FileType.Plain, parser_out).ToArray();
 
             CollectionAssert.AreEqual(expected, actual, new GenericEntityComparer());
         }

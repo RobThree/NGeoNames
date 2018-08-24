@@ -3,7 +3,7 @@ using NGeoNames;
 
 namespace NGeoNamesTests
 {
-    
+
     [TestClass]
     public class GeoUtilTests
     {

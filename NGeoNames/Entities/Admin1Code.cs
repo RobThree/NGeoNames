@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NGeoNames.Entities
+﻿namespace NGeoNames.Entities
 {
     /// <summary>
     /// Represents an administrative division.

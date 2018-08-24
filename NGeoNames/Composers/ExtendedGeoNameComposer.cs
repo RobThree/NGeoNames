@@ -17,8 +17,8 @@ namespace NGeoNames.Composers
         {
             return string.Join(FieldSeparator.ToString(), value.Id, value.Name, value.NameASCII, ArrayToValue(value.AlternateNames),
                     value.Latitude.ToString(CultureInfo.InvariantCulture), value.Longitude.ToString(CultureInfo.InvariantCulture), value.FeatureClass, value.FeatureCode, value.CountryCode,
-                    ArrayToValue(value.AlternateCountryCodes), value.Admincodes[0], value.Admincodes[1], value.Admincodes[2], value.Admincodes[3],
-                    value.Population, value.Elevation, value.Dem, value.Timezone.Replace(" ", "_"), value.ModificationDate.ToString("yyyy-MM-dd"));
+                    ArrayToValue(value.AlternateCountryCodes), GetArrayValue(value.Admincodes, 0), GetArrayValue(value.Admincodes, 1), GetArrayValue(value.Admincodes, 2), GetArrayValue(value.Admincodes, 3),
+                    value.Population, value.Elevation, value.Dem, value.Timezone?.Replace(" ", "_"), value.ModificationDate.ToString("yyyy-MM-dd"));
         }
     }
 }

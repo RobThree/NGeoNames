@@ -798,7 +798,7 @@ namespace NGeoNamesTests
         [TestMethod]
         public void CustomParser_IsUsedCorrectly()
         {
-            var target = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
+            var target = new GeoFileReader().ReadRecords(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
 
             Assert.AreEqual(2, target.Length);
             CollectionAssert.AreEqual(target[0].Data, target[1].Data);
@@ -808,7 +808,7 @@ namespace NGeoNamesTests
         public void FileReader_HandlesEmptyFilesCorrectly()
         {
             //Could use ANY entity
-            var target1 = new GeoFileReader().ReadRecords<CustomEntity>(@"testdata\emptyfile.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
+            var target1 = new GeoFileReader().ReadRecords(@"testdata\emptyfile.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
 
             Assert.AreEqual(0, target1.Length);
 

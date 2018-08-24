@@ -1,6 +1,4 @@
-﻿using NGeoNames.Entities;
-
-namespace NGeoNames.Entities
+﻿namespace NGeoNames.Entities
 {
     /// <summary>
     /// Provides geolocation related extension methods.

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NGeoNames.Entities;
-using System;
 
 namespace NGeoNamesTests
 {
@@ -16,7 +15,7 @@ namespace NGeoNamesTests
 
             var x1 = a.DistanceTo(b);                       // DistanceTo(GeoName) overload
             var x2 = a.DistanceTo(b.Latitude, b.Longitude); // DistanceTo(double, double) overload
-            var actual = 2887.26;                           // According to wikipedia
+            var actual = 2887260;                           // According to wikipedia
 
             //We use a slightly different radius of the earth than the wikipedia example uses (6372.8 in wikipedia vs. 6371 which is most commonly used)
             Assert.AreEqual(actual, x1, actual * .0005);     // All we want is to be within .05% of the "actual" (according to wikipedia) value
@@ -31,7 +30,7 @@ namespace NGeoNamesTests
             var a = new GeoName { Latitude = 51.377020, Longitude = 179.431888, Name = "Amchitka Island" };
             var b = new GeoName { Latitude = 51.272322, Longitude = -179.134396, Name = "Amatignak Island" };
 
-            var actual = 100.3;   // +/- a bit; checked with http://www.freemaptools.com/measure-distance.htm and (classic) google maps measure tool
+            var actual = 100300;   // +/- a bit; checked with http://www.freemaptools.com/measure-distance.htm and (classic) google maps measure tool
 
             var result = a.DistanceTo(b);
             Assert.AreEqual(actual, result, actual * .0005);    // All we want is to be within .05% of the "actual" (according to our own measurements) value

@@ -13,7 +13,7 @@ namespace NGeoNamesTests
         public void GeoFileReader_ParsesFileCorrectly1()
         {
             var gf = new GeoFileReader();
-            var target = gf.ReadRecords<CustomEntity>(@"testdata\test_geofilereadercustom1.txt", new CustomParser(9, 1, new[] { ',' }, Encoding.UTF8, true)).ToArray();
+            var target = gf.ReadRecords(@"testdata\test_geofilereadercustom1.txt", new CustomParser(9, 1, new[] { ',' }, Encoding.UTF8, true)).ToArray();
             Assert.AreEqual(2, target.Length);
         }
 
@@ -21,7 +21,7 @@ namespace NGeoNamesTests
         public void GeoFileReader_ParsesFileCorrectly2()
         {
             var gf = new GeoFileReader();
-            var target = gf.ReadRecords<CustomEntity>(@"testdata\test_geofilereadercustom2.txt", new CustomParser(4, 0, new[] { '!' }, Encoding.UTF8, false)).ToArray();
+            var target = gf.ReadRecords(@"testdata\test_geofilereadercustom2.txt", new CustomParser(4, 0, new[] { '!' }, Encoding.UTF8, false)).ToArray();
             Assert.AreEqual(3, target.Length);
         }
 
@@ -31,7 +31,7 @@ namespace NGeoNamesTests
         {
             //When filetype == autodetect and an unknown extension is used an exception should be thrown
             var gf = new GeoFileReader();
-            var target = gf.ReadRecords<CustomEntity>(@"testdata\invalid.ext", new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
+            var target = gf.ReadRecords(@"testdata\invalid.ext", new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace NGeoNamesTests
         {
             //When filetype is specified and an unknown extension is used it should be read fine
             var gf = new GeoFileReader();
-            var target = gf.ReadRecords<CustomEntity>(@"testdata\invalid.ext", FileType.Plain, new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
+            var target = gf.ReadRecords(@"testdata\invalid.ext", FileType.Plain, new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace NGeoNamesTests
         {
             //When and unknown filetype is specified an exception should be thrown
             var gf = new GeoFileReader();
-            var target = gf.ReadRecords<CustomEntity>(@"testdata\invalid.ext", (FileType)999, new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
+            var target = gf.ReadRecords(@"testdata\invalid.ext", (FileType)999, new CustomParser(5, 0, new[] { '\t' }, Encoding.UTF8, false)).ToArray();
         }
     }
 }

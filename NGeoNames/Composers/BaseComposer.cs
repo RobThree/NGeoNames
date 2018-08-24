@@ -63,10 +63,43 @@ namespace NGeoNames.Composers
         /// <param name="separator">The string to use as a separator.</param>
         /// <returns>
         /// A string that consists of the elements of values delimited by the separator string. If values is an empty
-        /// array, the method returns <see cref="String.Empty"/>.
+        /// array, the method returns <see cref="string.Empty"/>.
         /// </returns>
         protected string ArrayToValue(IEnumerable<string> values, string separator = ",") {
+            if (values == null)
+                return null;
             return string.Join(separator, values);
+        }
+
+        /// <summary>
+        /// Returns the desired element of a string array, or, when the index is out of bounds, <see langword="null"/>.
+        /// </summary>
+        /// <param name="values">The array to return the element from.</param>
+        /// <param name="index">The index of the element to get.</param>
+        /// <returns>
+        /// Returns the desired element of a string array or, when the index is out of bounds, <see langword="null"/>.
+        /// </returns>
+        protected string GetArrayValue(string[] values, int index)
+        {
+            return GetArrayValue(values, index, null);
+        }
+
+        /// <summary>
+        /// Returns the desired element of an array, or, when the index is out of bounds, the specified
+        /// <paramref name="defaultValue"/>.
+        /// </summary>
+        /// <param name="values">The array to return the element from.</param>
+        /// <param name="index">The index of the element to get.</param>
+        /// <param name="defaultValue">The default value to return when the index is out of bounds.</param>
+        /// <returns>
+        /// Returns the desired element of a string array or, when the index is out of bounds, the specified
+        /// <paramref name="defaultValue"/>.
+        /// </returns>
+        protected TVal GetArrayValue<TVal>(TVal[] values, int index, TVal defaultValue)
+        {
+            if (values != null && index < values.Length)
+                return values[index];
+            return defaultValue;
         }
 
         /// <summary>

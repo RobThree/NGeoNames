@@ -15,7 +15,9 @@ namespace NGeoNames.Composers
         public override string Compose(Postalcode value)
         {
             return string.Join(FieldSeparator.ToString(), value.CountryCode, value.PostalCode, value.PlaceName,
-                value.AdminName[0], value.AdminCode[0], value.AdminName[1], value.AdminCode[1], value.AdminName[2], value.AdminCode[2],
+                GetArrayValue(value.AdminName, 0), GetArrayValue(value.AdminCode, 0),
+                GetArrayValue(value.AdminName, 1), GetArrayValue(value.AdminCode, 1),
+                GetArrayValue(value.AdminName, 2), GetArrayValue(value.AdminCode, 2),
                 DoubleToString(value.Latitude), DoubleToString(value.Longitude), value.Accuracy
             );
         }

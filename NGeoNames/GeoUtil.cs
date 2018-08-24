@@ -33,14 +33,14 @@ namespace NGeoNames
         /// Note that we use the <a href="http://en.wikipedia.org/wiki/International_System_of_Units">International
         /// System of Units (SI)</a>; units of distance are specified in meters. If you want to use imperial system (e.g.
         /// miles, nautical miles, yards, foot and whathaveyou's) you need to convert from/to meters. You can use the
-        /// helper methods <see cref="GeoUtil.MilesToMeters"/> / <see cref="GeoUtil.MetersToMiles"/> and 
-        /// <see cref="GeoUtil.YardsToMeters"/> / <see cref="GeoUtil.MetersToYards"/> for quick conversion.
+        /// helper methods <see cref="MilesToMeters"/> / <see cref="MetersToMiles"/> and 
+        /// <see cref="YardsToMeters"/> / <see cref="MetersToYards"/> for quick conversion.
         /// </remarks>
         internal static double DistanceTo(IGeoLocation src, IGeoLocation dest, double radiusofearth = RADIUSOFEARTH)
         {
-            double dLat = GeoUtil.Deg2Rad(dest.Latitude - src.Latitude);
-            double dLon = GeoUtil.Deg2Rad(dest.Longitude - src.Longitude);
-            return (radiusofearth / 1000) * (2 * Math.Asin(Math.Min(1, Math.Sqrt(Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(GeoUtil.Deg2Rad(src.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(dest.Latitude)) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2)))));
+            var dLat = GeoUtil.Deg2Rad(dest.Latitude - src.Latitude);
+            var dLon = GeoUtil.Deg2Rad(dest.Longitude - src.Longitude);
+            return radiusofearth * (2 * Math.Asin(Math.Min(1, Math.Sqrt(Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(GeoUtil.Deg2Rad(src.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(dest.Latitude)) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2)))));
         }
 
         /// <summary>

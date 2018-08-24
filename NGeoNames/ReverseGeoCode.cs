@@ -14,17 +14,17 @@ namespace NGeoNames
         private KdTree.KdTree<double, T> _tree;
 
         /// <summary>
-        /// Initializes a new, empty <see cref="ReverseGeoCode&lt;T&gt;"/> object.
+        /// Initializes a new, empty <see cref="ReverseGeoCode{T}"/> object.
         /// </summary>
         public ReverseGeoCode()
             : this(Enumerable.Empty<T>()) { }
 
         /// <summary>
-        /// Initializes a new <see cref="ReverseGeoCode&lt;T&gt;"/> object, populating the internal structures with the provided
+        /// Initializes a new <see cref="ReverseGeoCode{T}"/> object, populating the internal structures with the provided
         /// <see cref="IGeoLocation"/>s.
         /// </summary>
         /// <param name="nodes">
-        /// An IEnumerable&lt;T&gt; of <see cref="IGeoLocation"/> to populate the <see cref="ReverseGeoCode&lt;T&gt;"/> with.
+        /// An IEnumerable{T} of <see cref="IGeoLocation"/> to populate the <see cref="ReverseGeoCode{T}"/> with.
         /// </param>
         /// <remarks>
         /// This constructor will, internally, call the <see cref="Balance"/> method when the internal structure is initialized.
@@ -38,7 +38,7 @@ namespace NGeoNames
         }
 
         /// <summary>
-        /// Adds a node to the <see cref="ReverseGeoCode&lt;T&gt;"/> internal structure.
+        /// Adds a node to the <see cref="ReverseGeoCode{T}"/> internal structure.
         /// </summary>
         /// <param name="node">The <see cref="IGeoLocation"/> to add.</param>
         public void Add(T node)
@@ -48,9 +48,9 @@ namespace NGeoNames
 
 
         /// <summary>
-        /// Adds the specified nodes to the <see cref="ReverseGeoCode&lt;T&gt;"/> internal structure.
+        /// Adds the specified nodes to the <see cref="ReverseGeoCode{T}"/> internal structure.
         /// </summary>
-        /// <param name="nodes">An IEnumerable&lt;T&gt; of <see cref="IGeoLocation"/>s to add.</param>
+        /// <param name="nodes">An IEnumerable{T} of <see cref="IGeoLocation"/>s to add.</param>
         public void AddRange(IEnumerable<T> nodes)
         {
             foreach (var i in nodes)
@@ -62,7 +62,7 @@ namespace NGeoNames
         /// </summary>
         /// <remarks>
         /// This method only needs to be called when all nodes have been added; it *can* be called earlier but is
-        /// not of much use. Note that the <see cref="ReverseGeoCode(IEnumerable&lt;T&gt;)"/> calls this
+        /// not of much use. Note that the <see cref="ReverseGeoCode(IEnumerable{T})"/> calls this
         /// method automatically; no need to call it when using this constructor.
         /// </remarks>
         public void Balance()

@@ -185,7 +185,7 @@ namespace NGeoNamesTests
             var src = @"testdata\test_custom.txt";
             var dst = @"testdata\test_custom.out.txt";
 
-            new GeoFileWriter().WriteRecords<CustomEntity>(dst, new GeoFileReader().ReadRecords<CustomEntity>(src, new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)), new CustomComposer(Encoding.UTF7, '☃'));
+            new GeoFileWriter().WriteRecords(dst, new GeoFileReader().ReadRecords(src, new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)), new CustomComposer(Encoding.UTF7, '☃'));
 
             FileUtil.EnsureFilesAreFunctionallyEqual(src, dst, 19, 5, new[] { '☃' }, Encoding.UTF7, true);
         }
