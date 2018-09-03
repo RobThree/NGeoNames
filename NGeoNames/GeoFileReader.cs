@@ -270,6 +270,34 @@ namespace NGeoNames
         }
 
         /// <summary>
+        /// Reads <see cref="AlternateNameV2"/> records from the specified file, using the default <see cref="AlternateNameParserV2"/>.
+        /// </summary>
+        /// <param name="filename">The name/path of the file.</param>
+        /// <returns>Returns an IEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
+        /// <remarks>
+        /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
+        /// more control over how the file is read.
+        /// </remarks>
+        public static IEnumerable<AlternateNameV2> ReadAlternateNamesV2(string filename)
+        {
+            return new GeoFileReader().ReadRecords(filename, new AlternateNameParserV2());
+        }
+
+        /// <summary>
+        /// Reads <see cref="AlternateNameV2"/> records from the <see cref="Stream"/>, using the default <see cref="AlternateNameParserV2"/>.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
+        /// <returns>Returns an IEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
+        /// <remarks>
+        /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
+        /// more control over how the stream is read.
+        /// </remarks>
+        public static IEnumerable<AlternateNameV2> ReadAlternateNamesV2(Stream stream)
+        {
+            return new GeoFileReader().ReadRecords(stream, new AlternateNameParserV2());
+        }
+
+        /// <summary>
         /// Reads <see cref="Continent"/> records from the built-in data, using the default <see cref="ContinentParser"/>.
         /// </summary>
         /// <returns>Returns an IEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>

@@ -1,13 +1,15 @@
-﻿namespace NGeoNames.Entities
+namespace NGeoNames.Entities
 {
     /// <summary>
-    /// Represents an alternate name for a specific <see cref="GeoName"/> or <see cref="ExtendedGeoName"/>.
+    /// Represents an alternate name for a specific <see cref="GeoName"/> or <see cref="ExtendedGeoName"/>. This entity
+    /// represents a newer version of the <see cref="AlternateName"/> type, with new From and To properties that describe
+    /// the historical usage of the name.
     /// </summary>
     /// <remarks>
     /// The property <see cref="ExtendedGeoName.AlternateNames"/> of the <see cref="ExtendedGeoName"/> object is a short
-    /// version of the <see cref="AlternateName"/> data without links and postal codes but with ASCUU transliterations.
+    /// version of the <see cref="AlternateNameV2"/> data without links and postal codes but with ASCUU transliterations.
     /// </remarks>
-    public class AlternateName
+    public class AlternateNameV2
     {
         /// <summary>
         /// Gets/sets the Id of the <see cref="AlternateName"/>.
@@ -56,5 +58,15 @@
         /// Gets/sets whether this <see cref="AlternateName"/> is historic and was used in the past
         /// </summary>
         public bool IsHistoric { get; set; }
+
+        /// <summary>
+        /// Gets/sets the start date for the historical period during which this name was used
+        /// </summary>
+        public string From { get; set; }
+
+        /// <summary>
+        /// Gets/sets the end date for the historical period during which this name was used
+        /// </summary>
+        public string To { get; set; }
     }
 }

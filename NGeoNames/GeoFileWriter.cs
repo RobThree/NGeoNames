@@ -172,6 +172,34 @@ namespace NGeoNames
         }
 
         /// <summary>
+        /// Writes <see cref="AlternateNameV2"/> records to the specified file, using the default <see cref="AlternateNameV2Composer"/>.
+        /// </summary>
+        /// <param name="filename">The name/path of the file.</param>
+        /// <param name="values">The values to write to the file.</param>
+        /// <remarks>
+        /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
+        /// more control over how the file is written.
+        /// </remarks>
+        public static void WriteAlternateNamesV2(string filename, IEnumerable<AlternateNameV2> values)
+        {
+            new GeoFileWriter().WriteRecords(filename, values, new AlternateNameV2Composer());
+        }
+
+        /// <summary>
+        /// Writes <see cref="AlternateNameV2"/> records to the <see cref="Stream"/>, using the default <see cref="AlternateNameV2Composer"/>.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to write to.</param>
+        /// <param name="values">The values to write to the stream.</param>
+        /// <remarks>
+        /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
+        /// more control over how the stream is written.
+        /// </remarks>
+        public static void WriteAlternateNamesV2(Stream stream, IEnumerable<AlternateNameV2> values)
+        {
+            new GeoFileWriter().WriteRecords(stream, values, new AlternateNameV2Composer());
+        }
+
+        /// <summary>
         /// Writes <see cref="Continent"/> records to the specified file, using the default <see cref="ContinentComposer"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
