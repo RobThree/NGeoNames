@@ -42,6 +42,17 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
+        public void AlternateNamesComposerV2_ComposesFileCorrectly()
+        {
+            var src = @"testdata\test_alternateNamesV2.txt";
+            var dst = @"testdata\test_alternateNamesV2.out.txt";
+
+            GeoFileWriter.WriteAlternateNamesV2(dst, GeoFileReader.ReadAlternateNamesV2(src));
+
+            FileUtil.EnsureFilesAreFunctionallyEqual(src, dst, 10, 0, new[] { '\t' }, Encoding.UTF8, false);
+        }
+
+        [TestMethod]
         public void ContinentComposer_ComposesFileCorrectly()
         {
             var src = @"testdata\test_continentCodes.txt";
