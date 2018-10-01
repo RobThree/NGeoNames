@@ -75,13 +75,15 @@ namespace NGeoNamesTests
             var target = GeoFileReader.ReadAlternateNames(@"testdata\test_alternateNames.txt").ToArray();
             Assert.AreEqual(17, target.Length);
 
+            Assert.AreEqual(2488123, target[0].Id);
+            Assert.AreEqual(4, target[0].GeoNameId);
             Assert.AreEqual("رودخانه زاکلی", target[0].Name);
             Assert.AreEqual("fa", target[0].ISOLanguage);       //Ensure we have an ISO code
             Assert.IsNull(target[0].Type);                      //When ISO code is specified, type should be null
-            Assert.AreEqual(false, target[0].IsPreferredName);  //All these...
-            Assert.AreEqual(false, target[0].IsColloquial);     //...bits should...
-            Assert.AreEqual(false, target[0].IsShortName);      //...be set...
-            Assert.AreEqual(false, target[0].IsHistoric);       //...to false
+            Assert.IsFalse(target[0].IsPreferredName);  //All these...
+            Assert.IsFalse(target[0].IsColloquial);     //...bits should...
+            Assert.IsFalse(target[0].IsShortName);      //...be set...
+            Assert.IsFalse(target[0].IsHistoric);       //...to false
 
             Assert.AreEqual("http://en.wikipedia.org/wiki/Takht-e_Qeysar", target[1].Name);
             Assert.IsNull(target[1].ISOLanguage);           //Should be null when a type is specified (e.g. length of ISO code field > 3)
@@ -132,119 +134,54 @@ namespace NGeoNamesTests
 
             //Check flags/bits
             Assert.AreEqual("The Jekyll & Hyde Pub", target[14].Name);
-            Assert.AreEqual(true, target[14].IsPreferredName);
-            Assert.AreEqual(false, target[14].IsColloquial);
-            Assert.AreEqual(true, target[14].IsShortName);
-            Assert.AreEqual(false, target[14].IsHistoric);
+            Assert.IsTrue(target[14].IsPreferredName);
+            Assert.IsFalse(target[14].IsColloquial);
+            Assert.IsTrue(target[14].IsShortName);
+            Assert.IsFalse(target[14].IsHistoric);
 
             Assert.AreEqual("Torre Fiumicelli", target[15].Name);
-            Assert.AreEqual(false, target[15].IsPreferredName);
-            Assert.AreEqual(true, target[15].IsColloquial);
-            Assert.AreEqual(false, target[15].IsShortName);
-            Assert.AreEqual(false, target[15].IsHistoric);
+            Assert.IsFalse(target[15].IsPreferredName);
+            Assert.IsTrue(target[15].IsColloquial);
+            Assert.IsFalse(target[15].IsShortName);
+            Assert.IsFalse(target[15].IsHistoric);
 
             Assert.AreEqual("Abbaye Saint-Antoine-des-Champs", target[16].Name);
-            Assert.AreEqual(false, target[16].IsPreferredName);
-            Assert.AreEqual(false, target[16].IsColloquial);
-            Assert.AreEqual(false, target[16].IsShortName);
-            Assert.AreEqual(true, target[16].IsHistoric);
+            Assert.IsFalse(target[16].IsPreferredName);
+            Assert.IsFalse(target[16].IsColloquial);
+            Assert.IsFalse(target[16].IsShortName);
+            Assert.IsTrue(target[16].IsHistoric);
         }
 
         [TestMethod]
         public void AlternateNamesParserV2_ParsesFileCorrectly()
         {
             var target = GeoFileReader.ReadAlternateNamesV2(@"testdata\test_alternateNamesV2.txt").ToArray();
-            Assert.AreEqual(19, target.Length);
+            Assert.AreEqual(5, target.Length);
 
-            Assert.AreEqual("رودخانه زاکلی", target[0].Name);
-            Assert.AreEqual("fa", target[0].ISOLanguage);       //Ensure we have an ISO code
-            Assert.IsNull(target[0].Type);                      //When ISO code is specified, type should be null
-            Assert.AreEqual(false, target[0].IsPreferredName);  //All these...
-            Assert.AreEqual(false, target[0].IsColloquial);     //...bits should...
-            Assert.AreEqual(false, target[0].IsShortName);      //...be set...
-            Assert.AreEqual(false, target[0].IsHistoric);       //...to false
+            Assert.AreEqual(12453592, target[0].Id);
+            Assert.AreEqual(7258581, target[0].GeoNameId);
+            Assert.AreEqual("Rossmoor CDP", target[0].Name);
+            Assert.AreEqual(string.Empty, target[0].ISOLanguage);
+            Assert.IsNull(target[0].Type);
+            Assert.IsFalse(target[0].IsPreferredName);
+            Assert.IsFalse(target[0].IsColloquial);
+            Assert.IsFalse(target[0].IsPreferredName);
+            Assert.IsTrue(target[0].IsHistoric);
 
-            Assert.AreEqual("http://en.wikipedia.org/wiki/Takht-e_Qeysar", target[1].Name);
-            Assert.IsNull(target[1].ISOLanguage);           //Should be null when a type is specified (e.g. length of ISO code field > 3)
-            Assert.AreEqual("link", target[1].Type);        //Ensure we have a type
+            Assert.AreEqual(string.Empty, target[0].From);
+            Assert.AreEqual("19 February 2008", target[0].To);
 
-            Assert.AreEqual("Нагольная", target[2].Name);
+            Assert.AreEqual("1961", target[1].From);
+            Assert.AreEqual(string.Empty, target[1].To);
 
-            Assert.AreEqual("บ้านน้ำฉ่า", target[3].Name);
-            Assert.AreEqual("th", target[3].ISOLanguage);
+            Assert.AreEqual("قولەی کانی ماران", target[2].From);
+            Assert.AreEqual("Qulai Kanimaran", target[2].To);
 
-            Assert.AreEqual("글렌로시스", target[4].Name);
-            Assert.AreEqual("ko", target[4].ISOLanguage);
+            Assert.AreEqual("19150903", target[3].From);
+            Assert.AreEqual(string.Empty, target[3].To);
 
-            //Postal code
-            Assert.AreEqual("TW13", target[5].Name);
-            Assert.AreEqual("post", target[5].Type);
-
-            //IATA - International Air Transport Association; airport code
-            Assert.AreEqual("FAB", target[6].Name);
-            Assert.AreEqual("iata", target[6].Type);
-
-            //ICAO - International Civil Aviation Organization airport code
-            Assert.AreEqual("LSGG", target[7].Name);
-            Assert.AreEqual("icao", target[7].Type);
-
-            //ICAO - International Civil Aviation Organization airport code
-            Assert.AreEqual("GSN", target[8].Name);
-            Assert.AreEqual("faac", target[8].Type);
-
-            Assert.AreEqual("Saipan International Airport", target[9].Name);
-            Assert.AreEqual("", target[9].ISOLanguage); //No language,...
-            Assert.IsNull(target[9].Type);              //...no type
-
-            //Link
-            Assert.AreEqual("http://en.wikipedia.org/wiki/Saipan_International_Airport", target[10].Name);
-            Assert.AreEqual("link", target[10].Type);
-
-            //fr_1793 - French Revolution name
-            Assert.AreEqual("Ile-de-la-Liberté", target[11].Name);
-            Assert.AreEqual("fr_1793", target[11].Type);
-
-            Assert.AreEqual("ཞིང་རི", target[12].Name);
-            Assert.AreEqual("bo", target[12].ISOLanguage);
-
-            //Abbreviation
-            Assert.AreEqual("TRTO", target[13].Name);
-            Assert.AreEqual("abbr", target[13].Type);
-
-            //Check flags/bits
-            Assert.AreEqual("The Jekyll & Hyde Pub", target[14].Name);
-            Assert.AreEqual(true, target[14].IsPreferredName);
-            Assert.AreEqual(false, target[14].IsColloquial);
-            Assert.AreEqual(true, target[14].IsShortName);
-            Assert.AreEqual(false, target[14].IsHistoric);
-
-            Assert.AreEqual("Torre Fiumicelli", target[15].Name);
-            Assert.AreEqual(false, target[15].IsPreferredName);
-            Assert.AreEqual(true, target[15].IsColloquial);
-            Assert.AreEqual(false, target[15].IsShortName);
-            Assert.AreEqual(false, target[15].IsHistoric);
-
-            Assert.AreEqual("Abbaye Saint-Antoine-des-Champs", target[16].Name);
-            Assert.AreEqual(false, target[16].IsPreferredName);
-            Assert.AreEqual(false, target[16].IsColloquial);
-            Assert.AreEqual(false, target[16].IsShortName);
-            Assert.AreEqual(true, target[16].IsHistoric);
-
-            //Check from/to
-            Assert.AreEqual("Volgograd", target[17].Name);
-            Assert.AreEqual(true, target[17].IsPreferredName);
-            Assert.AreEqual(false, target[17].IsColloquial);
-            Assert.AreEqual(false, target[17].IsShortName);
-            Assert.AreEqual(false, target[17].IsHistoric);
-            Assert.AreEqual("1961", target[17].From);
-
-            Assert.AreEqual("Tsaritsyn", target[18].Name);
-            Assert.AreEqual(false, target[18].IsPreferredName);
-            Assert.AreEqual(false, target[18].IsColloquial);
-            Assert.AreEqual(false, target[18].IsShortName);
-            Assert.AreEqual(true, target[18].IsHistoric);
-            Assert.AreEqual("1589", target[18].From);
-            Assert.AreEqual("1925", target[18].To);
+            Assert.AreEqual("1589", target[4].From);
+            Assert.AreEqual("1925", target[4].To);
         }
 
         [TestMethod]
@@ -319,7 +256,7 @@ namespace NGeoNamesTests
             //Lots of alternate countrycodes/alternatenames
             CollectionAssert.AreEqual(new[] { "DZ", "LY", "MR", "TN", "EG", "MA", "EH", "ML", "NE", "TD", "SD" }, target[2].AlternateCountryCodes);
             #region Charset test
-            CollectionAssert.AreEqual(new[] { 
+            CollectionAssert.AreEqual(new[] {
                 "An Bhoisnia agus Heirseagovein",
                 "An Bhoisnia agus Heirseagóvéin",
                 "An Bhoisnia-Heirseagaivein",
@@ -568,7 +505,7 @@ namespace NGeoNamesTests
                 "bosniya ani harjegovina",
                 "bosniya ani harjhagovhina",
                 "bosniya aura harazegovina",
-                "bosniya aura harzegovina", 
+                "bosniya aura harzegovina",
                 "bosniya mariyu herjegovina",
                 "bosniya mattu harjegovina",
                 "bosniya mattu herjegovina",
@@ -678,7 +615,7 @@ namespace NGeoNamesTests
                 "波斯尼亚和黑山共和国",
                 "波斯尼亞",
                 "보스니아 헤르체고비나",
-                "보스니아헤르체고비나" 
+                "보스니아헤르체고비나"
             }, target[3].AlternateNames);
             #endregion
 

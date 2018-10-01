@@ -3,7 +3,7 @@
 namespace NGeoNames.Composers
 {
     /// <summary>
-    /// Provides methods for composing a string representing an <see cref="AlternateName"/>.
+    /// Provides methods for composing a string representing an <see cref="AlternateNameV2"/>.
     /// </summary>
     public class AlternateNameV2Composer : BaseComposer<AlternateNameV2>
     {

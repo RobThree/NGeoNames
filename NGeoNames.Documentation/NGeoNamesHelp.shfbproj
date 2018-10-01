@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{d6a78785-3434-4544-a495-b201afbd0964}</ProjectGuid>
-    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>2017.9.26.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -32,7 +32,7 @@
       <DocumentationSource sourceFile="..\NGeoNames\bin\Release\net45\NGeoNames.xml" />
     </DocumentationSources>
     <ProjectSummary>This library provides classes for downloading, reading and parsing, writing and composing files from GeoNames.org and provides %28reverse%29 geocoding methods like NearestNeighbourSearch%28%29 and RadialSearch%28%29 on the downloaded dataset%28s%29.</ProjectSummary>
-    <HelpFileVersion>1.5.0</HelpFileVersion>
+    <HelpFileVersion>1.5.1</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SyntaxFilters>Standard</SyntaxFilters>
