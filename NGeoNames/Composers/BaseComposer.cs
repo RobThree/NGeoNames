@@ -88,6 +88,7 @@ namespace NGeoNames.Composers
         /// Returns the desired element of an array, or, when the index is out of bounds, the specified
         /// <paramref name="defaultValue"/>.
         /// </summary>
+        /// <typeparam name="TVal">The type of the value returned.</typeparam>
         /// <param name="values">The array to return the element from.</param>
         /// <param name="index">The index of the element to get.</param>
         /// <param name="defaultValue">The default value to return when the index is out of bounds.</param>
