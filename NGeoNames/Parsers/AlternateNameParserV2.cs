@@ -2,6 +2,9 @@ using NGeoNames.Entities;
 
 namespace NGeoNames.Parsers
 {
+    /// <summary>
+    /// Provides methods for parsing an <see cref="AlternateNameV2"/> object from a string-array.
+    /// </summary>
     public class AlternateNameParserV2 : BaseParser<AlternateNameV2>
     {
         /// <summary>
