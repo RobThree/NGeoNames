@@ -75,13 +75,15 @@ namespace NGeoNamesTests
             var target = GeoFileReader.ReadAlternateNames(@"testdata\test_alternateNames.txt").ToArray();
             Assert.AreEqual(17, target.Length);
 
+            Assert.AreEqual(2488123, target[0].Id);
+            Assert.AreEqual(4, target[0].GeoNameId);
             Assert.AreEqual("رودخانه زاکلی", target[0].Name);
             Assert.AreEqual("fa", target[0].ISOLanguage);       //Ensure we have an ISO code
             Assert.IsNull(target[0].Type);                      //When ISO code is specified, type should be null
-            Assert.AreEqual(false, target[0].IsPreferredName);  //All these...
-            Assert.AreEqual(false, target[0].IsColloquial);     //...bits should...
-            Assert.AreEqual(false, target[0].IsShortName);      //...be set...
-            Assert.AreEqual(false, target[0].IsHistoric);       //...to false
+            Assert.IsFalse(target[0].IsPreferredName);  //All these...
+            Assert.IsFalse(target[0].IsColloquial);     //...bits should...
+            Assert.IsFalse(target[0].IsShortName);      //...be set...
+            Assert.IsFalse(target[0].IsHistoric);       //...to false
 
             Assert.AreEqual("http://en.wikipedia.org/wiki/Takht-e_Qeysar", target[1].Name);
             Assert.IsNull(target[1].ISOLanguage);           //Should be null when a type is specified (e.g. length of ISO code field > 3)
@@ -132,22 +134,54 @@ namespace NGeoNamesTests
 
             //Check flags/bits
             Assert.AreEqual("The Jekyll & Hyde Pub", target[14].Name);
-            Assert.AreEqual(true, target[14].IsPreferredName);
-            Assert.AreEqual(false, target[14].IsColloquial);
-            Assert.AreEqual(true, target[14].IsShortName);
-            Assert.AreEqual(false, target[14].IsHistoric);
+            Assert.IsTrue(target[14].IsPreferredName);
+            Assert.IsFalse(target[14].IsColloquial);
+            Assert.IsTrue(target[14].IsShortName);
+            Assert.IsFalse(target[14].IsHistoric);
 
             Assert.AreEqual("Torre Fiumicelli", target[15].Name);
-            Assert.AreEqual(false, target[15].IsPreferredName);
-            Assert.AreEqual(true, target[15].IsColloquial);
-            Assert.AreEqual(false, target[15].IsShortName);
-            Assert.AreEqual(false, target[15].IsHistoric);
+            Assert.IsFalse(target[15].IsPreferredName);
+            Assert.IsTrue(target[15].IsColloquial);
+            Assert.IsFalse(target[15].IsShortName);
+            Assert.IsFalse(target[15].IsHistoric);
 
             Assert.AreEqual("Abbaye Saint-Antoine-des-Champs", target[16].Name);
-            Assert.AreEqual(false, target[16].IsPreferredName);
-            Assert.AreEqual(false, target[16].IsColloquial);
-            Assert.AreEqual(false, target[16].IsShortName);
-            Assert.AreEqual(true, target[16].IsHistoric);
+            Assert.IsFalse(target[16].IsPreferredName);
+            Assert.IsFalse(target[16].IsColloquial);
+            Assert.IsFalse(target[16].IsShortName);
+            Assert.IsTrue(target[16].IsHistoric);
+        }
+
+        [TestMethod]
+        public void AlternateNamesParserV2_ParsesFileCorrectly()
+        {
+            var target = GeoFileReader.ReadAlternateNamesV2(@"testdata\test_alternateNamesV2.txt").ToArray();
+            Assert.AreEqual(5, target.Length);
+
+            Assert.AreEqual(12453592, target[0].Id);
+            Assert.AreEqual(7258581, target[0].GeoNameId);
+            Assert.AreEqual("Rossmoor CDP", target[0].Name);
+            Assert.AreEqual(string.Empty, target[0].ISOLanguage);
+            Assert.IsNull(target[0].Type);
+            Assert.IsFalse(target[0].IsPreferredName);
+            Assert.IsFalse(target[0].IsColloquial);
+            Assert.IsFalse(target[0].IsPreferredName);
+            Assert.IsTrue(target[0].IsHistoric);
+
+            Assert.AreEqual(string.Empty, target[0].From);
+            Assert.AreEqual("19 February 2008", target[0].To);
+
+            Assert.AreEqual("1961", target[1].From);
+            Assert.AreEqual(string.Empty, target[1].To);
+
+            Assert.AreEqual("قولەی کانی ماران", target[2].From);
+            Assert.AreEqual("Qulai Kanimaran", target[2].To);
+
+            Assert.AreEqual("19150903", target[3].From);
+            Assert.AreEqual(string.Empty, target[3].To);
+
+            Assert.AreEqual("1589", target[4].From);
+            Assert.AreEqual("1925", target[4].To);
         }
 
         [TestMethod]
@@ -222,7 +256,7 @@ namespace NGeoNamesTests
             //Lots of alternate countrycodes/alternatenames
             CollectionAssert.AreEqual(new[] { "DZ", "LY", "MR", "TN", "EG", "MA", "EH", "ML", "NE", "TD", "SD" }, target[2].AlternateCountryCodes);
             #region Charset test
-            CollectionAssert.AreEqual(new[] { 
+            CollectionAssert.AreEqual(new[] {
                 "An Bhoisnia agus Heirseagovein",
                 "An Bhoisnia agus Heirseagóvéin",
                 "An Bhoisnia-Heirseagaivein",
@@ -471,7 +505,7 @@ namespace NGeoNamesTests
                 "bosniya ani harjegovina",
                 "bosniya ani harjhagovhina",
                 "bosniya aura harazegovina",
-                "bosniya aura harzegovina", 
+                "bosniya aura harzegovina",
                 "bosniya mariyu herjegovina",
                 "bosniya mattu harjegovina",
                 "bosniya mattu herjegovina",
@@ -581,7 +615,7 @@ namespace NGeoNamesTests
                 "波斯尼亚和黑山共和国",
                 "波斯尼亞",
                 "보스니아 헤르체고비나",
-                "보스니아헤르체고비나" 
+                "보스니아헤르체고비나"
             }, target[3].AlternateNames);
             #endregion
 
@@ -871,6 +905,13 @@ namespace NGeoNamesTests
         {
             using (var s = File.OpenRead(@"testdata\test_alternateNames.txt"))
                 GeoFileReader.ReadAlternateNames(s).Count();
+        }
+
+        [TestMethod]
+        public void FileReader_AlternateNamesV2_StreamOverload()
+        {
+            using (var s = File.OpenRead(@"testdata\test_alternateNamesV2.txt"))
+                GeoFileReader.ReadAlternateNamesV2(s).Count();
         }
 
         [TestMethod]

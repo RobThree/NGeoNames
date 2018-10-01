@@ -1,0 +1,5 @@
+12453592	7258581		Rossmoor CDP				1		19 February 2008
+9528154	472757	en	Volgograd	1				1961	
+13653740	11853854	ku	قولەی کانی ماران	1			1	قولەی کانی ماران	Qulai Kanimaran
+13653663	6955096	es	Comitán de Domínguez					19150903	
+13634199	472757	en	Tsaritsyn				1	1589	1925

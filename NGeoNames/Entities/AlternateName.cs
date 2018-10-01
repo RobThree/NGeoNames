@@ -38,22 +38,22 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets/sets wether this <see cref="AlternateName"/> is an official/preferred name.
+        /// Gets/sets whether this <see cref="AlternateName"/> is an official/preferred name.
         /// </summary>
         public bool IsPreferredName { get; set; }
 
         /// <summary>
-        /// Gets/sets wether this <see cref="AlternateName"/> is a short name like 'California' for 'State of California'.
+        /// Gets/sets whether this <see cref="AlternateName"/> is a short name like 'California' for 'State of California'.
         /// </summary>
         public bool IsShortName { get; set; }
 
         /// <summary>
-        /// Gets/sets wether this <see cref="AlternateName"/> is a colloquial or slang term.
+        /// Gets/sets whether this <see cref="AlternateName"/> is a colloquial or slang term.
         /// </summary>
         public bool IsColloquial { get; set; }
 
         /// <summary>
-        /// Gets/sets wether this <see cref="AlternateName"/> is historic and was used in the past
+        /// Gets/sets whether this <see cref="AlternateName"/> is historic and was used in the past
         /// </summary>
         public bool IsHistoric { get; set; }
     }
