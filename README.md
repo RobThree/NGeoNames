@@ -198,3 +198,9 @@ The [NuGet package](https://www.nuget.org/packages/NGeoNames/) comes with a Wind
 <img src="http://riii.nl/womm" width="200" height="200" align="left"> The project will be updated from time-to-time when required. I am happy to accept pull-requests; if you're interested in contributing to this library please contact me. If you have any issues please [open an issue](https://github.com/RobThree/NGeoNames/issues).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/mkmbxvm1w0mxaifv)](https://ci.appveyor.com/project/RobIII/ngeonames) <a href="https://www.nuget.org/packages/NGeoNames/"><img src="http://img.shields.io/nuget/v/NGeoNames.svg?style=flat-square" alt="NuGet version" height="18"></a>
+
+## License
+
+Licensed under MIT license. See [LICENSE](LICENSE) for details.
+
+[Logo / icon](http://www.iconninja.com/earth-search-internet-icon-44388) sourced from iconninja.com ([Archived page](http://riii.me/rftqo))
