@@ -27,11 +27,11 @@ namespace NGeoNames
         public static FileType GetFileTypeFromExtension(string path)
         {
             var fi = new FileInfo(path);
-            switch (fi.Extension.ToLowerInvariant())
+            switch (fi.Extension.ToUpperInvariant())
             {
-                case ".txt":
+                case ".TXT":
                     return FileType.Plain;
-                case ".gz":
+                case ".GZ":
                     return FileType.GZip;
             }
             throw new System.NotSupportedException("Unable to detect filetype from file extension");

@@ -1,6 +1,7 @@
 ﻿using NGeoNames.Entities;
 using NGeoNames.Parsers;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 
@@ -57,16 +58,16 @@ namespace NGeoNames
             using (var r = new StreamReader(stream, parser.Encoding))
             {
                 string line = null;
-                int c = 0;
+                int linecount = 0;
                 char[] separators = parser.FieldSeparators.Clone() as char[];
                 while (!r.EndOfStream && (line = r.ReadLine()) != null)
                 {
-                    c++;
-                    if ((c > parser.SkipLines) && (line.Length > 0)  && (!parser.HasComments || (parser.HasComments && !line.StartsWith("#"))))
+                    linecount++;
+                    if ((linecount > parser.SkipLines) && (line.Length > 0)  && (!parser.HasComments || (parser.HasComments && !line.StartsWith("#", System.StringComparison.Ordinal))))
                     {
                         var data = line.Split(parser.FieldSeparators);
                         if (data.Length != parser.ExpectedNumberOfFields)
-                            throw new ParserException(string.Format("Expected number of fields mismatch; expected: {0}, read: {1}, line: {2}", parser.ExpectedNumberOfFields, data.Length, c));
+                            throw new ParserException($"Expected number of fields mismatch; expected: {parser.ExpectedNumberOfFields}, read: {data.Length}, line: {linecount}");
                         yield return parser.Parse(data);
                     }
                 }
@@ -86,7 +87,7 @@ namespace NGeoNames
                 case FileType.GZip:
                     return new GZipStream(filestream, CompressionMode.Decompress);
             }
-            throw new System.NotSupportedException(string.Format("Filetype not supported: {0}", readastype));
+            throw new System.NotSupportedException($"Filetype not supported: {readastype}");
         }
 
 
@@ -313,7 +314,7 @@ namespace NGeoNames
 
         private static IEnumerable<T> ReadBuiltInResource<T>(string name, IParser<T> parser)
         {
-            using (var s = new MemoryStream(parser.Encoding.GetBytes(Properties.Resources.ResourceManager.GetString(name))))
+            using (var s = new MemoryStream(parser.Encoding.GetBytes(Properties.Resources.ResourceManager.GetString(name, CultureInfo.InvariantCulture))))
                 foreach (var i in new GeoFileReader().ReadRecords(s, parser))
                     yield return i;
         }

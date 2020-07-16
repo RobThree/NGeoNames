@@ -81,7 +81,7 @@ namespace NGeoNames
                 case FileType.GZip:
                     return new GZipStream(filestream, CompressionLevel.Optimal);
             }
-            throw new System.NotSupportedException(string.Format("Filetype not supported: {0}", writeastype));
+            throw new System.NotSupportedException($"Filetype not supported: {writeastype}");
         }
 
         #region Convenience methods

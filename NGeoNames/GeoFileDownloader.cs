@@ -34,7 +34,7 @@ namespace NGeoNames
         /// <summary>
         /// Gets the useragent string used to identify when downloading files from geonames.org.
         /// </summary>
-        public static readonly string USERAGENT = string.Format("{0} v{1}", typeof(GeoFileDownloader).Assembly.GetName().Name, typeof(GeoFileDownloader).Assembly.GetName().Version.ToString());
+        public static readonly string USERAGENT = $"{typeof(GeoFileDownloader).Assembly.GetName().Name} v{typeof(GeoFileDownloader).Assembly.GetName().Version}";
 
         /// <summary>
         /// Gets/sets the base URI to use when downloading files and relative paths are specified.

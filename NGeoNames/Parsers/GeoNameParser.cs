@@ -9,9 +9,7 @@ namespace NGeoNames.Parsers
     /// </summary>
     public class GeoNameParser : BaseParser<GeoName>
     {
-        private static readonly char[] csv = { ',' };
-
-        private int _expectednumberoffields;
+        private readonly int _expectednumberoffields;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoNameParser"/> class with default values (extended fileformat, 19 fields).
@@ -79,7 +77,7 @@ namespace NGeoNames.Parsers
                         Longitude = StringToDouble(fields[5]),
                     };
             }
-            throw new NotSupportedException(string.Format("Unsupported number of fields: {0}", ExpectedNumberOfFields));
+            throw new NotSupportedException($"Unsupported number of fields: {ExpectedNumberOfFields}");
         }
 
     }

@@ -19,14 +19,18 @@ namespace DumpTester
     /// </remarks>
     class Program
     {
-        private static string Dump_DownloadDirectory = ConfigurationManager.AppSettings["dump_downloaddirectory"];
-        private static string Postal_DownloadDirectory = ConfigurationManager.AppSettings["postal_downloaddirectory"];
+        private static readonly string Dump_DownloadDirectory = ConfigurationManager.AppSettings["dump_downloaddirectory"];
+        private static readonly string Postal_DownloadDirectory = ConfigurationManager.AppSettings["postal_downloaddirectory"];
 
         static void Main(string[] args)
         {
             //Test GeoName dumps
             var dumpdownloader = GeoFileDownloader.CreateGeoFileDownloader();
             var dumpfiles = GetDumps(dumpdownloader);
+
+
+            Directory.CreateDirectory(Dump_DownloadDirectory);
+            Directory.CreateDirectory(Postal_DownloadDirectory);
 
             dumpfiles.AsParallel().ForAll(g =>
             {
@@ -75,6 +79,7 @@ namespace DumpTester
                 new GeoFile { Filename = "allCountries.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
                 new GeoFile { Filename = "alternateNames.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAlternateNames(fn).Count(); }) },
                 new GeoFile { Filename = "alternateNamesV2.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAlternateNamesV2(fn).Count(); }) },
+                new GeoFile { Filename = "cities500.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
                 new GeoFile { Filename = "cities1000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
                 new GeoFile { Filename = "cities15000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
                 new GeoFile { Filename = "cities5000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },

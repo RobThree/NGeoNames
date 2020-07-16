@@ -8,8 +8,6 @@ namespace NGeoNames.Parsers
     public class FeatureClassParser : BaseParser<FeatureClass>
     {
 
-        private static readonly char[] fcodesep = new[] { '.' };
-
         /// <summary>
         /// Gets wether the file/stream has (or is expected to have) comments (lines starting with "#").
         /// </summary>

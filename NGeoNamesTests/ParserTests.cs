@@ -15,14 +15,14 @@ namespace NGeoNamesTests
         [ExpectedException(typeof(ParserException))]
         public void ParserThrowsOnInvalidData()
         {
-            var target = GeoFileReader.ReadAdmin1Codes(@"testdata\invalid_admin1CodesASCII.txt").ToArray();
+            GeoFileReader.ReadAdmin1Codes(@"testdata\invalid_admin1CodesASCII.txt").ToArray();
         }
 
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
         public void ParserThrowsOnNonExistingFile()
         {
-            var target = GeoFileReader.ReadAdmin1Codes(@"testdata\non_existing_file.txt").ToArray();
+            GeoFileReader.ReadAdmin1Codes(@"testdata\non_existing_file.txt").ToArray();
         }
 
         [TestMethod]
@@ -858,14 +858,6 @@ namespace NGeoNamesTests
             var target = GeoFileReader.ReadCountryInfo(@"testdata\countryInfo_gzip_compat.txt.gz").ToArray();
 
             Assert.AreEqual(2, target.Length);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidDataException))]
-
-        public void FileReader_ThrowsOnIncompatibleOrInvalidGZipFiles()
-        {
-            var target = GeoFileReader.ReadCountryInfo(@"testdata\countryInfo_not_gzip_compat.txt.gz").ToArray();
         }
 
         [TestMethod]

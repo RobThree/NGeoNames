@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Authors>RobIII</Authors>
     <Company>RobIII</Company>
     <PackageId>NGeoNames</PackageId>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Product>NGeoNames</Product>
-    <Copyright>(C) 2014 - 2018 Devcorner.nl</Copyright>
+    <Copyright>(C) 2014 - 2020 Devcorner.nl</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://raw.githubusercontent.com/RobThree/NGeoNames/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/RobThree/NGeoNames</PackageProjectUrl>
@@ -22,12 +22,12 @@
     <DefineConstants>TRACE;RELEASE;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-    <DocumentationFile>bin\Release\net45\NGeoNames.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="KdTree" Version="1.4.0" />
+    <PackageReference Include="KdTree" Version="1.4.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
 </Project>

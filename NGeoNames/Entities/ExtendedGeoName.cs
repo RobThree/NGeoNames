@@ -63,7 +63,7 @@ namespace NGeoNames.Entities
             set
             {
                 if (value.Length != 4)
-                    throw new ArgumentOutOfRangeException("Admincodes array must be of length 4");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Admincodes array must be of length 4");
                 _admincodes = value;
             }
         }

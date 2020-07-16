@@ -1,4 +1,5 @@
 ﻿using NGeoNames.Entities;
+using System;
 
 namespace NGeoNames.Parsers
 {
@@ -54,7 +55,7 @@ namespace NGeoNames.Parsers
 
         private static bool BoolToString(string value)
         {
-            return value.Equals("1");
+            return value.Equals("1", StringComparison.Ordinal);
         }
     }
 }
