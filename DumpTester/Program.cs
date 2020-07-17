@@ -1,10 +1,12 @@
-﻿using NGeoNames;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NGeoNames;
 using System;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DumpTester
 {
@@ -22,33 +24,43 @@ namespace DumpTester
         private static readonly string Dump_DownloadDirectory = ConfigurationManager.AppSettings["dump_downloaddirectory"];
         private static readonly string Postal_DownloadDirectory = ConfigurationManager.AppSettings["postal_downloaddirectory"];
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            //Test GeoName dumps
-            var dumpdownloader = GeoFileDownloader.CreateGeoFileDownloader();
-            var dumpfiles = GetDumps(dumpdownloader);
+            var services = new ServiceCollection();
+            services.AddHttpClient<IGeoNamesGeoClient, GeoNamesGeoClient>();
+            services.AddHttpClient<IGeoNamesPostalClient, GeoNamesPostalClient>();
+            var serviceProvider = services.BuildServiceProvider();
 
+            //Test GeoName dumps
+            var dumpdownloader = new GeoFileDownloader(serviceProvider.GetRequiredService<IGeoNamesGeoClient>());
+            var dumpfiles = GetDumps(dumpdownloader);
 
             Directory.CreateDirectory(Dump_DownloadDirectory);
             Directory.CreateDirectory(Postal_DownloadDirectory);
 
-            dumpfiles.AsParallel().ForAll(g =>
-            {
-                Console.WriteLine("Download: {0}", g.Filename);
-                dumpdownloader.DownloadFile(g.Filename, Dump_DownloadDirectory);
-                Console.WriteLine("Testing {0}: {1}", g.Filename, g.Test(Path.Combine(Dump_DownloadDirectory, g.Filename)));
-            });
+            await Task.WhenAll(
+                dumpfiles.Select(async f =>
+                {
+                    Console.WriteLine("Download: {0}", f.Filename);
+                    var result = await dumpdownloader.DownloadFileAsync(f.Filename, Dump_DownloadDirectory);
+                    Console.WriteLine("Testing {0}: {1}", f.Filename, f.Test(Path.Combine(Dump_DownloadDirectory, f.Filename)));
+                    return result;
+                })
+            ).ConfigureAwait(false);
 
             //Test Postalcode dumps
-            var postalcodedownloader = GeoFileDownloader.CreatePostalcodeDownloader();
+            var postalcodedownloader = new GeoFileDownloader(serviceProvider.GetRequiredService<IGeoNamesPostalClient>());
             var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
 
-            postalcodefiles.AsParallel().ForAll(g =>
-            {
-                Console.WriteLine("Download: {0}", g.Filename);
-                postalcodedownloader.DownloadFile(g.Filename, Postal_DownloadDirectory);
-                Console.WriteLine("Testing {0}: {1}", g.Filename, g.Test(Path.Combine(Postal_DownloadDirectory, g.Filename)));
-            });
+            await Task.WhenAll(
+                postalcodefiles.Select(async f =>
+                {
+                    Console.WriteLine("Download: {0}", f.Filename);
+                    var result = await postalcodedownloader.DownloadFileAsync(f.Filename, Postal_DownloadDirectory).ConfigureAwait(false);
+                    Console.WriteLine("Testing {0}: {1}", f.Filename, f.Test(Path.Combine(Postal_DownloadDirectory, f.Filename)));
+                    return result;
+                })
+            ).ConfigureAwait(false);
 
             Console.WriteLine("Testing ASCII fields");
             DumpASCIILies(Dump_DownloadDirectory);

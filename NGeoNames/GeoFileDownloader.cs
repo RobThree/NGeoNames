@@ -3,138 +3,49 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Net.Cache;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace NGeoNames
 {
-    //TODO: Add ASYNC methods/support
-
     /// <summary>
     /// Provides methods to download files from geonames.org.
     /// </summary>
     /// <remarks>
-    /// This class is, essentially, a small wrapper with some extra (specific) functionality for the
-    /// <see cref="WebClient"/>-class. When downloading ZIP files from geonames.org it will automatically extract the
-    /// archives. It also handles (in a very simple manner) caching of downloaded files to prevent downloading files
-    /// more than desired.
+    /// This class is, essentially, a small helper with some (specific) functionality for handling GeoNames files. When
+    /// downloading ZIP files from geonames.org it will automatically extract the archives. It also handles (in a very
+    /// simple manner) caching of downloaded files to prevent downloading files more than necessary.
     /// </remarks>
     public class GeoFileDownloader
     {
         /// <summary>
-        /// Gets the default URI where geonames.org export files can be found.
-        /// </summary>
-        public static readonly Uri DEFAULTGEOFILEBASEURI = new Uri("http://download.geonames.org/export/dump/", UriKind.Absolute);
-
-        /// <summary>
-        /// Gets the default URI where geonames.org postal codes files can be found.
-        /// </summary>
-        public static readonly Uri DEFAULTPOSTALCODEBASEURI = new Uri("http://download.geonames.org/export/zip/", UriKind.Absolute);
-
-        /// <summary>
-        /// Gets the useragent string used to identify when downloading files from geonames.org.
-        /// </summary>
-        public static readonly string USERAGENT = $"{typeof(GeoFileDownloader).Assembly.GetName().Name} v{typeof(GeoFileDownloader).Assembly.GetName().Version}";
-
-        /// <summary>
-        /// Gets/sets the base URI to use when downloading files and relative paths are specified.
-        /// </summary>
-        public Uri BaseUri { get; set; }
-
-        /// <summary>
-        /// Gets/sets the application's cache policy for any resources obtained by this GeoFileDownloader instance.
-        /// </summary>
-        public RequestCachePolicy CachePolicy { get; set; }
-
-        /// <summary>
-        /// Gets/sets the network credentials that are sent to the host and used to authenticate the request.
-        /// </summary>
-        public ICredentials Credentials { get; set; }
-
-        /// <summary>
-        /// Gets/sets the proxy used by this GeoFileDownloader object.
-        /// </summary>
-        public IWebProxy Proxy { get; set; }
-
-        /// <summary>
         /// Gets/sets the default 'Time To Live'; specifying how long already downloaded files are deemed 'valid' and
         /// won't require actually downloading again.
         /// </summary>
-        public TimeSpan DefaultTTL { get; set; }
+        public TimeSpan DefaultTTL { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class using the specified URI as <see cref="BaseUri"/>.
+        /// Gets the base URI to use when downloading files and relative paths are specified.
         /// </summary>
-        /// <param name="baseUri">The base URI to use when downloading files and relative paths are specified.</param>
-        /// <remarks>
-        /// The <see cref="DefaultTTL"/> is 24 hours.
-        /// </remarks>
-        public GeoFileDownloader(Uri baseUri)
-            : this(baseUri, TimeSpan.FromHours(24)) { }
+        public Uri BaseUri => _httpclient.BaseAddress;
+
+        private readonly IGeoNamesClient _httpclient;
 
         /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class using the specified URI as <see cref="BaseUri"/>
-        /// and specified TTL.
+        /// Initializes a new instance of the GeoFileDownloader class.
         /// </summary>
-        /// <param name="baseUri">The base URI to use when downloading files and relative paths are specified.</param>
-        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
-        public GeoFileDownloader(Uri baseUri, TimeSpan ttl)
+        /// <param name="httpClient">The <see cref="IGeoNamesClient"/> to use for handling the downloads.</param>
+        public GeoFileDownloader(IGeoNamesClient httpClient)
+            : this(httpClient, TimeSpan.FromHours(24)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the GeoFileDownloader class using the specified <see cref="DefaultTTL"/>.
+        /// </summary>
+        /// <param name="httpClient">The <see cref="IGeoNamesClient"/> to use for handling the downloads.</param>
+        public GeoFileDownloader(IGeoNamesClient httpClient, TimeSpan defaultTTL)
         {
-            BaseUri = baseUri;
-            DefaultTTL = ttl;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files.
-        /// </summary>
-        /// <returns>Returns a default GeoFileDownloader intialized with the default geofiles URI as base URI.</returns>
-        /// <remarks>
-        /// The <see cref="DefaultTTL"/> is 24 hours.
-        /// </remarks>
-        public static GeoFileDownloader CreateGeoFileDownloader()
-        {
-            return new GeoFileDownloader(DEFAULTGEOFILEBASEURI);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class for downloading GeoName files with the specified TTL.
-        /// </summary>
-        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
-        /// <returns>
-        /// Returns a default GeoFileDownloaderintialized with the default geofiles URI as base URI and with specified
-        /// <see cref="DefaultTTL">TTL</see>.
-        /// </returns>
-        public static GeoFileDownloader CreateGeoFileDownloader(TimeSpan ttl)
-        {
-            return new GeoFileDownloader(DEFAULTGEOFILEBASEURI, ttl);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files.
-        /// </summary>
-        /// <returns>Returns a default GeoFileDownloader intialized with the default postalcode URI as base URI.</returns>
-        /// <remarks>
-        /// The <see cref="DefaultTTL"/> is 24 hours.
-        /// </remarks>
-        public static GeoFileDownloader CreatePostalcodeDownloader()
-        {
-            return new GeoFileDownloader(DEFAULTPOSTALCODEBASEURI);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the GeoFileDownloader class for downloading postal code files with the specified TTL.
-        /// </summary>
-        /// <param name="ttl">The <see cref="DefaultTTL"/> to use.</param>
-        /// <returns>
-        /// Returns a default GeoFileDownloaderintialized with the default postalcode URI as base URI and with specified
-        /// <see cref="DefaultTTL">TTL</see>.
-        /// </returns>
-        /// <remarks>
-        /// The <see cref="DefaultTTL"/> is 24 hours.
-        /// </remarks>
-        public static GeoFileDownloader CreatePostalcodeDownloader(TimeSpan ttl)
-        {
-            return new GeoFileDownloader(DEFAULTPOSTALCODEBASEURI, ttl);
+            _httpclient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            DefaultTTL = defaultTTL;
         }
 
         /// <summary>
@@ -153,9 +64,9 @@ namespace NGeoNames
         /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive. This method uses the <see cref="DefaultTTL"/>.
         /// </remarks>
-        public string[] DownloadFile(string uri, string destinationpath)
+        public Task<string[]> DownloadFileAsync(string uri, string destinationpath)
         {
-            return DownloadFile(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath);
+            return DownloadFileAsync(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath);
         }
 
         /// <summary>
@@ -174,9 +85,9 @@ namespace NGeoNames
         /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive. This method uses the <see cref="DefaultTTL"/>.
         /// </remarks>
-        public string[] DownloadFile(Uri uri, string destinationpath)
+        public Task<string[]> DownloadFileAsync(Uri uri, string destinationpath)
         {
-            return DownloadFileWhenOlderThan(uri, destinationpath, DefaultTTL);
+            return DownloadFileWhenOlderThanAsync(uri, destinationpath, DefaultTTL);
         }
 
         /// <summary>
@@ -199,9 +110,9 @@ namespace NGeoNames
         /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive.
         /// </remarks>
-        public string[] DownloadFileWhenOlderThan(string uri, string destinationpath, TimeSpan ttl)
+        public Task<string[]> DownloadFileWhenOlderThanAsync(string uri, string destinationpath, TimeSpan ttl)
         {
-            return DownloadFileWhenOlderThan(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath, ttl);
+            return DownloadFileWhenOlderThanAsync(new Uri(uri, UriKind.RelativeOrAbsolute), destinationpath, ttl);
         }
 
         /// <summary>
@@ -224,22 +135,13 @@ namespace NGeoNames
         /// When a ZIP archive is downloaded the archive will automatically be extracted; this is why this method returns
         /// a string-array: there may be more than one file in the archive.
         /// </remarks>
-        public string[] DownloadFileWhenOlderThan(Uri uri, string destinationpath, TimeSpan ttl)
+        public async Task<string[]> DownloadFileWhenOlderThanAsync(Uri uri, string destinationpath, TimeSpan ttl)
         {
             var downloaduri = DetermineDownloadPath(uri);
             destinationpath = DetermineDestinationPath(downloaduri, destinationpath);
 
             if (IsFileExpired(destinationpath, ttl))
-            {
-                using (var w = new WebClient())
-                {
-                    w.CachePolicy = CachePolicy;
-                    w.Credentials = Credentials;
-                    w.Proxy = Proxy;
-                    w.Headers.Add(HttpRequestHeader.UserAgent, USERAGENT);
-                    w.DownloadFile(downloaduri, destinationpath);
-                }
-            }
+                await _httpclient.DownloadFileAsync(downloaduri, destinationpath).ConfigureAwait(false);
 
             if (Path.GetExtension(destinationpath).Equals(".zip", StringComparison.OrdinalIgnoreCase))
                 return UnzipFiles(destinationpath, ttl);
@@ -297,7 +199,7 @@ namespace NGeoNames
         private Uri DetermineDownloadPath(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
-                return new Uri(BaseUri, uri.OriginalString);
+                return new Uri(_httpclient.BaseAddress, uri.OriginalString);
             return uri;
         }
 
@@ -307,5 +209,60 @@ namespace NGeoNames
                 path = Path.Combine(path, Path.GetFileName(uri.AbsolutePath));
             return path;
         }
+    }
+
+    public interface IGeoNamesClient
+    {
+        Uri BaseAddress { get; }
+        Task DownloadFileAsync(Uri downloadUri, string destinationPath);
+    }
+
+    public abstract class GeoNamesClient : IGeoNamesClient
+    {
+        /// <summary>
+        /// Gets the useragent string used to identify when downloading files from geonames.org.
+        /// </summary>
+        public static readonly string USERAGENT = $"{typeof(GeoNamesClient).Assembly.GetName().Name} v{typeof(GeoNamesClient).Assembly.GetName().Version}";
+
+        public Uri BaseAddress => _client.BaseAddress;
+
+        private readonly HttpClient _client;
+
+        public GeoNamesClient(HttpClient client, Uri baseAddress)
+        {
+            _client = client ?? throw new ArgumentNullException(nameof(baseAddress));
+            _client.BaseAddress = baseAddress;
+            _client.DefaultRequestHeaders.Add("User-Agent", USERAGENT);
+        }
+
+        public async Task DownloadFileAsync(Uri downloadUri, string destinationPath)
+        {
+            using (var response = await _client.GetAsync(downloadUri).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                using (var fs = new FileStream(destinationPath, FileMode.CreateNew))
+                    await response.Content.CopyToAsync(fs).ConfigureAwait(false);
+            }
+        }
+    }
+
+    public interface IGeoNamesGeoClient : IGeoNamesClient { }
+
+    public class GeoNamesGeoClient : GeoNamesClient, IGeoNamesGeoClient
+    {
+        public static readonly Uri DEFAULTURI = new Uri("http://download.geonames.org/export/dump/", UriKind.Absolute);
+
+        public GeoNamesGeoClient(HttpClient client)
+            : base(client, DEFAULTURI) { }
+    }
+
+    public interface IGeoNamesPostalClient : IGeoNamesClient { }
+
+    public class GeoNamesPostalClient : GeoNamesClient, IGeoNamesPostalClient
+    {
+        public static readonly Uri DEFAULTURI = new Uri("http://download.geonames.org/export/zip/", UriKind.Absolute);
+
+        public GeoNamesPostalClient(HttpClient client)
+            : base(client, DEFAULTURI) { }
     }
 }
