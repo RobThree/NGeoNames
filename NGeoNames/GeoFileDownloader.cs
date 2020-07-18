@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -16,7 +19,7 @@ namespace NGeoNames
     /// downloading ZIP files from geonames.org it will automatically extract the archives. It also handles (in a very
     /// simple manner) caching of downloaded files to prevent downloading files more than necessary.
     /// </remarks>
-    public class GeoFileDownloader
+    public abstract class GeoFileDownloader : IGeoFileDownloader
     {
         /// <summary>
         /// Gets/sets the default 'Time To Live'; specifying how long already downloaded files are deemed 'valid' and
@@ -246,6 +249,58 @@ namespace NGeoNames
         }
     }
 
+
+    public static class ExtensionMethods
+    {
+        private class GeoNamesHttpClientBuilder : IHttpClientBuilder
+        {
+            private static readonly string NAME = typeof(GeoNamesHttpClientBuilder).Assembly.GetName().Name;
+            public string Name => NAME;
+
+            public IServiceCollection Services { get; }
+
+            public GeoNamesHttpClientBuilder(IServiceCollection services)
+            {
+                Services = services ?? throw new ArgumentNullException(nameof(services));
+            }
+        }
+
+        public static IServiceCollection AddGeoNames(this IServiceCollection services)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            services.AddHttpClient();
+            var defaultHttpClientBuilder = new GeoNamesHttpClientBuilder(services);
+            defaultHttpClientBuilder.AddTypedClient<IGeoNamesGeoClient, GeoNamesGeoClient>();
+            defaultHttpClientBuilder.AddTypedClient<IGeoNamesPostalClient, GeoNamesPostalClient>();
+            services.TryAdd(ServiceDescriptor.Transient(typeof(IGeoFileGeoDownloader), typeof(GeoFileGeoDownloader)));
+            services.TryAdd(ServiceDescriptor.Transient(typeof(IGeoFilePostalDownloader), typeof(GeoFilePostalDownloader)));
+
+            return services;
+        }
+
+        private static IHttpClientBuilder AddTypedClient<TClient, TImplementation>(this IHttpClientBuilder builder)
+            where TClient : class
+            where TImplementation : class, TClient
+        {
+            builder.Services.AddTransient(delegate (IServiceProvider s)
+            {
+                var httpClient = (HttpClient)s.GetRequiredService<IHttpClientFactory>().CreateClient(builder.Name);
+                return (TClient)s.GetRequiredService<ITypedHttpClientFactory<TImplementation>>().CreateClient(httpClient);
+            });
+            return builder;
+        }
+    }
+
+    public interface IGeoFileGeoDownloader : IGeoFileDownloader { }
+
+    public class GeoFileGeoDownloader : GeoFileDownloader, IGeoFileGeoDownloader
+    {
+        public GeoFileGeoDownloader(IGeoNamesGeoClient client)
+            : base(client) { }
+    }
+
     public interface IGeoNamesGeoClient : IGeoNamesClient { }
 
     public class GeoNamesGeoClient : GeoNamesClient, IGeoNamesGeoClient
@@ -254,6 +309,14 @@ namespace NGeoNames
 
         public GeoNamesGeoClient(HttpClient client)
             : base(client, DEFAULTURI) { }
+    }
+
+    public interface IGeoFilePostalDownloader : IGeoFileDownloader { }
+
+    public class GeoFilePostalDownloader : GeoFileDownloader, IGeoFilePostalDownloader
+    {
+        public GeoFilePostalDownloader(IGeoNamesPostalClient client)
+            : base(client) { }
     }
 
     public interface IGeoNamesPostalClient : IGeoNamesClient { }

@@ -27,16 +27,14 @@ namespace DumpTester
         static async Task Main(string[] args)
         {
             var services = new ServiceCollection();
-            services.AddHttpClient<IGeoNamesGeoClient, GeoNamesGeoClient>();
-            services.AddHttpClient<IGeoNamesPostalClient, GeoNamesPostalClient>();
+            services.AddGeoNames();
             var serviceProvider = services.BuildServiceProvider();
 
             //Test GeoName dumps
-            var dumpdownloader = new GeoFileDownloader(serviceProvider.GetRequiredService<IGeoNamesGeoClient>());
+            var dumpdownloader = serviceProvider.GetRequiredService<IGeoFileGeoDownloader>();
             var dumpfiles = GetDumps(dumpdownloader);
 
             Directory.CreateDirectory(Dump_DownloadDirectory);
-            Directory.CreateDirectory(Postal_DownloadDirectory);
 
             await Task.WhenAll(
                 dumpfiles.Select(async f =>
@@ -49,8 +47,10 @@ namespace DumpTester
             ).ConfigureAwait(false);
 
             //Test Postalcode dumps
-            var postalcodedownloader = new GeoFileDownloader(serviceProvider.GetRequiredService<IGeoNamesPostalClient>());
+            var postalcodedownloader = serviceProvider.GetRequiredService<IGeoFilePostalDownloader>();
             var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
+
+            Directory.CreateDirectory(Postal_DownloadDirectory);
 
             await Task.WhenAll(
                 postalcodefiles.Select(async f =>
@@ -68,7 +68,7 @@ namespace DumpTester
             Console.WriteLine("All done!");
         }
 
-        private static GeoFile[] GetCountryPostalcodes(GeoFileDownloader downloader)
+        private static GeoFile[] GetCountryPostalcodes(IGeoFilePostalDownloader downloader)
         {
             var w = new WebClient();
             var document = w.DownloadString(downloader.BaseUri);
@@ -83,7 +83,7 @@ namespace DumpTester
             }.Union(countries.OrderBy(m => m.Filename)).ToArray();
         }
 
-        private static GeoFile[] GetDumps(GeoFileDownloader downloader)
+        private static GeoFile[] GetDumps(IGeoFileGeoDownloader downloader)
         {
             return new[] {
                 new GeoFile { Filename = "admin1CodesASCII.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAdmin1Codes(fn).Count(); }) },
@@ -105,7 +105,7 @@ namespace DumpTester
             }.Union(GetCountryDumps(downloader)).ToArray();
         }
 
-        private static GeoFile[] GetCountryDumps(GeoFileDownloader downloader)
+        private static GeoFile[] GetCountryDumps(IGeoFileGeoDownloader downloader)
         {
             var w = new WebClient();
             var document = w.DownloadString(downloader.BaseUri);
