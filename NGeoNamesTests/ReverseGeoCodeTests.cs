@@ -13,11 +13,9 @@ namespace NGeoNamesTests
         public async Task ReverseGeoCode_RadialSearch_ReturnsCorrectResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
-            var rg = new ReverseGeoCode<ExtendedGeoName>(data);
+            var rg = new ReverseGeoCode<ExtendedGeoName>();
+            await rg.AddRange(GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt")).ConfigureAwait(false);
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
-
-            Assert.AreEqual(47, data.Length);   //File should contain 47 records total
 
             var expected_ids = new[] { 2640729, 2639577, 2642465, 2637627, 2633709, 2643339, 2634677, 2636503, 2652053, 2654710, 2643743, 2646003, 2643741, 2653941, 6690870, 2655775, 2651621, 2650497, 2656194, 2653266, 2648657, 2637433, 2652618, 2646057 };
 
@@ -34,12 +32,11 @@ namespace NGeoNamesTests
         public async Task ReverseGeoCode_RadialSearch_ReturnsMaxCountResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
-            var rg = new ReverseGeoCode<ExtendedGeoName>(data);
+            var rg = new ReverseGeoCode<ExtendedGeoName>();
+            await rg.AddRange(GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt")).ConfigureAwait(false);
+            
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
             var maxresults = 10;
-
-            Assert.AreEqual(47, data.Length);   //File should contain 47 records total
 
             var expected_ids = new[] { 2643741, 2646003, 2643743, 6690870, 2651621, 2655775, 2636503, 2634677, 2656194, 2653266 };
             Assert.AreEqual(maxresults, expected_ids.Length);
@@ -57,12 +54,10 @@ namespace NGeoNamesTests
         public async Task ReverseGeoCode_NearestNeighbourSearch_ReturnsCorrectResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
-            var rg = new ReverseGeoCode<ExtendedGeoName>(data);
+            var rg = new ReverseGeoCode<ExtendedGeoName>();
+            await rg.AddRange(GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt")).ConfigureAwait(false);
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
-
-            Assert.AreEqual(47, data.Length);   //File should contain 47 records total
-
+            
             var expected_ids = new[] { 2640729, 2639577, 2642465, 2637627, 2633709, 2643339, 2634677, 2636503, 2652053, 2654710, 2643743, 2646003, 2643741, 2653941, 6690870, 2655775, 2651621, 2650497, 2656194, 2653266, 2648657, 2637433, 2652618, 2646057 };
 
             // Search from the/a center in London for the first X points (where X == expected_ids.length)
@@ -80,8 +75,8 @@ namespace NGeoNamesTests
         [TestMethod]
         public void Geonames_MultipleEntities()
         {
-            var rgc1 = new ReverseGeoCode<Postalcode>();
-            var rgc2 = new ReverseGeoCode<ExtendedGeoName>();
+            new ReverseGeoCode<Postalcode>();
+            new ReverseGeoCode<ExtendedGeoName>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NGeoNames.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NGeoNames
 {
@@ -11,31 +12,9 @@ namespace NGeoNames
     public class ReverseGeoCode<T>
         where T : IGeoLocation, new()
     {
-        private KdTree.KdTree<double, T> _tree;
+        private KdTree.KdTree<double, T> _tree = new KdTree.KdTree<double, T>(3, new DoubleMath());
 
-        /// <summary>
-        /// Initializes a new, empty <see cref="ReverseGeoCode{T}"/> object.
-        /// </summary>
-        public ReverseGeoCode()
-            : this(Enumerable.Empty<T>()) { }
-
-        /// <summary>
-        /// Initializes a new <see cref="ReverseGeoCode{T}"/> object, populating the internal structures with the provided
-        /// <see cref="IGeoLocation"/>s.
-        /// </summary>
-        /// <param name="nodes">
-        /// An IEnumerable{T} of <see cref="IGeoLocation"/> to populate the <see cref="ReverseGeoCode{T}"/> with.
-        /// </param>
-        /// <remarks>
-        /// This constructor will, internally, call the <see cref="Balance"/> method when the internal structure is initialized.
-        /// </remarks>
-        public ReverseGeoCode(IEnumerable<T> nodes)
-        {
-            _tree = new KdTree.KdTree<double, T>(3, new DoubleMath());
-            AddRange(nodes);
-
-            Balance();
-        }
+        public int Count => _tree.Count;
 
         /// <summary>
         /// Adds a node to the <see cref="ReverseGeoCode{T}"/> internal structure.
@@ -46,15 +25,19 @@ namespace NGeoNames
             _tree.Add(GeoUtil.GetCoord(node), node);
         }
 
-
         /// <summary>
         /// Adds the specified nodes to the <see cref="ReverseGeoCode{T}"/> internal structure.
         /// </summary>
-        /// <param name="nodes">An IEnumerable{T} of <see cref="IGeoLocation"/>s to add.</param>
-        public void AddRange(IEnumerable<T> nodes)
+        /// <param name="nodes">An IAsyncEnumerable{T} of <see cref="IGeoLocation"/>s to add.</param>
+        public async Task AddRange(IAsyncEnumerable<T> nodes)
         {
-            foreach (var i in nodes)
+            if (nodes is null)
+                throw new System.ArgumentNullException(nameof(nodes));
+            
+            await foreach (var i in nodes)
                 Add(i);
+            
+            Balance();
         }
 
         /// <summary>
@@ -62,7 +45,7 @@ namespace NGeoNames
         /// </summary>
         /// <remarks>
         /// This method only needs to be called when all nodes have been added; it *can* be called earlier but is
-        /// not of much use. Note that the <see cref="ReverseGeoCode(IEnumerable{T})"/> calls this
+        /// not of much use. Note that the <see cref="ReverseGeoCode(IAsyncEnumerable{T})"/> calls this
         /// method automatically; no need to call it when using this constructor.
         /// </remarks>
         public void Balance()

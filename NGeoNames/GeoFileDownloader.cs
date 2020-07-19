@@ -173,19 +173,17 @@ namespace NGeoNames
         {
             var files = new List<string>();
             using (var f = File.OpenRead(path))
+            using (var z = new ZipArchive(f, ZipArchiveMode.Read))
             {
-                using (var z = new ZipArchive(f, ZipArchiveMode.Read))
+                foreach (var c in z.Entries.Where(n => !n.Name.StartsWith("readme", StringComparison.OrdinalIgnoreCase)))
                 {
-                    foreach (var c in z.Entries.Where(n => !n.Name.StartsWith("readme", StringComparison.OrdinalIgnoreCase)))
+                    var dest = Path.Combine(Path.GetDirectoryName(path), c.Name);
+                    if (IsFileExpired(dest, ttl))
                     {
-                        var dest = Path.Combine(Path.GetDirectoryName(path), c.Name);
-                        if (IsFileExpired(dest, ttl))
-                        {
-                            using (var e = File.Create(dest))
-                                c.Open().CopyTo(e);
-                        }
-                        files.Add(dest);
+                        using (var e = File.Create(dest))
+                            c.Open().CopyTo(e);
                     }
+                    files.Add(dest);
                 }
             }
             return files.ToArray();

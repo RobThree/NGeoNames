@@ -53,7 +53,7 @@ The library consists mainly of parsers, composers and entities (in their respect
 
 Because some "geoname files" can be very large (like `allcountries.txt`) we have a `GeoName` entity which is a simplified version (and baseclass) of an `ExtendedGeoName`. The `GeoName` class contains a unique id which can be used to resolve the `ExtendedGeoName` easily for more information when required. It is, however, recommended to use `<countrycode>.txt` (e.g. `GB.txt`) `cities15000.txt` or `cities1000.txt` for example to reduce the dataset to a smaller size, You can also compose your own custom datasets using the `GeoFileWriter` and composers.
 
-Also worth noting is that the readers return an `IEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary()` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
+Also worth noting is that the readers return an `IAsyncEnumerable<SomeEntity>`; make sure that you materialize these enumerables to a list, array or other datastructure (using `.ToList()`, `.ToArray()`, `.ToDictionary()` etc.) if you access it more than once to avoid file I/O to the underlying file each time you access the data.
 
 ### <a name="downloading"></a>Downloading / retrieving data from geonames.org (Optional)
 
@@ -84,7 +84,7 @@ var cities_in_us = GeoFileReader.ReadExtendedGeoNames(@"D:\my\geodata\cities1000
         .OrderBy(p => p.Name);
 ```
 
-Again, **please note** that `Read<Something>` methods return an `IEnumerable<T>`. Whenever you want to access the data more than once you will probably want to call `.ToArray()` or similar to materialize the data into memory. The `GeoFileReader` class has two static method (`ReadBuiltInContinents()` and `ReadBuiltInFeatureClasses()`) that can be used to use built-in values for continents and [feature codes](http://www.geonames.org/export/codes.html) which are not provided by geonames.org as downloadable files. You can, however, craft your own files for this purpose and use the `ReadContinents()` and `ReadFeatureClasses()` if you want to specify your own values / update built-in values (should `NGeoNames`'s values be outdated for example).
+Again, **please note** that `Read<Something>` methods return an `IAsyncEnumerable<T>`. Whenever you want to access the data more than once you will probably want to call `.ToArray()` or similar to materialize the data into memory. The `GeoFileReader` class has two static method (`ReadBuiltInContinents()` and `ReadBuiltInFeatureClasses()`) that can be used to use built-in values for continents and [feature codes](http://www.geonames.org/export/codes.html) which are not provided by geonames.org as downloadable files. You can, however, craft your own files for this purpose and use the `ReadContinents()` and `ReadFeatureClasses()` if you want to specify your own values / update built-in values (should `NGeoNames`'s values be outdated for example).
 
 You can also add your own entities and, as long as you provide a parser for it, use the `GeoFileReader` class to read/parse files for these entities as well:
 
@@ -104,7 +104,7 @@ As you'll probably realize by now, the `GeoFileReader` class *combined* with [LI
 
 ### <a name="utilizing"></a>Utilizing geonames.org data
 
-The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IEnumerable<GeoNames>` or `IEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor. Even if you choose to store your data in a database or custom (binary?) fileformat or anything else; as long as you provide an `IEnumerable` to this class you'll be able to use it.
+The 'heart' of the library is the `ReverseGeoCode<T>` class. When you supply it with either `IAsyncEnumerable<GeoNames>` or `IAsyncEnumerable<ExtendedGeoNames>` it can be used to do a `RadialSearch()` or `NearestNeighbourSearch()`. Supplying the class with data can be done by either passing it to the class constructor or by using the `Add()` or `AddRange()` methods. You may want to call the `Balance()` method to balance the internal KD-tree, however; this is done automatically when the data is supplied via the constructor. Even if you choose to store your data in a database or custom (binary?) fileformat or anything else; as long as you provide an `IAsyncEnumerable` to this class you'll be able to use it.
 
 ```c#
 // Create our ReverseGeoCode class and supply it with data

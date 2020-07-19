@@ -75,14 +75,12 @@ namespace NGeoNames
 
             //Figure out how we're supposed to read the file
             var writeastype = filetype == FileType.AutoDetect ? FileUtil.GetFileTypeFromExtension(path) : filetype;
-            switch (writeastype)
+            return writeastype switch
             {
-                case FileType.Plain:
-                    return filestream;
-                case FileType.GZip:
-                    return new GZipStream(filestream, CompressionLevel.Optimal);
-            }
-            throw new System.NotSupportedException($"Filetype not supported: {writeastype}");
+                FileType.Plain => filestream,
+                FileType.GZip => new GZipStream(filestream, CompressionLevel.Optimal),
+                _ => throw new System.NotSupportedException($"Filetype not supported: {writeastype}"),
+            };
         }
 
         #region Convenience methods

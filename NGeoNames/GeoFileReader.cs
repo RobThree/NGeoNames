@@ -20,7 +20,7 @@ namespace NGeoNames
         /// <typeparam name="T">The type of objects to read/parse.</typeparam>
         /// <param name="path">The path of the file to read/parse.</param>
         /// <param name="parser">The <see cref="IParser{T}"/> to use when reading the file.</param>
-        /// <returns>Returns an IEnumerable of T representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of T representing the records read/parsed.</returns>
         /// <remarks>
         /// This method will try to "autodetect" the filetype; it will 'recognize' .txt and .gz (or .*.gz) files
         /// and act accordingly. If you use another extension you may want to explicitly specify the filetype
@@ -38,7 +38,7 @@ namespace NGeoNames
         /// <param name="path">The path of the file to read/parse.</param>
         /// <param name="filetype">The <see cref="FileType"/> of the file.</param>
         /// <param name="parser">The <see cref="IParser{T}"/> to use when reading the file.</param>
-        /// <returns>Returns an IEnumerable of T representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of T representing the records read/parsed.</returns>
         public async static IAsyncEnumerable<T> ReadRecordsAsync<T>(string path, FileType filetype, IParser<T> parser)
         {
             using (var f = GetStream(path, filetype))
@@ -52,7 +52,7 @@ namespace NGeoNames
         /// <typeparam name="T">The type of objects to read/parse.</typeparam>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
         /// <param name="parser">The <see cref="IParser{T}"/> to use when reading the file.</param>
-        /// <returns>Returns an IEnumerable of T representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of T representing the records read/parsed.</returns>
         public static async IAsyncEnumerable<T> ReadRecordsAsync<T>(Stream stream, IParser<T> parser)
         {
             using (var r = new StreamReader(stream, parser.Encoding))
@@ -80,14 +80,12 @@ namespace NGeoNames
 
             //Figure out how we're supposed to read the file
             var readastype = filetype == FileType.AutoDetect ? FileUtil.GetFileTypeFromExtension(path) : filetype;
-            switch (readastype)
+            return readastype switch
             {
-                case FileType.Plain:
-                    return filestream;
-                case FileType.GZip:
-                    return new GZipStream(filestream, CompressionMode.Decompress);
-            }
-            throw new System.NotSupportedException($"Filetype not supported: {readastype}");
+                FileType.Plain => filestream,
+                FileType.GZip => new GZipStream(filestream, CompressionMode.Decompress),
+                _ => throw new System.NotSupportedException($"Filetype not supported: {readastype}"),
+            };
         }
 
 
@@ -96,7 +94,7 @@ namespace NGeoNames
         /// Reads <see cref="ExtendedGeoName"/> records from the specified file, using the default <see cref="ExtendedGeoNameParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="ExtendedGeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="ExtendedGeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -110,7 +108,7 @@ namespace NGeoNames
         /// Reads <see cref="ExtendedGeoName"/> records from the <see cref="Stream"/>, using the default <see cref="ExtendedGeoNameParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="ExtendedGeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="ExtendedGeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -124,7 +122,7 @@ namespace NGeoNames
         /// Reads <see cref="GeoName"/> records from the specified file, using the default <see cref="GeoNameParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -138,7 +136,7 @@ namespace NGeoNames
         /// Reads <see cref="GeoName"/> records from the <see cref="Stream"/>, using the default <see cref="GeoNameParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -157,7 +155,7 @@ namespace NGeoNames
         /// when this parameter is false a custom 4 field format (containing only Id, Name, Latitude and Longitude)
         /// will be used.
         /// </param>
-        /// <returns>Returns an IEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -176,7 +174,7 @@ namespace NGeoNames
         /// when this parameter is false a custom 4 field format (containing only Id, Name, Latitude and Longitude)
         /// will be used.
         /// </param>
-        /// <returns>Returns an IEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="GeoName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -190,7 +188,7 @@ namespace NGeoNames
         /// Reads <see cref="Admin1Code"/> records from the specified file, using the default <see cref="Admin1CodeParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Admin1Code"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Admin1Code"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -204,7 +202,7 @@ namespace NGeoNames
         /// Reads <see cref="Admin1Code"/> records from the <see cref="Stream"/>, using the default <see cref="Admin1CodeParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Admin1Code"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Admin1Code"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -218,7 +216,7 @@ namespace NGeoNames
         /// Reads <see cref="Admin2Code"/> records from the specified file, using the default <see cref="Admin2CodeParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Admin2Code"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Admin2Code"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -232,7 +230,7 @@ namespace NGeoNames
         /// Reads <see cref="Admin2Code"/> records from the <see cref="Stream"/>, using the default <see cref="Admin2CodeParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Admin2Code"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Admin2Code"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -246,7 +244,7 @@ namespace NGeoNames
         /// Reads <see cref="AlternateName"/> records from the specified file, using the default <see cref="AlternateNameParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="AlternateName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="AlternateName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -260,7 +258,7 @@ namespace NGeoNames
         /// Reads <see cref="AlternateName"/> records from the <see cref="Stream"/>, using the default <see cref="AlternateNameParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="AlternateName"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="AlternateName"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -274,7 +272,7 @@ namespace NGeoNames
         /// Reads <see cref="AlternateNameV2"/> records from the specified file, using the default <see cref="AlternateNameParserV2"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -288,7 +286,7 @@ namespace NGeoNames
         /// Reads <see cref="AlternateNameV2"/> records from the <see cref="Stream"/>, using the default <see cref="AlternateNameParserV2"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="AlternateNameV2"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -301,7 +299,7 @@ namespace NGeoNames
         /// <summary>
         /// Reads <see cref="Continent"/> records from the built-in data, using the default <see cref="ContinentParser"/>.
         /// </summary>
-        /// <returns>Returns an IEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// Geonames.org doesn't provide a file for continents; you can provide your own file (see
         /// <see cref="ReadContinents(string)"/> or <see cref="ReadContinents(Stream)"/>) or use the built-in
@@ -322,7 +320,7 @@ namespace NGeoNames
         /// Reads <see cref="Continent"/> records from the specified file, using the default <see cref="ContinentParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -337,7 +335,7 @@ namespace NGeoNames
         /// Reads <see cref="Continent"/> records from the <see cref="Stream"/>, using the default <see cref="ContinentParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Continent"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -352,7 +350,7 @@ namespace NGeoNames
         /// Reads <see cref="CountryInfo"/> records from the specified file, using the default <see cref="CountryInfoParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="CountryInfo"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="CountryInfo"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -366,7 +364,7 @@ namespace NGeoNames
         /// Reads <see cref="CountryInfo"/> records from the <see cref="Stream"/>, using the default <see cref="CountryInfoParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="CountryInfo"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="CountryInfo"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -379,7 +377,7 @@ namespace NGeoNames
         /// <summary>
         /// Reads <see cref="FeatureClass"/> records from the built-in data, using the default <see cref="FeatureClassParser"/>.
         /// </summary>
-        /// <returns>Returns an IEnumerable of <see cref="FeatureClass"/> representing the records read/parsed.</returns>
+        /// <returns>Returns a <see cref="Task&lt;IEnumerable&lt;FeatureClass&gt;&gt;"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// Geonames.org doesn't provide a file for featueclasses; you can provide your own file (see
         /// <see cref="ReadFeatureClasses(string)"/> or <see cref="ReadFeatureClasses(Stream)"/>) or use the built-in
@@ -395,7 +393,7 @@ namespace NGeoNames
         /// Reads <see cref="FeatureClass"/> records from the specified file, using the default <see cref="FeatureClassParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="FeatureClass"/> representing the records read/parsed.</returns>
+        /// <returns>Returns a <see cref="Task&lt;IEnumerable&lt;FeatureClass&gt;&gt;"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -410,7 +408,7 @@ namespace NGeoNames
         /// Reads <see cref="FeatureClass"/> records from the <see cref="Stream"/>, using the default <see cref="FeatureClassParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="FeatureClass"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="FeatureClass"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -425,7 +423,7 @@ namespace NGeoNames
         /// Reads <see cref="FeatureCode"/> records from the specified file, using the default <see cref="FeatureCodeParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="FeatureCode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="FeatureCode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -439,7 +437,7 @@ namespace NGeoNames
         /// Reads <see cref="FeatureCode"/> records from the <see cref="Stream"/>, using the default <see cref="FeatureCodeParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="FeatureCode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="FeatureCode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -453,7 +451,7 @@ namespace NGeoNames
         /// Reads <see cref="HierarchyNode"/> records from the specified file, using the default <see cref="HierarchyParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="HierarchyNode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="HierarchyNode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -467,7 +465,7 @@ namespace NGeoNames
         /// Reads <see cref="HierarchyNode"/> records from the <see cref="Stream"/>, using the default <see cref="HierarchyParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="HierarchyNode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="HierarchyNode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -481,7 +479,7 @@ namespace NGeoNames
         /// Reads <see cref="ISOLanguageCode"/> records from the specified file, using the default <see cref="ISOLanguageCodeParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="ISOLanguageCode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="ISOLanguageCode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -495,7 +493,7 @@ namespace NGeoNames
         /// Reads <see cref="ISOLanguageCode"/> records from the <see cref="Stream"/>, using the default <see cref="ISOLanguageCodeParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="ISOLanguageCode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="ISOLanguageCode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -509,7 +507,7 @@ namespace NGeoNames
         /// Reads <see cref="TimeZone"/> records from the specified file, using the default <see cref="TimeZoneParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="TimeZone"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="TimeZone"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -523,7 +521,7 @@ namespace NGeoNames
         /// Reads <see cref="TimeZone"/> records from the <see cref="Stream"/>, using the default <see cref="TimeZoneParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="TimeZone"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="TimeZone"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -537,7 +535,7 @@ namespace NGeoNames
         /// Reads <see cref="UserTag"/> records from the specified file, using the default <see cref="UserTagParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="UserTag"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="UserTag"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -551,7 +549,7 @@ namespace NGeoNames
         /// Reads <see cref="UserTag"/> records from the <see cref="Stream"/>, using the default <see cref="UserTagParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="UserTag"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="UserTag"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
@@ -565,7 +563,7 @@ namespace NGeoNames
         /// Reads <see cref="Postalcode"/> records from the specified file, using the default <see cref="PostalcodeParser"/>.
         /// </summary>
         /// <param name="filename">The name/path of the file.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
@@ -579,7 +577,7 @@ namespace NGeoNames
         /// Reads <see cref="Postalcode"/> records from the <see cref="Stream"/>, using the default <see cref="PostalcodeParser"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
-        /// <returns>Returns an IEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
+        /// <returns>Returns an IAsyncEnumerable of <see cref="Postalcode"/> representing the records read/parsed.</returns>
         /// <remarks>
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
