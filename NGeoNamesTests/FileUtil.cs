@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NGeoNamesTests
 {
@@ -12,13 +13,13 @@ namespace NGeoNamesTests
     {
         // Compares two data files using a GenericEntity to easily compare actual values without bothering with newline differences, 
         // comments etc. nor trying to "understand" what they mean
-        public static void EnsureFilesAreFunctionallyEqual(string src, string dst, int expectedfields, int skiplines, char[] fieldseparators, Encoding encoding, bool hascomments)
+        public static async Task EnsureFilesAreFunctionallyEqual(string src, string dst, int expectedfields, int skiplines, char[] fieldseparators, Encoding encoding, bool hascomments)
         {
             var parser_in = new GenericParser(expectedfields, skiplines, fieldseparators, encoding, hascomments);
             var parser_out = new GenericParser(expectedfields, 0, fieldseparators, encoding, false);
 
-            var expected = new GeoFileReader().ReadRecords(src, FileType.Plain, parser_in).ToArray();
-            var actual = new GeoFileReader().ReadRecords(dst, FileType.Plain, parser_out).ToArray();
+            var expected = await GeoFileReader.ReadRecordsAsync(src, FileType.Plain, parser_in).ToArrayAsync();
+            var actual = await GeoFileReader.ReadRecordsAsync(dst, FileType.Plain, parser_out).ToArrayAsync();
 
             CollectionAssert.AreEqual(expected, actual, new GenericEntityComparer());
         }

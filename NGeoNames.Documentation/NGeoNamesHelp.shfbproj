@@ -78,6 +78,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseDocs' ">
+    <OutputPath>bin\ReleaseDocs\</OutputPath>
+  </PropertyGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
 </Project>

@@ -3,6 +3,7 @@ using NGeoNames.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace NGeoNames
 {
@@ -27,11 +28,11 @@ namespace NGeoNames
         /// <remarks>
         /// This method will try to "autodetect" the filetype; it will 'recognize' .txt and .gz (or .*.gz) files
         /// and act accordingly. If you use another extension you may want to explicitly specify the filetype
-        /// using the <see cref="WriteRecords{T}(string, IEnumerable{T}, IComposer{T}, FileType, string)"/> overload.
+        /// using the <see cref="WriteRecordsAsync{T}(string, IAsyncEnumerable{T}, IComposer{T}, FileType, string)"/> overload.
         /// </remarks>
-        public void WriteRecords<T>(string path, IEnumerable<T> values, IComposer<T> composer, string lineseparator = DEFAULTLINESEPARATOR)
+        public static Task WriteRecordsAsync<T>(string path, IAsyncEnumerable<T> values, IComposer<T> composer, string lineseparator = DEFAULTLINESEPARATOR)
         {
-            WriteRecords(path, values, composer, FileUtil.GetFileTypeFromExtension(path), lineseparator);
+            return WriteRecordsAsync(path, values, composer, FileUtil.GetFileTypeFromExtension(path), lineseparator);
         }
 
         /// <summary>
@@ -43,10 +44,10 @@ namespace NGeoNames
         /// <param name="filetype">The <see cref="FileType"/> of the file.</param>
         /// <param name="composer">The <see cref="IComposer{T}"/> to use when writing the file.</param>
         /// <param name="lineseparator">The lineseparator to use (see <see cref="DEFAULTLINESEPARATOR"/>).</param>
-        public void WriteRecords<T>(string path, IEnumerable<T> values, IComposer<T> composer, FileType filetype, string lineseparator = DEFAULTLINESEPARATOR)
+        public static async Task WriteRecordsAsync<T>(string path, IAsyncEnumerable<T> values, IComposer<T> composer, FileType filetype, string lineseparator = DEFAULTLINESEPARATOR)
         {
             using (var s = GetStream(path, filetype))
-                WriteRecords(s, values, composer, lineseparator);
+                await WriteRecordsAsync(s, values, composer, lineseparator).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -57,11 +58,11 @@ namespace NGeoNames
         /// <param name="values">The values to write to the file.</param>
         /// <param name="composer">The <see cref="IComposer{T}"/> to use when writing the file.</param>
         /// <param name="lineseparator">The lineseparator to use (see <see cref="DEFAULTLINESEPARATOR"/>).</param>
-        public void WriteRecords<T>(Stream stream, IEnumerable<T> values, IComposer<T> composer, string lineseparator = DEFAULTLINESEPARATOR)
+        public static async Task WriteRecordsAsync<T>(Stream stream, IAsyncEnumerable<T> values, IComposer<T> composer, string lineseparator = DEFAULTLINESEPARATOR)
         {
             using (var w = new StreamWriter(stream, composer.Encoding))
             {
-                foreach (var v in values)
+                await foreach (var v in values)
                 {
                     w.Write(composer.Compose(v) + lineseparator);
                 }
@@ -96,9 +97,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteAdmin1Codes(string filename, IEnumerable<Admin1Code> values)
+        public static Task WriteAdmin1Codes(string filename, IAsyncEnumerable<Admin1Code> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new Admin1CodeComposer());
+            return WriteRecordsAsync(filename, values, new Admin1CodeComposer());
         }
 
         /// <summary>
@@ -110,9 +111,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteAdmin1Codes(Stream stream, IEnumerable<Admin1Code> values)
+        public static Task WriteAdmin1Codes(Stream stream, IAsyncEnumerable<Admin1Code> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new Admin1CodeComposer());
+            return WriteRecordsAsync(stream, values, new Admin1CodeComposer());
         }
 
         /// <summary>
@@ -124,9 +125,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteAdmin2Codes(string filename, IEnumerable<Admin2Code> values)
+        public static Task WriteAdmin2Codes(string filename, IAsyncEnumerable<Admin2Code> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new Admin2CodeComposer());
+            return WriteRecordsAsync(filename, values, new Admin2CodeComposer());
         }
 
         /// <summary>
@@ -138,9 +139,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteAdmin2Codes(Stream stream, IEnumerable<Admin2Code> values)
+        public static Task WriteAdmin2Codes(Stream stream, IAsyncEnumerable<Admin2Code> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new Admin2CodeComposer());
+            return WriteRecordsAsync(stream, values, new Admin2CodeComposer());
         }
 
         /// <summary>
@@ -152,9 +153,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteAlternateNames(string filename, IEnumerable<AlternateName> values)
+        public static Task WriteAlternateNames(string filename, IAsyncEnumerable<AlternateName> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new AlternateNameComposer());
+            return WriteRecordsAsync(filename, values, new AlternateNameComposer());
         }
 
         /// <summary>
@@ -166,9 +167,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteAlternateNames(Stream stream, IEnumerable<AlternateName> values)
+        public static Task WriteAlternateNames(Stream stream, IAsyncEnumerable<AlternateName> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new AlternateNameComposer());
+            return WriteRecordsAsync(stream, values, new AlternateNameComposer());
         }
 
         /// <summary>
@@ -180,9 +181,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteAlternateNamesV2(string filename, IEnumerable<AlternateNameV2> values)
+        public static Task WriteAlternateNamesV2(string filename, IAsyncEnumerable<AlternateNameV2> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new AlternateNameV2Composer());
+            return WriteRecordsAsync(filename, values, new AlternateNameV2Composer());
         }
 
         /// <summary>
@@ -194,9 +195,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteAlternateNamesV2(Stream stream, IEnumerable<AlternateNameV2> values)
+        public static Task WriteAlternateNamesV2(Stream stream, IAsyncEnumerable<AlternateNameV2> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new AlternateNameV2Composer());
+            return WriteRecordsAsync(stream, values, new AlternateNameV2Composer());
         }
 
         /// <summary>
@@ -208,9 +209,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteContinents(string filename, IEnumerable<Continent> values)
+        public static Task WriteContinents(string filename, IAsyncEnumerable<Continent> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new ContinentComposer());
+            return WriteRecordsAsync(filename, values, new ContinentComposer());
         }
 
         /// <summary>
@@ -222,9 +223,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteContinents(Stream stream, IEnumerable<Continent> values)
+        public static Task WriteContinents(Stream stream, IAsyncEnumerable<Continent> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new ContinentComposer());
+            return WriteRecordsAsync(stream, values, new ContinentComposer());
         }
 
         /// <summary>
@@ -236,9 +237,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteCountryInfo(string filename, IEnumerable<CountryInfo> values)
+        public static Task WriteCountryInfo(string filename, IAsyncEnumerable<CountryInfo> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new CountryInfoComposer());
+            return WriteRecordsAsync(filename, values, new CountryInfoComposer());
         }
 
         /// <summary>
@@ -250,9 +251,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteCountryInfo(Stream stream, IEnumerable<CountryInfo> values)
+        public static Task WriteCountryInfo(Stream stream, IAsyncEnumerable<CountryInfo> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new CountryInfoComposer());
+            return WriteRecordsAsync(stream, values, new CountryInfoComposer());
         }
 
         /// <summary>
@@ -264,9 +265,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteExtendedGeoNames(string filename, IEnumerable<ExtendedGeoName> values)
+        public static Task WriteExtendedGeoNames(string filename, IAsyncEnumerable<ExtendedGeoName> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new ExtendedGeoNameComposer());
+            return WriteRecordsAsync(filename, values, new ExtendedGeoNameComposer());
         }
 
         /// <summary>
@@ -278,9 +279,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteExtendedGeoNames(Stream stream, IEnumerable<ExtendedGeoName> values)
+        public static Task WriteExtendedGeoNames(Stream stream, IAsyncEnumerable<ExtendedGeoName> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new ExtendedGeoNameComposer());
+            return WriteRecordsAsync(stream, values, new ExtendedGeoNameComposer());
         }
 
         /// <summary>
@@ -292,9 +293,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteFeatureClasses(string filename, IEnumerable<FeatureClass> values)
+        public static Task WriteFeatureClasses(string filename, IAsyncEnumerable<FeatureClass> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new FeatureClassComposer());
+            return WriteRecordsAsync(filename, values, new FeatureClassComposer());
         }
 
         /// <summary>
@@ -306,9 +307,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteFeatureClasses(Stream stream, IEnumerable<FeatureClass> values)
+        public static Task WriteFeatureClasses(Stream stream, IAsyncEnumerable<FeatureClass> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new FeatureClassComposer());
+            return WriteRecordsAsync(stream, values, new FeatureClassComposer());
         }
 
         /// <summary>
@@ -320,9 +321,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteFeatureCodes(string filename, IEnumerable<FeatureCode> values)
+        public static Task WriteFeatureCodes(string filename, IAsyncEnumerable<FeatureCode> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new FeatureCodeComposer());
+            return WriteRecordsAsync(filename, values, new FeatureCodeComposer());
         }
 
         /// <summary>
@@ -334,9 +335,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteFeatureCodes(Stream stream, IEnumerable<FeatureCode> values)
+        public static Task WriteFeatureCodes(Stream stream, IAsyncEnumerable<FeatureCode> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new FeatureCodeComposer());
+            return WriteRecordsAsync(stream, values, new FeatureCodeComposer());
         }
 
         /// <summary>
@@ -347,13 +348,13 @@ namespace NGeoNames
         /// <remarks>
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written. This method will use the default 19 field (geonames.org compatible)
-        /// fileformat. Use <see cref="WriteGeoNames(string, IEnumerable{GeoName}, bool)"/> if you want to use a
+        /// fileformat. Use <see cref="WriteGeoNames(string, IAsyncEnumerable{GeoName}, bool)"/> if you want to use a
         /// more compact 4 field format.
         /// </remarks>
-        /// <seealso cref="WriteGeoNames(string, IEnumerable{GeoName}, bool)"/>
-        public static void WriteGeoNames(string filename, IEnumerable<GeoName> values)
+        /// <seealso cref="WriteGeoNames(string, IAsyncEnumerable{GeoName}, bool)"/>
+        public static Task WriteGeoNames(string filename, IAsyncEnumerable<GeoName> values)
         {
-            WriteGeoNames(filename, values, false);
+            return WriteGeoNames(filename, values, false);
         }
 
         /// <summary>
@@ -364,13 +365,13 @@ namespace NGeoNames
         /// <remarks>
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written. This method will use the default 19 field (geonames.org compatible)
-        /// fileformat. Use <see cref="WriteGeoNames(string, IEnumerable{GeoName}, bool)"/> if you want to use a
+        /// fileformat. Use <see cref="WriteGeoNames(string, IAsyncEnumerable{GeoName}, bool)"/> if you want to use a
         /// more compact 4 field format.
         /// </remarks>
-        /// <seealso cref="WriteGeoNames(Stream, IEnumerable{GeoName}, bool)"/>
-        public static void WriteGeoNames(Stream stream, IEnumerable<GeoName> values)
+        /// <seealso cref="WriteGeoNames(Stream, IAsyncEnumerable{GeoName}, bool)"/>
+        public static Task WriteGeoNames(Stream stream, IAsyncEnumerable<GeoName> values)
         {
-            WriteGeoNames(stream, values, false);
+            return WriteGeoNames(stream, values, false);
         }
 
         /// <summary>
@@ -386,10 +387,10 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        /// <seealso cref="WriteGeoNames(string, IEnumerable{GeoName})"/>
-        public static void WriteGeoNames(string filename, IEnumerable<GeoName> values, bool useextendedfileformat)
+        /// <seealso cref="WriteGeoNames(string, IAsyncEnumerable{GeoName})"/>
+        public static Task WriteGeoNames(string filename, IAsyncEnumerable<GeoName> values, bool useextendedfileformat)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new GeoNameComposer(useextendedfileformat));
+            return WriteRecordsAsync(filename, values, new GeoNameComposer(useextendedfileformat));
         }
 
         /// <summary>
@@ -405,10 +406,10 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        /// <seealso cref="WriteGeoNames(Stream, IEnumerable{GeoName})"/>
-        public static void WriteGeoNames(Stream stream, IEnumerable<GeoName> values, bool useextendedfileformat)
+        /// <seealso cref="WriteGeoNames(Stream, IAsyncEnumerable{GeoName})"/>
+        public static Task WriteGeoNames(Stream stream, IAsyncEnumerable<GeoName> values, bool useextendedfileformat)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new GeoNameComposer(useextendedfileformat));
+            return WriteRecordsAsync(stream, values, new GeoNameComposer(useextendedfileformat));
         }
 
         /// <summary>
@@ -420,9 +421,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteHierarchy(string filename, IEnumerable<HierarchyNode> values)
+        public static Task WriteHierarchy(string filename, IAsyncEnumerable<HierarchyNode> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new HierarchyComposer());
+            return WriteRecordsAsync(filename, values, new HierarchyComposer());
         }
 
         /// <summary>
@@ -434,9 +435,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteHierarchy(Stream stream, IEnumerable<HierarchyNode> values)
+        public static Task WriteHierarchy(Stream stream, IAsyncEnumerable<HierarchyNode> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new HierarchyComposer());
+            return WriteRecordsAsync(stream, values, new HierarchyComposer());
         }
 
         /// <summary>
@@ -448,9 +449,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteISOLanguageCodes(string filename, IEnumerable<ISOLanguageCode> values)
+        public static Task WriteISOLanguageCodes(string filename, IAsyncEnumerable<ISOLanguageCode> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new ISOLanguageCodeComposer());
+            return WriteRecordsAsync(filename, values, new ISOLanguageCodeComposer());
         }
 
         /// <summary>
@@ -462,9 +463,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteISOLanguageCodes(Stream stream, IEnumerable<ISOLanguageCode> values)
+        public static Task WriteISOLanguageCodes(Stream stream, IAsyncEnumerable<ISOLanguageCode> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new ISOLanguageCodeComposer());
+            return WriteRecordsAsync(stream, values, new ISOLanguageCodeComposer());
         }
 
         /// <summary>
@@ -476,9 +477,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteTimeZones(string filename, IEnumerable<TimeZone> values)
+        public static Task WriteTimeZones(string filename, IAsyncEnumerable<TimeZone> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new TimeZoneComposer());
+            return WriteRecordsAsync(filename, values, new TimeZoneComposer());
         }
 
         /// <summary>
@@ -490,9 +491,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteTimeZones(Stream stream, IEnumerable<TimeZone> values)
+        public static Task WriteTimeZones(Stream stream, IAsyncEnumerable<TimeZone> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new TimeZoneComposer());
+            return WriteRecordsAsync(stream, values, new TimeZoneComposer());
         }
 
         /// <summary>
@@ -504,9 +505,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WriteUserTags(string filename, IEnumerable<UserTag> values)
+        public static Task WriteUserTags(string filename, IAsyncEnumerable<UserTag> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new UserTagComposer());
+            return WriteRecordsAsync(filename, values, new UserTagComposer());
         }
 
         /// <summary>
@@ -518,9 +519,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WriteUserTags(Stream stream, IEnumerable<UserTag> values)
+        public static Task WriteUserTags(Stream stream, IAsyncEnumerable<UserTag> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new UserTagComposer());
+            return WriteRecordsAsync(stream, values, new UserTagComposer());
         }
 
         /// <summary>
@@ -532,9 +533,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the file is written.
         /// </remarks>
-        public static void WritePostalcodes(string filename, IEnumerable<Postalcode> values)
+        public static Task WritePostalcodes(string filename, IAsyncEnumerable<Postalcode> values)
         {
-            new GeoFileWriter().WriteRecords(filename, values, new PostalcodeComposer());
+            return WriteRecordsAsync(filename, values, new PostalcodeComposer());
         }
 
         /// <summary>
@@ -546,9 +547,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the WriteRecords{T} overloaded instance-methods for
         /// more control over how the stream is written.
         /// </remarks>
-        public static void WritePostalcodes(Stream stream, IEnumerable<Postalcode> values)
+        public static Task WritePostalcodes(Stream stream, IAsyncEnumerable<Postalcode> values)
         {
-            new GeoFileWriter().WriteRecords(stream, values, new PostalcodeComposer());
+            return WriteRecordsAsync(stream, values, new PostalcodeComposer());
         }
         #endregion
     }

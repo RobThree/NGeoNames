@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace NGeoNames
 {
     /// <summary>
     /// Provides methods to read/parse files from geonames.org.
     /// </summary>
-    public class GeoFileReader
+    public static class GeoFileReader
     {
         /// <summary>
         /// Reads records of type T, using the specified parser to parse the values.
@@ -22,11 +24,11 @@ namespace NGeoNames
         /// <remarks>
         /// This method will try to "autodetect" the filetype; it will 'recognize' .txt and .gz (or .*.gz) files
         /// and act accordingly. If you use another extension you may want to explicitly specify the filetype
-        /// using the <see cref="ReadRecords{T}(string, FileType, IParser{T})"/> overload.
+        /// using the <see cref="ReadRecordsAsync{T}(string, FileType, IParser{T})"/> overload.
         /// </remarks>
-        public IEnumerable<T> ReadRecords<T>(string path, IParser<T> parser)
+        public static IAsyncEnumerable<T> ReadRecordsAsync<T>(string path, IParser<T> parser)
         {
-            return ReadRecords(path, FileType.AutoDetect, parser);
+            return ReadRecordsAsync(path, FileType.AutoDetect, parser);
         }
 
         /// <summary>
@@ -37,13 +39,11 @@ namespace NGeoNames
         /// <param name="filetype">The <see cref="FileType"/> of the file.</param>
         /// <param name="parser">The <see cref="IParser{T}"/> to use when reading the file.</param>
         /// <returns>Returns an IEnumerable of T representing the records read/parsed.</returns>
-        public IEnumerable<T> ReadRecords<T>(string path, FileType filetype, IParser<T> parser)
+        public async static IAsyncEnumerable<T> ReadRecordsAsync<T>(string path, FileType filetype, IParser<T> parser)
         {
             using (var f = GetStream(path, filetype))
-            {
-                foreach (var r in ReadRecords(f, parser))
+                await foreach (var r in ReadRecordsAsync(f, parser))
                     yield return r;
-            }
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace NGeoNames
         /// <param name="stream">The <see cref="Stream"/> to read/parse.</param>
         /// <param name="parser">The <see cref="IParser{T}"/> to use when reading the file.</param>
         /// <returns>Returns an IEnumerable of T representing the records read/parsed.</returns>
-        public IEnumerable<T> ReadRecords<T>(Stream stream, IParser<T> parser)
+        public static async IAsyncEnumerable<T> ReadRecordsAsync<T>(Stream stream, IParser<T> parser)
         {
             using (var r = new StreamReader(stream, parser.Encoding))
             {
                 string line = null;
                 int linecount = 0;
                 char[] separators = parser.FieldSeparators.Clone() as char[];
-                while (!r.EndOfStream && (line = r.ReadLine()) != null)
+                while (!r.EndOfStream && (line = (await r.ReadLineAsync().ConfigureAwait(false))) != null)
                 {
                     linecount++;
                     if ((linecount > parser.SkipLines) && (line.Length > 0)  && (!parser.HasComments || (parser.HasComments && !line.StartsWith("#", System.StringComparison.Ordinal))))
@@ -101,9 +101,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<ExtendedGeoName> ReadExtendedGeoNames(string filename)
+        public static IAsyncEnumerable<ExtendedGeoName> ReadExtendedGeoNames(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new ExtendedGeoNameParser());
+            return ReadRecordsAsync(filename, new ExtendedGeoNameParser());
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<ExtendedGeoName> ReadExtendedGeoNames(Stream stream)
+        public static IAsyncEnumerable<ExtendedGeoName> ReadExtendedGeoNames(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new ExtendedGeoNameParser());
+            return ReadRecordsAsync(stream, new ExtendedGeoNameParser());
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<GeoName> ReadGeoNames(string filename)
+        public static IAsyncEnumerable<GeoName> ReadGeoNames(string filename)
         {
             return ReadGeoNames(filename, true);
         }
@@ -143,7 +143,7 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<GeoName> ReadGeoNames(Stream stream)
+        public static IAsyncEnumerable<GeoName> ReadGeoNames(Stream stream)
         {
             return ReadGeoNames(stream, true);
         }
@@ -162,9 +162,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<GeoName> ReadGeoNames(string filename, bool useextendedfileformat)
+        public static IAsyncEnumerable<GeoName> ReadGeoNames(string filename, bool useextendedfileformat)
         {
-            return new GeoFileReader().ReadRecords(filename, new GeoNameParser(useextendedfileformat));
+            return ReadRecordsAsync(filename, new GeoNameParser(useextendedfileformat));
         }
 
         /// <summary>
@@ -181,9 +181,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<GeoName> ReadGeoNames(Stream stream, bool useextendedfileformat)
+        public static IAsyncEnumerable<GeoName> ReadGeoNames(Stream stream, bool useextendedfileformat)
         {
-            return new GeoFileReader().ReadRecords(stream, new GeoNameParser(useextendedfileformat));
+            return ReadRecordsAsync(stream, new GeoNameParser(useextendedfileformat));
         }
 
         /// <summary>
@@ -195,9 +195,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<Admin1Code> ReadAdmin1Codes(string filename)
+        public static IAsyncEnumerable<Admin1Code> ReadAdmin1Codes(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new Admin1CodeParser());
+            return ReadRecordsAsync(filename, new Admin1CodeParser());
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<Admin1Code> ReadAdmin1Codes(Stream stream)
+        public static IAsyncEnumerable<Admin1Code> ReadAdmin1Codes(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new Admin1CodeParser());
+            return ReadRecordsAsync(stream, new Admin1CodeParser());
         }
 
         /// <summary>
@@ -223,9 +223,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<Admin2Code> ReadAdmin2Codes(string filename)
+        public static IAsyncEnumerable<Admin2Code> ReadAdmin2Codes(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new Admin2CodeParser());
+            return ReadRecordsAsync(filename, new Admin2CodeParser());
         }
 
         /// <summary>
@@ -237,9 +237,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<Admin2Code> ReadAdmin2Codes(Stream stream)
+        public static IAsyncEnumerable<Admin2Code> ReadAdmin2Codes(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new Admin2CodeParser());
+            return ReadRecordsAsync(stream, new Admin2CodeParser());
         }
 
         /// <summary>
@@ -251,9 +251,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<AlternateName> ReadAlternateNames(string filename)
+        public static IAsyncEnumerable<AlternateName> ReadAlternateNames(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new AlternateNameParser());
+            return ReadRecordsAsync(filename, new AlternateNameParser());
         }
 
         /// <summary>
@@ -265,9 +265,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<AlternateName> ReadAlternateNames(Stream stream)
+        public static IAsyncEnumerable<AlternateName> ReadAlternateNames(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new AlternateNameParser());
+            return ReadRecordsAsync(stream, new AlternateNameParser());
         }
 
         /// <summary>
@@ -279,9 +279,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<AlternateNameV2> ReadAlternateNamesV2(string filename)
+        public static IAsyncEnumerable<AlternateNameV2> ReadAlternateNamesV2(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new AlternateNameParserV2());
+            return ReadRecordsAsync(filename, new AlternateNameParserV2());
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<AlternateNameV2> ReadAlternateNamesV2(Stream stream)
+        public static IAsyncEnumerable<AlternateNameV2> ReadAlternateNamesV2(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new AlternateNameParserV2());
+            return ReadRecordsAsync(stream, new AlternateNameParserV2());
         }
 
         /// <summary>
@@ -307,16 +307,15 @@ namespace NGeoNames
         /// <see cref="ReadContinents(string)"/> or <see cref="ReadContinents(Stream)"/>) or use the built-in
         /// values provided by this method.
         /// </remarks>
-        public static IEnumerable<Continent> ReadBuiltInContinents()
+        public static async Task<IEnumerable<Continent>> ReadBuiltInContinents()
         {
-            return ReadBuiltInResource("continentCodes", new ContinentParser());
+            return await ReadBuiltInResource("continentCodes", new ContinentParser()).ConfigureAwait(false);
         }
 
-        private static IEnumerable<T> ReadBuiltInResource<T>(string name, IParser<T> parser)
+        private static async Task<IEnumerable<T>> ReadBuiltInResource<T>(string name, IParser<T> parser)
         {
             using (var s = new MemoryStream(parser.Encoding.GetBytes(Properties.Resources.ResourceManager.GetString(name, CultureInfo.InvariantCulture))))
-                foreach (var i in new GeoFileReader().ReadRecords(s, parser))
-                    yield return i;
+                return await ReadRecordsAsync(s, parser).ToArrayAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -329,9 +328,9 @@ namespace NGeoNames
         /// more control over how the file is read.
         /// </remarks>
         /// <seealso cref="ReadBuiltInContinents"/>
-        public static IEnumerable<Continent> ReadContinents(string filename)
+        public static IAsyncEnumerable<Continent> ReadContinents(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new ContinentParser());
+            return ReadRecordsAsync(filename, new ContinentParser());
         }
 
         /// <summary>
@@ -344,9 +343,9 @@ namespace NGeoNames
         /// more control over how the stream is read.
         /// </remarks>
         /// <seealso cref="ReadBuiltInContinents"/>
-        public static IEnumerable<Continent> ReadContinents(Stream stream)
+        public static IAsyncEnumerable<Continent> ReadContinents(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new ContinentParser());
+            return ReadRecordsAsync(stream, new ContinentParser());
         }
 
         /// <summary>
@@ -358,9 +357,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<CountryInfo> ReadCountryInfo(string filename)
+        public static IAsyncEnumerable<CountryInfo> ReadCountryInfo(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new CountryInfoParser());
+            return ReadRecordsAsync(filename, new CountryInfoParser());
         }
 
         /// <summary>
@@ -372,9 +371,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<CountryInfo> ReadCountryInfo(Stream stream)
+        public static IAsyncEnumerable<CountryInfo> ReadCountryInfo(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new CountryInfoParser());
+            return ReadRecordsAsync(stream, new CountryInfoParser());
         }
 
         /// <summary>
@@ -386,9 +385,9 @@ namespace NGeoNames
         /// <see cref="ReadFeatureClasses(string)"/> or <see cref="ReadFeatureClasses(Stream)"/>) or use the built-in
         /// values provided by this method.
         /// </remarks>
-        public static IEnumerable<FeatureClass> ReadBuiltInFeatureClasses()
+        public static async Task<IEnumerable<FeatureClass>> ReadBuiltInFeatureClasses()
         {
-            return ReadBuiltInResource("featureClasses_en", new FeatureClassParser());
+            return await ReadBuiltInResource("featureClasses_en", new FeatureClassParser()).ConfigureAwait(false);
         }
 
 
@@ -402,9 +401,9 @@ namespace NGeoNames
         /// more control over how the file is read.
         /// </remarks>
         /// <seealso cref="ReadBuiltInFeatureClasses"/>
-        public static IEnumerable<FeatureClass> ReadFeatureClasses(string filename)
+        public static IAsyncEnumerable<FeatureClass> ReadFeatureClasses(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new FeatureClassParser());
+            return ReadRecordsAsync(filename, new FeatureClassParser());
         }
 
         /// <summary>
@@ -417,9 +416,9 @@ namespace NGeoNames
         /// more control over how the stream is read.
         /// </remarks>
         /// <seealso cref="ReadBuiltInFeatureClasses"/>
-        public static IEnumerable<FeatureClass> ReadFeatureClasses(Stream stream)
+        public static IAsyncEnumerable<FeatureClass> ReadFeatureClasses(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new FeatureClassParser());
+            return ReadRecordsAsync(stream, new FeatureClassParser());
         }
 
         /// <summary>
@@ -431,9 +430,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<FeatureCode> ReadFeatureCodes(string filename)
+        public static IAsyncEnumerable<FeatureCode> ReadFeatureCodes(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new FeatureCodeParser());
+            return ReadRecordsAsync(filename, new FeatureCodeParser());
         }
 
         /// <summary>
@@ -445,9 +444,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<FeatureCode> ReadFeatureCodes(Stream stream)
+        public static IAsyncEnumerable<FeatureCode> ReadFeatureCodes(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new FeatureCodeParser());
+            return ReadRecordsAsync(stream, new FeatureCodeParser());
         }
 
         /// <summary>
@@ -459,9 +458,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<HierarchyNode> ReadHierarchy(string filename)
+        public static IAsyncEnumerable<HierarchyNode> ReadHierarchy(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new HierarchyParser());
+            return ReadRecordsAsync(filename, new HierarchyParser());
         }
 
         /// <summary>
@@ -473,9 +472,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<HierarchyNode> ReadHierarchy(Stream stream)
+        public static IAsyncEnumerable<HierarchyNode> ReadHierarchy(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new HierarchyParser());
+            return ReadRecordsAsync(stream, new HierarchyParser());
         }
 
         /// <summary>
@@ -487,9 +486,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<ISOLanguageCode> ReadISOLanguageCodes(string filename)
+        public static IAsyncEnumerable<ISOLanguageCode> ReadISOLanguageCodes(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new ISOLanguageCodeParser());
+            return ReadRecordsAsync(filename, new ISOLanguageCodeParser());
         }
 
         /// <summary>
@@ -501,9 +500,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<ISOLanguageCode> ReadISOLanguageCodes(Stream stream)
+        public static IAsyncEnumerable<ISOLanguageCode> ReadISOLanguageCodes(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new ISOLanguageCodeParser());
+            return ReadRecordsAsync(stream, new ISOLanguageCodeParser());
         }
 
         /// <summary>
@@ -515,9 +514,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<TimeZone> ReadTimeZones(string filename)
+        public static IAsyncEnumerable<TimeZone> ReadTimeZones(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new TimeZoneParser());
+            return ReadRecordsAsync(filename, new TimeZoneParser());
         }
 
         /// <summary>
@@ -529,9 +528,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<TimeZone> ReadTimeZones(Stream stream)
+        public static IAsyncEnumerable<TimeZone> ReadTimeZones(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new TimeZoneParser());
+            return ReadRecordsAsync(stream, new TimeZoneParser());
         }
 
         /// <summary>
@@ -543,9 +542,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<UserTag> ReadUserTags(string filename)
+        public static IAsyncEnumerable<UserTag> ReadUserTags(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new UserTagParser());
+            return ReadRecordsAsync(filename, new UserTagParser());
         }
 
         /// <summary>
@@ -557,9 +556,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<UserTag> ReadUserTags(Stream stream)
+        public static IAsyncEnumerable<UserTag> ReadUserTags(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new UserTagParser());
+            return ReadRecordsAsync(stream, new UserTagParser());
         }
 
         /// <summary>
@@ -571,9 +570,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the file is read.
         /// </remarks>
-        public static IEnumerable<Postalcode> ReadPostalcodes(string filename)
+        public static IAsyncEnumerable<Postalcode> ReadPostalcodes(string filename)
         {
-            return new GeoFileReader().ReadRecords(filename, new PostalcodeParser());
+            return ReadRecordsAsync(filename, new PostalcodeParser());
         }
 
         /// <summary>
@@ -585,9 +584,9 @@ namespace NGeoNames
         /// This static method is a convenience-method; see the ReadRecords{T} overloaded instance-methods for
         /// more control over how the stream is read.
         /// </remarks>
-        public static IEnumerable<Postalcode> ReadPostalcodes(Stream stream)
+        public static IAsyncEnumerable<Postalcode> ReadPostalcodes(Stream stream)
         {
-            return new GeoFileReader().ReadRecords(stream, new PostalcodeParser());
+            return ReadRecordsAsync(stream, new PostalcodeParser());
         }
         #endregion
     }

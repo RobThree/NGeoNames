@@ -16,9 +16,15 @@
     <Description>Provides classes and methods for downloading, reading/parsing and utilizing files from GeoNames.org dumps.</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/RobThree/NGeoNames/master/icon.png</PackageIconUrl>
     <Version>1.5.1</Version>
+    <Configurations>Debug;Release;ReleaseDocs</Configurations>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDocs|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
@@ -31,5 +37,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.6" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 using NGeoNames;
 using NGeoNames.Entities;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NGeoNamesTests
 {
@@ -9,10 +10,10 @@ namespace NGeoNamesTests
     public class ReverseGeoCodeTests
     {
         [TestMethod]
-        public void ReverseGeoCode_RadialSearch_ReturnsCorrectResults()
+        public async Task ReverseGeoCode_RadialSearch_ReturnsCorrectResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArray();
+            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
             var rg = new ReverseGeoCode<ExtendedGeoName>(data);
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
 
@@ -30,10 +31,10 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void ReverseGeoCode_RadialSearch_ReturnsMaxCountResults()
+        public async Task ReverseGeoCode_RadialSearch_ReturnsMaxCountResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArray();
+            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
             var rg = new ReverseGeoCode<ExtendedGeoName>(data);
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
             var maxresults = 10;
@@ -53,10 +54,10 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void ReverseGeoCode_NearestNeighbourSearch_ReturnsCorrectResults()
+        public async Task ReverseGeoCode_NearestNeighbourSearch_ReturnsCorrectResults()
         {
             // Read a file with data with points in and around London in a 20Km radius
-            var data = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArray();
+            var data = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_GB.txt").ToArrayAsync();
             var rg = new ReverseGeoCode<ExtendedGeoName>(data);
             var center = rg.CreateFromLatLong(51.5286416, 0);   //Exactly at 0 longitude so we test left/right of prime meridian
 

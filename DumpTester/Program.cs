@@ -32,7 +32,7 @@ namespace DumpTester
 
             //Test GeoName dumps
             var dumpdownloader = serviceProvider.GetRequiredService<IGeoFileGeoDownloader>();
-            var dumpfiles = GetDumps(dumpdownloader);
+            var dumpfiles = await GetDumps(dumpdownloader).ConfigureAwait(false);
 
             Directory.CreateDirectory(Dump_DownloadDirectory);
 
@@ -40,15 +40,15 @@ namespace DumpTester
                 dumpfiles.Select(async f =>
                 {
                     Console.WriteLine("Download: {0}", f.Filename);
-                    var result = await dumpdownloader.DownloadFileAsync(f.Filename, Dump_DownloadDirectory);
-                    Console.WriteLine("Testing {0}: {1}", f.Filename, f.Test(Path.Combine(Dump_DownloadDirectory, f.Filename)));
+                    var result = await dumpdownloader.DownloadFileAsync(f.Filename, Dump_DownloadDirectory).ConfigureAwait(false);
+                    Console.WriteLine("Testing {0}: {1}", f.Filename, await f.Test(Path.Combine(Dump_DownloadDirectory, f.Filename)).ConfigureAwait(false));
                     return result;
                 })
             ).ConfigureAwait(false);
 
             //Test Postalcode dumps
             var postalcodedownloader = serviceProvider.GetRequiredService<IGeoFilePostalDownloader>();
-            var postalcodefiles = GetCountryPostalcodes(postalcodedownloader);
+            var postalcodefiles = await GetCountryPostalcodes(postalcodedownloader).ConfigureAwait(false);
 
             Directory.CreateDirectory(Postal_DownloadDirectory);
 
@@ -57,55 +57,56 @@ namespace DumpTester
                 {
                     Console.WriteLine("Download: {0}", f.Filename);
                     var result = await postalcodedownloader.DownloadFileAsync(f.Filename, Postal_DownloadDirectory).ConfigureAwait(false);
-                    Console.WriteLine("Testing {0}: {1}", f.Filename, f.Test(Path.Combine(Postal_DownloadDirectory, f.Filename)));
+                    Console.WriteLine("Testing {0}: {1}", f.Filename, await f.Test(Path.Combine(Postal_DownloadDirectory, f.Filename)).ConfigureAwait(false));
                     return result;
                 })
             ).ConfigureAwait(false);
 
-            Console.WriteLine("Testing ASCII fields");
-            DumpASCIILies(Dump_DownloadDirectory);
+            //Console.WriteLine("Testing ASCII fields");
+            //await DumpASCIILies(Dump_DownloadDirectory).ConfigureAwait(false);
 
             Console.WriteLine("All done!");
         }
 
-        private static GeoFile[] GetCountryPostalcodes(IGeoFilePostalDownloader downloader)
+        private static async Task<GeoFile[]> GetCountryPostalcodes(IGeoFilePostalDownloader downloader)
         {
             var w = new WebClient();
             var document = w.DownloadString(downloader.BaseUri);
 
+
             var countries = new Regex("href=\"([A-Z]{2}.zip)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
                 .Matches(document)
                 .Cast<Match>()
-                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) });
+                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadPostalcodes(fn).CountAsync()).ConfigureAwait(false) });
 
             return new[] {
-                new GeoFile { Filename = "allCountries.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadPostalcodes(fn).Count(); }) }
+                new GeoFile { Filename = "allCountries.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadPostalcodes(fn).CountAsync()).ConfigureAwait(false) }
             }.Union(countries.OrderBy(m => m.Filename)).ToArray();
         }
 
-        private static GeoFile[] GetDumps(IGeoFileGeoDownloader downloader)
+        private static async Task<GeoFile[]> GetDumps(IGeoFileGeoDownloader downloader)
         {
             return new[] {
-                new GeoFile { Filename = "admin1CodesASCII.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAdmin1Codes(fn).Count(); }) },
-                new GeoFile { Filename = "admin2Codes.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAdmin2Codes(fn).Count(); }) },
-                new GeoFile { Filename = "allCountries.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "alternateNames.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAlternateNames(fn).Count(); }) },
-                new GeoFile { Filename = "alternateNamesV2.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadAlternateNamesV2(fn).Count(); }) },
-                new GeoFile { Filename = "cities500.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "cities1000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "cities15000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "cities5000.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "countryInfo.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadCountryInfo(fn).Count(); }) },
+                new GeoFile { Filename = "admin1CodesASCII.txt", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadAdmin1Codes(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "admin2Codes.txt", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadAdmin2Codes(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "allCountries.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "alternateNames.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadAlternateNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "alternateNamesV2.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadAlternateNamesV2(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "cities500.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "cities1000.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "cities15000.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "cities5000.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "countryInfo.txt", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadCountryInfo(fn).CountAsync()).ConfigureAwait(false) },
                 //Featurecodes are downloaded by GetCountryDumps()
-                new GeoFile { Filename = "hierarchy.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadHierarchy(fn).Count(); }) },
-                new GeoFile { Filename = "iso-languagecodes.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadISOLanguageCodes(fn).Count(); }) },
-                new GeoFile { Filename = "no-country.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) },
-                new GeoFile { Filename = "timeZones.txt", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadTimeZones(fn).Count(); }) },
-                new GeoFile { Filename = "userTags.zip", Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadUserTags(fn).Count(); }) },
-            }.Union(GetCountryDumps(downloader)).ToArray();
+                new GeoFile { Filename = "hierarchy.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadHierarchy(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "iso-languagecodes.txt", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadISOLanguageCodes(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "no-country.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "timeZones.txt", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadTimeZones(fn).CountAsync()).ConfigureAwait(false) },
+                new GeoFile { Filename = "userTags.zip", Test = async f => await ExecuteTest(f, fn => GeoFileReader.ReadUserTags(fn).CountAsync()).ConfigureAwait(false) },
+            }.Union(await GetCountryDumps(downloader)).ToArray();
         }
 
-        private static GeoFile[] GetCountryDumps(IGeoFileGeoDownloader downloader)
+        private static async Task<GeoFile[]> GetCountryDumps(IGeoFileGeoDownloader downloader)
         {
             var w = new WebClient();
             var document = w.DownloadString(downloader.BaseUri);
@@ -113,17 +114,17 @@ namespace DumpTester
             var countries = new Regex("href=\"([A-Z]{2}.zip)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
                 .Matches(document)
                 .Cast<Match>()
-                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadExtendedGeoNames(fn).Count(); }) });
+                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, fn => GeoFileReader.ReadExtendedGeoNames(fn).CountAsync()) });
 
             var featurecodes = new Regex("href=\"(featureCodes_[A-Z]{2}.txt)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
                 .Matches(document)
                 .Cast<Match>()
-                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, (fn) => { return GeoFileReader.ReadFeatureCodes(fn).Count(); }) });
+                .Select(m => new GeoFile { Filename = m.Groups[1].Value, Test = (f) => ExecuteTest(f, fn => GeoFileReader.ReadFeatureCodes(fn).CountAsync()) });
 
             return countries.Union(featurecodes).OrderBy(m => m.Filename).ToArray();
         }
 
-        private static string ExecuteTest(string filename, Func<string, int> test)
+        private static async ValueTask<string> ExecuteTest(string filename, Func<string, ValueTask<int>> test)
         {
             try
             {
@@ -134,7 +135,7 @@ namespace DumpTester
                 //if (file.EndsWith("no-country.txt"))
                 //    file = file.Replace("no-country.txt", "null.txt");
 
-                return string.Format("{0} records OK", test(file));
+                return string.Format("{0} records OK", await test(file));
             }
             catch (Exception ex)
             {
@@ -142,54 +143,54 @@ namespace DumpTester
             }
         }
 
-        private static void DumpASCIILies(string logpath)
-        {
-            using (var lw = File.CreateText(Path.Combine(logpath, "_asciilies.log")))
-            {
+        //private static async Task DumpASCIILies(string logpath)
+        //{
+        //    using (var lw = File.CreateText(Path.Combine(logpath, "_asciilies.log")))
+        //    {
 
-                //Test for fields that claim to contain ASCII only but contain non-ASCII data anyways
-                var nonasciifilter = new Regex("[^\x20-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-                var geofilefilter = new Regex("^[A-Z]{2}.txt$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        //        //Test for fields that claim to contain ASCII only but contain non-ASCII data anyways
+        //        var nonasciifilter = new Regex("[^\x20-\x7F]", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        //        var geofilefilter = new Regex("^[A-Z]{2}.txt$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-                lw.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
+        //        lw.WriteLine("The following files contain entries that claim to contain ASCII only but contain non-ASCII data anyways:");
 
-                var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "no-country" }
-                    .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
-                    .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
-                        .Where(f => geofilefilter.IsMatch(Path.GetFileName(f)))
-                    );
+        //        var extgeofiles = new[] { "allCountries", "cities1000", "cities5000", "cities15000", "no-country" }
+        //            .Select(f => Path.Combine(Dump_DownloadDirectory, f + ".txt"))
+        //            .Union(Directory.GetFiles(Dump_DownloadDirectory, "*.txt")
+        //                .Where(f => geofilefilter.IsMatch(Path.GetFileName(f)))
+        //        );
 
-                var lies = extgeofiles.AsParallel()
-                    .SelectMany(f => GeoFileReader.ReadExtendedGeoNames(f)
-                        .Where(e => nonasciifilter.IsMatch(e.NameASCII))
-                        .Select(i => new NonASCIIEntry { FileName = f, Id = i.Id, Value = i.NameASCII })
-                    ).Union(
-                        GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt")).AsParallel()
-                            .Where(c => nonasciifilter.IsMatch(c.NameASCII))
-                            .Select(i => new NonASCIIEntry { FileName = "admin1CodesASCII.txt", Id = i.GeoNameId, Value = i.NameASCII })
-                    ).Union(
-                        GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt")).AsParallel()
-                            .Where(c => nonasciifilter.IsMatch(c.NameASCII))
-                            .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
-                    );
+        //        var lies = extgeofiles.AsParallel()
+        //            .SelectMany(async f => (await GeoFileReader.ReadExtendedGeoNames(f).ToArrayAsync()).AsParallel()
+        //                .Where(e => nonasciifilter.IsMatch(e.NameASCII))
+        //                .Select(i => new NonASCIIEntry { FileName = f, Id = i.Id, Value = i.NameASCII })
+        //            ).Union(
+        //                (await GeoFileReader.ReadAdmin1Codes(Path.Combine(Dump_DownloadDirectory, "admin1CodesASCII.txt")).ToArrayAsync()).AsParallel()
+        //                    .Where(c => nonasciifilter.IsMatch(c.NameASCII))
+        //                    .Select(i => new NonASCIIEntry { FileName = "admin1CodesASCII.txt", Id = i.GeoNameId, Value = i.NameASCII })
+        //            ).Union(
+        //                (await GeoFileReader.ReadAdmin2Codes(Path.Combine(Dump_DownloadDirectory, "admin2Codes.txt")).ToArrayAsync()).AsParallel()
+        //                    .Where(c => nonasciifilter.IsMatch(c.NameASCII))
+        //                    .Select(i => new NonASCIIEntry { FileName = "admin2Codes.txt", Id = i.GeoNameId, Value = i.NameASCII })
+        //            );
 
-                foreach (var l in lies.OrderBy(l => l.FileName).ThenBy(l => l.Value))
-                {
-                    lw.WriteLine(string.Join("\t", Path.GetFileName(l.FileName), l.Id, l.Value));
-                };
+        //        foreach (var l in lies.OrderBy(l => l.FileName).ThenBy(l => l.Value))
+        //        {
+        //            lw.WriteLine(string.Join("\t", Path.GetFileName(l.FileName), l.Id, l.Value));
+        //        };
 
-            }
-        }
+        //    }
+        //}
     }
 
     class GeoFile
     {
         public string Filename { get; set; }
-        public Func<string, string> Test { get; set; }
+        public Func<string, ValueTask<string>> Test { get; set; }
 
         public GeoFile()
         {
-            this.Test = (f) => { throw new NotImplementedException(); };
+            //this.Test = (f) => { throw new NotImplementedException(); };
         }
     }
 

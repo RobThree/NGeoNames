@@ -38,9 +38,9 @@ namespace NGeoNames
         /// </remarks>
         internal static double DistanceTo(IGeoLocation src, IGeoLocation dest, double radiusofearth = RADIUSOFEARTH)
         {
-            var dLat = GeoUtil.Deg2Rad(dest.Latitude - src.Latitude);
-            var dLon = GeoUtil.Deg2Rad(dest.Longitude - src.Longitude);
-            return radiusofearth * (2 * Math.Asin(Math.Min(1, Math.Sqrt(Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(GeoUtil.Deg2Rad(src.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(dest.Latitude)) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2)))));
+            var dLat = Deg2Rad(dest.Latitude - src.Latitude);
+            var dLon = Deg2Rad(dest.Longitude - src.Longitude);
+            return radiusofearth * (2 * Math.Asin(Math.Min(1, Math.Sqrt(Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(Deg2Rad(src.Latitude)) * Math.Cos(Deg2Rad(dest.Latitude)) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2)))));
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace NGeoNames
         internal static double[] GetCoord(IGeoLocation n, double radiusofearth = RADIUSOFEARTH)
         {
             return new[] {
-                radiusofearth * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Cos(GeoUtil.Deg2Rad(n.Longitude)),
-                radiusofearth * Math.Cos(GeoUtil.Deg2Rad(n.Latitude)) * Math.Sin(GeoUtil.Deg2Rad(n.Longitude)),
-                radiusofearth * Math.Sin(GeoUtil.Deg2Rad(n.Latitude))
+                radiusofearth * Math.Cos(Deg2Rad(n.Latitude)) * Math.Cos(Deg2Rad(n.Longitude)),
+                radiusofearth * Math.Cos(Deg2Rad(n.Latitude)) * Math.Sin(Deg2Rad(n.Longitude)),
+                radiusofearth * Math.Sin(Deg2Rad(n.Latitude))
             };
         }
 

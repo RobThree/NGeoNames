@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NGeoNamesTests
 {
@@ -13,22 +14,22 @@ namespace NGeoNamesTests
     {
         [TestMethod]
         [ExpectedException(typeof(ParserException))]
-        public void ParserThrowsOnInvalidData()
+        public async Task ParserThrowsOnInvalidData()
         {
-            GeoFileReader.ReadAdmin1Codes(@"testdata\invalid_admin1CodesASCII.txt").ToArray();
+            await GeoFileReader.ReadAdmin1Codes(@"testdata\invalid_admin1CodesASCII.txt").ToArrayAsync();
         }
 
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
-        public void ParserThrowsOnNonExistingFile()
+        public async Task ParserThrowsOnNonExistingFile()
         {
-            GeoFileReader.ReadAdmin1Codes(@"testdata\non_existing_file.txt").ToArray();
+            await GeoFileReader.ReadAdmin1Codes(@"testdata\non_existing_file.txt").ToArrayAsync();
         }
 
         [TestMethod]
-        public void Admin1CodesParser_ParsesFileCorrectly()
+        public async Task Admin1CodesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadAdmin1Codes(@"testdata\test_admin1CodesASCII.txt").ToArray();
+            var target = await GeoFileReader.ReadAdmin1Codes(@"testdata\test_admin1CodesASCII.txt").ToArrayAsync();
             Assert.AreEqual(4, target.Length);
 
             Assert.AreEqual("CF.04", target[0].Code);
@@ -53,9 +54,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void Admin2CodesParser_ParsesFileCorrectly()
+        public async Task Admin2CodesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadAdmin2Codes(@"testdata\test_admin2Codes.txt").ToArray();
+            var target = await GeoFileReader.ReadAdmin2Codes(@"testdata\test_admin2Codes.txt").ToArrayAsync();
             Assert.AreEqual(2, target.Length);
 
             Assert.AreEqual("AF.01.7052666", target[0].Code);
@@ -70,9 +71,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void AlternateNamesParser_ParsesFileCorrectly()
+        public async Task AlternateNamesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadAlternateNames(@"testdata\test_alternateNames.txt").ToArray();
+            var target = await GeoFileReader.ReadAlternateNames(@"testdata\test_alternateNames.txt").ToArrayAsync();
             Assert.AreEqual(17, target.Length);
 
             Assert.AreEqual(2488123, target[0].Id);
@@ -153,9 +154,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void AlternateNamesParserV2_ParsesFileCorrectly()
+        public async Task AlternateNamesParserV2_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadAlternateNamesV2(@"testdata\test_alternateNamesV2.txt").ToArray();
+            var target = await GeoFileReader.ReadAlternateNamesV2(@"testdata\test_alternateNamesV2.txt").ToArrayAsync();
             Assert.AreEqual(5, target.Length);
 
             Assert.AreEqual(12453592, target[0].Id);
@@ -185,9 +186,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void CountryInfoParser_ParsesFileCorrectly()
+        public async Task CountryInfoParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadCountryInfo(@"testdata\test_countryInfo.txt").ToArray();
+            var target = await GeoFileReader.ReadCountryInfo(@"testdata\test_countryInfo.txt").ToArrayAsync();
             Assert.AreEqual(2, target.Length);  //Should've skipped comment lines
 
             Assert.AreEqual("BZ", target[0].ISO_Alpha2);
@@ -232,9 +233,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void ExtendedGeoNameParser_ParsesFileCorrectly()
+        public async Task ExtendedGeoNameParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadExtendedGeoNames(@"testdata\test_extendedgeonames.txt").ToArray();
+            var target = await GeoFileReader.ReadExtendedGeoNames(@"testdata\test_extendedgeonames.txt").ToArrayAsync();
             Assert.AreEqual(7, target.Length);
 
             //No alternate names/countrycodes and empty admincodes
@@ -630,9 +631,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void FeatureCodeParser_ParsesFileCorrectly()
+        public async Task FeatureCodeParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadFeatureCodes(@"testdata\test_featureCodes_en.txt").ToArray();
+            var target = await GeoFileReader.ReadFeatureCodes(@"testdata\test_featureCodes_en.txt").ToArrayAsync();
             Assert.AreEqual(3, target.Length);
 
             //A.ADM1 should result in a "A" class and "ADM1" code
@@ -652,9 +653,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void GeoNameParser_ParsesFileCorrectly()
+        public async Task GeoNameParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadGeoNames(@"testdata\test_geonames.txt").ToArray();
+            var target = await GeoFileReader.ReadGeoNames(@"testdata\test_geonames.txt").ToArrayAsync();
             Assert.AreEqual(2, target.Length);
 
             //Positive lat/long
@@ -671,9 +672,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void HierarchyParser_ParsesFileCorrectly()
+        public async Task HierarchyParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadHierarchy(@"testdata\test_hierarchy.txt").ToArray();
+            var target = await GeoFileReader.ReadHierarchy(@"testdata\test_hierarchy.txt").ToArrayAsync();
             Assert.AreEqual(4, target.Length);
 
             //"Normal" record
@@ -698,9 +699,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void IsoLanguageCodeParser_ParsesFileCorrectly()
+        public async Task IsoLanguageCodeParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadISOLanguageCodes(@"testdata\test_iso-languagecodes.txt").ToArray();
+            var target = await GeoFileReader.ReadISOLanguageCodes(@"testdata\test_iso-languagecodes.txt").ToArrayAsync();
             Assert.AreEqual(2, target.Length);  //First line in file should've been skipped
 
 
@@ -716,9 +717,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void TimeZonesParser_ParsesFileCorrectly()
+        public async Task TimeZonesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadTimeZones(@"testdata\test_timeZones.txt").ToArray();
+            var target = await GeoFileReader.ReadTimeZones(@"testdata\test_timeZones.txt").ToArrayAsync();
             Assert.AreEqual(5, target.Length);    //First line in file should've been skipped
 
             //Zero offsets
@@ -753,9 +754,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void UserTagParser_ParsesFileCorrectly()
+        public async Task UserTagParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadUserTags(@"testdata\test_userTags.txt").ToArray();
+            var target = await GeoFileReader.ReadUserTags(@"testdata\test_userTags.txt").ToArrayAsync();
             Assert.AreEqual(3, target.Length);
 
             //"Normal" tag
@@ -771,9 +772,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void ContinentParser_ParsesFileCorrectly()
+        public async Task ContinentParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadContinents(@"testdata\test_continentCodes.txt").ToArray();
+            var target = await GeoFileReader.ReadContinents(@"testdata\test_continentCodes.txt").ToArrayAsync();
             Assert.AreEqual(1, target.Length);  //First line in file should've been skipped
 
             Assert.AreEqual("EU", target[0].Code);
@@ -782,9 +783,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void FeatureClassesParser_ParsesFileCorrectly()
+        public async Task FeatureClassesParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadFeatureClasses(@"testdata\test_featureClasses_en.txt").ToArray();
+            var target = await GeoFileReader.ReadFeatureClasses(@"testdata\test_featureClasses_en.txt").ToArrayAsync();
             Assert.AreEqual(1, target.Length);  //First line in file should've been skipped
 
             Assert.AreEqual("X", target[0].Class);
@@ -792,9 +793,9 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void PostalCodeParser_ParsesFileCorrectly()
+        public async Task PostalCodeParser_ParsesFileCorrectly()
         {
-            var target = GeoFileReader.ReadPostalcodes(@"testdata\test_postalcodes.txt").ToArray();
+            var target = await GeoFileReader.ReadPostalcodes(@"testdata\test_postalcodes.txt").ToArrayAsync();
             Assert.AreEqual(4, target.Length);  //First line in file should've been skipped
 
             Assert.AreEqual("AU", target[0].CountryCode);
@@ -830,150 +831,150 @@ namespace NGeoNamesTests
         }
 
         [TestMethod]
-        public void CustomParser_IsUsedCorrectly()
+        public async Task CustomParser_IsUsedCorrectly()
         {
-            var target = new GeoFileReader().ReadRecords(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
+            var target = await GeoFileReader.ReadRecordsAsync(@"testdata\test_custom.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArrayAsync();
 
             Assert.AreEqual(2, target.Length);
             CollectionAssert.AreEqual(target[0].Data, target[1].Data);
         }
 
         [TestMethod]
-        public void FileReader_HandlesEmptyFilesCorrectly()
+        public async Task FileReader_HandlesEmptyFilesCorrectly()
         {
             //Could use ANY entity
-            var target1 = new GeoFileReader().ReadRecords(@"testdata\emptyfile.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArray();
+            var target1 = await GeoFileReader.ReadRecordsAsync(@"testdata\emptyfile.txt", new CustomParser(19, 5, new[] { '☃' }, Encoding.UTF7, true)).ToArrayAsync();
 
             Assert.AreEqual(0, target1.Length);
 
             //Here's a second one
-            var target2 = GeoFileReader.ReadExtendedGeoNames(@"testdata\emptyfile.txt").ToArray();
+            var target2 = await GeoFileReader.ReadExtendedGeoNames(@"testdata\emptyfile.txt").ToArrayAsync();
 
             Assert.AreEqual(0, target2.Length);
         }
 
         [TestMethod]
-        public void FileReader_HandlesGZippedFilesCorrectly()
+        public async Task FileReader_HandlesGZippedFilesCorrectly()
         {
-            var target = GeoFileReader.ReadCountryInfo(@"testdata\countryInfo_gzip_compat.txt.gz").ToArray();
+            var target = await GeoFileReader.ReadCountryInfo(@"testdata\countryInfo_gzip_compat.txt.gz").ToArrayAsync();
 
             Assert.AreEqual(2, target.Length);
         }
 
         [TestMethod]
-        public void FileReader_CanReadBuiltInContinentsCorrectly()
+        public async Task FileReader_CanReadBuiltInContinentsCorrectly()
         {
-            var target = GeoFileReader.ReadBuiltInContinents().ToArray();
+            var target = (await GeoFileReader.ReadBuiltInContinents()).ToArray();
 
             Assert.AreEqual(7, target.Length);
             CollectionAssert.AreEqual(target.OrderBy(c => c.Code).Select(c => c.Code).ToArray(), new[] { "AF", "AN", "AS", "EU", "NA", "OC", "SA" });
         }
 
         [TestMethod]
-        public void FileReader_CanReadBuiltInFeatureClassesCorrectly()
+        public async Task FileReader_CanReadBuiltInFeatureClassesCorrectly()
         {
-            var target = GeoFileReader.ReadBuiltInFeatureClasses().ToArray();
+            var target = (await GeoFileReader.ReadBuiltInFeatureClasses()).ToArray();
 
             Assert.AreEqual(9, target.Length);
             CollectionAssert.AreEqual(target.OrderBy(c => c.Class).Select(c => c.Class).ToArray(), new[] { "A", "H", "L", "P", "R", "S", "T", "U", "V" });
         }
 
         [TestMethod]
-        public void FileReader_Admin1Codes_StreamOverload()
+        public async Task FileReader_Admin1Codes_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_admin1CodesASCII.txt"))
-                GeoFileReader.ReadAdmin1Codes(s).Count();
+                await GeoFileReader.ReadAdmin1Codes(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_Admin2Codes_StreamOverload()
+        public async Task FileReader_Admin2Codes_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_admin2Codes.txt"))
-                GeoFileReader.ReadAdmin2Codes(s).Count();
+                await GeoFileReader.ReadAdmin2Codes(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_AlternateNames_StreamOverload()
+        public async Task FileReader_AlternateNames_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_alternateNames.txt"))
-                GeoFileReader.ReadAlternateNames(s).Count();
+                await GeoFileReader.ReadAlternateNames(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_AlternateNamesV2_StreamOverload()
+        public async Task FileReader_AlternateNamesV2_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_alternateNamesV2.txt"))
-                GeoFileReader.ReadAlternateNamesV2(s).Count();
+                await GeoFileReader.ReadAlternateNamesV2(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_Continent_StreamOverload()
+        public async Task FileReader_Continent_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_continentCodes.txt"))
-                GeoFileReader.ReadContinents(s).Count();
+                await GeoFileReader.ReadContinents(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_CountryInfo_StreamOverload()
+        public async Task FileReader_CountryInfo_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_CountryInfo.txt"))
-                GeoFileReader.ReadCountryInfo(s).Count();
+                await GeoFileReader.ReadCountryInfo(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_ExtendedGeoNames_StreamOverload()
+        public async Task FileReader_ExtendedGeoNames_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_extendedgeonames.txt"))
-                GeoFileReader.ReadExtendedGeoNames(s).Count();
+                await GeoFileReader.ReadExtendedGeoNames(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_FeatureClasses_StreamOverload()
+        public async Task FileReader_FeatureClasses_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_featureclasses_en.txt"))
-                GeoFileReader.ReadFeatureClasses(s).Count();
+                await GeoFileReader.ReadFeatureClasses(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_FeatureCodes_StreamOverload()
+        public async Task FileReader_FeatureCodes_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_featurecodes_en.txt"))
-                GeoFileReader.ReadFeatureCodes(s).Count();
+                await GeoFileReader.ReadFeatureCodes(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_GeoNames_StreamOverload()
+        public async Task FileReader_GeoNames_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_geonames.txt"))
-                GeoFileReader.ReadGeoNames(s).Count();
+                await GeoFileReader.ReadGeoNames(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_Hierarchy_StreamOverload()
+        public async Task FileReader_Hierarchy_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_hierarchy.txt"))
-                GeoFileReader.ReadHierarchy(s).Count();
+                await GeoFileReader.ReadHierarchy(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_ISOLanguageCode_StreamOverload()
+        public async Task FileReader_ISOLanguageCode_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_iso-languagecodes.txt"))
-                GeoFileReader.ReadISOLanguageCodes(s).Count();
+                await GeoFileReader.ReadISOLanguageCodes(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_TimeZone_StreamOverload()
+        public async Task FileReader_TimeZone_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_timeZones.txt"))
-                GeoFileReader.ReadTimeZones(s).Count();
+                await GeoFileReader.ReadTimeZones(s).CountAsync();
         }
 
         [TestMethod]
-        public void FileReader_UserTags_StreamOverload()
+        public async Task FileReader_UserTags_StreamOverload()
         {
             using (var s = File.OpenRead(@"testdata\test_usertags.txt"))
-                GeoFileReader.ReadUserTags(s).Count();
+                await GeoFileReader.ReadUserTags(s).CountAsync();
         }
     }
 }
