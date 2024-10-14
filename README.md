@@ -34,7 +34,7 @@ foreach (var r in results) {
     Console.WriteLine(
         string.Format(
             CultureInfo.InvariantCulture, "{0}, {1} {2} ({3:F4}Km)", 
-            r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam)
+            r.Latitude, r.Longitude, r.Name, r.DistanceTo(amsterdam) / 1000d
         )
     );
 }
